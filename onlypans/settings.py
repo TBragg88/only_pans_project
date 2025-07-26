@@ -2,6 +2,9 @@
 from pathlib import Path
 import os
 import sys
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from django.contrib.messages import constants as messages
 import dj_database_url
 if os.path.isfile('env.py'):
@@ -34,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'recipes',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [

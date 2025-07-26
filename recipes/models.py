@@ -1,8 +1,10 @@
-# recipes/models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.urls import reverse
+from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
+
 
 class Tag(models.Model):
     """Tags for categorizing recipes (cuisine, dietary, etc.)"""
@@ -101,6 +103,7 @@ class Recipe(models.Model):
     """Main recipe model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
     title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField(blank=True, help_text='Tell us about this recipe!')
     
     # Timing
@@ -108,8 +111,17 @@ class Recipe(models.Model):
     cook_time = models.PositiveIntegerField(help_text='Cooking time in minutes')
     servings = models.PositiveIntegerField(default=4)
     
-    # Media - just URL for now
-    image_url = models.URLField(blank=True, help_text='Link to recipe image')
+    # Media - Cloudinary integration
+    image = CloudinaryField(
+        'image', 
+        blank=True, 
+        null=True,
+        folder='recipes/',
+        help_text='Upload recipe image'
+    )
+    
+    # Keep URL field as fallback for external images
+    image_url = models.URLField(blank=True, help_text='Or paste image URL')
     
     # Categorization
     tags = models.ManyToManyField(Tag, blank=True)
@@ -124,8 +136,32 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
     
+    def save(self, *args, **kwargs):
+        """Auto-generate slug from title"""
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            
+            # Ensure unique slug
+            while Recipe.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            
+            self.slug = slug
+        
+        super().save(*args, **kwargs)
+    
     def get_absolute_url(self):
-        return reverse('recipe_detail', args=[self.pk])
+        return reverse('recipe_detail', kwargs={'slug': self.slug})
+    
+    def get_image_url(self):
+        """Get image URL - prioritize Cloudinary, fallback to URL field"""
+        if self.image:
+            return self.image.url
+        elif self.image_url:
+            return self.image_url
+        return None  # You might want a default image here
     
     @property
     def total_time(self):
@@ -170,10 +206,29 @@ class RecipeStep(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='steps')
     step_number = models.PositiveIntegerField()
     instruction = models.TextField()
-    image_url = models.URLField(blank=True, help_text='Optional image for this step')
+    
+    # Cloudinary field for step images
+    image = CloudinaryField(
+        'image', 
+        blank=True, 
+        null=True,
+        folder='recipe_steps/',
+        help_text='Upload step image'
+    )
+    
+    # Keep URL field as fallback
+    image_url = models.URLField(blank=True, help_text='Or paste image URL')
 
     def __str__(self):
         return f"{self.recipe.title} - Step {self.step_number}"
+    
+    def get_image_url(self):
+        """Get image URL - prioritize Cloudinary, fallback to URL field"""
+        if self.image:
+            return self.image.url
+        elif self.image_url:
+            return self.image_url
+        return None
  
     class Meta:
         ordering = ['step_number']
