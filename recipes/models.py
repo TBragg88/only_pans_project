@@ -171,10 +171,10 @@ class RecipeStep(models.Model):
     step_number = models.PositiveIntegerField()
     instruction = models.TextField()
     image_url = models.URLField(blank=True, help_text='Optional image for this step')
-    
+
     def __str__(self):
         return f"{self.recipe.title} - Step {self.step_number}"
-    
+ 
     class Meta:
         ordering = ['step_number']
         unique_together = ('recipe', 'step_number')
