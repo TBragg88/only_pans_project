@@ -1,5 +1,5 @@
 import json
-from yourapp.models import Ingredient  # Replace 'yourapp' with your actual app name
+from recipes.models import Ingredient
 
 # Complete ingredient data with ALL nutritional fields
 # Format: (name, category, unit, dietary_flags_list, calories, protein, carbs, fat, fiber, sugars, sodium_mg, sat_fat)
