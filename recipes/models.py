@@ -60,21 +60,13 @@ class Ingredient(models.Model):
     sodium_mg_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     saturated_fat_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     
-    # Dietary flags as JSON (dairy, gluten, nuts, etc.)
-    dietary_flags = models.TextField(blank=True, help_text='JSON array of dietary restrictions')
+    # Dietary tags (e.g., gluten-free, dairy-free, vegan, etc.)
+    dietary_tags = models.ManyToManyField('Tag', blank=True, limit_choices_to={'tag_type': 'dietary'}, help_text='Dietary restriction tags')
     
     def __str__(self):
         return self.name
 
-    def get_dietary_flags(self):
-        """Get dietary flags as Python list"""
-        if self.dietary_flags:
-            try:
-                import json
-                return json.loads(self.dietary_flags)
-            except json.JSONDecodeError:
-                return []
-        return []
+
 
     class Meta:
         ordering = ['name']
