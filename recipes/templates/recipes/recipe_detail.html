@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ recipe.title }} - OnlyPans{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'recipe_list' %}">Recipes</a></li>
+            <li class="breadcrumb-item active">{{ recipe.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Recipe Header -->
+            <div class="mb-4">
+                <h1 class="display-5 fw-bold mb-3">{{ recipe.title }}</h1>
+                <p class="lead text-muted">{{ recipe.description }}</p>
+                
+                <!-- Recipe Meta -->
+                <div class="d-flex flex-wrap gap-4 mb-3">
+                    <div>
+                        <i class="fas fa-clock text-primary me-1"></i>
+                        <strong>Prep:</strong> {{ recipe.prep_time }} min
+                    </div>
+                    <div>
+                        <i class="fas fa-fire text-primary me-1"></i>
+                        <strong>Cook:</strong> {{ recipe.cook_time }} min
+                    </div>
+                    <div>
+                        <i class="fas fa-users text-primary me-1"></i>
+                        <strong>Serves:</strong> {{ recipe.servings }}
+                    </div>
+                    <div>
+                        <i class="fas fa-eye text-primary me-1"></i>
+                        <strong>Views:</strong> {{ recipe.view_count }}
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="mb-4">
+                    {% for tag in recipe.tags.all %}
+                        <a href="?tag={{ tag.name }}" class="text-decoration-none">
+                            <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recipe Image -->
+            <div class="mb-5">
+                {% if recipe.get_image_url %}
+                    <img src="{{ recipe.get_image_url }}" class="img-fluid rounded shadow" alt="{{ recipe.title }}" style="width: 100%; max-height: 400px; object-fit: cover;">
+                {% else %}
+                    <div class="default-recipe-image rounded shadow" style="width: 100%; height: 400px;">
+                        <i class="fas fa-utensils fa-4x"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Instructions -->
+            <div class="mb-5">
+                <h3 class="mb-4">
+                    <i class="fas fa-list-ol text-primary me-2"></i>Instructions
+                </h3>
+                
+                {% for step in recipe.steps.all %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 40px; height: 40px;">
+                                        <strong>{{ step.step_number }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <p class="mb-0">{{ step.instruction }}</p>
+                                    {% if step.get_image_url %}
+                                        <img src="{{ step.get_image_url }}" class="img-fluid rounded mt-3" alt="Step {{ step.step_number }}" style="max-height: 200px;">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No instructions available.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Ingredients -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shopping-list me-2"></i>Ingredients
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for ingredient in recipe.ingredients.all %}
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span>{{ ingredient.ingredient.name }}</span>
+                            <strong>{{ ingredient.quantity }} {{ ingredient.unit.abbreviation }}</strong>
+                        </div>
+                        {% if ingredient.notes %}
+                            <small class="text-muted">{{ ingredient.notes }}</small>
+                        {% endif %}
+                    {% empty %}
+                        <p class="text-muted mb-0">No ingredients listed.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recipe Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Recipe Info
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <div class="h4 text-primary mb-1">{{ recipe.total_time }}</div>
+                            <small class="text-muted">Total Time (min)</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-primary mb-1">{{ recipe.servings }}</div>
+                            <small class="text-muted">Servings</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <small class="text-muted">
+                            Added by <strong>{{ recipe.user.username }}</strong><br>
+                            {{ recipe.created_at|date:"F j, Y" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Recipes -->
+            {% if related_recipes %}
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-heart me-2"></i>You Might Also Like
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        {% for related in related_recipes %}
+                            <div class="border-bottom p-3">
+                                <div class="row align-items-center">
+                                    <div class="col-4">
+                                        {% if related.get_image_url %}
+                                            <img src="{{ related.get_image_url }}" class="img-fluid rounded" alt="{{ related.title }}" style="height: 60px; width: 100%; object-fit: cover;">
+                                        {% else %}
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 60px;">
+                                                <i class="fas fa-utensils text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-8">
+                                        <a href="{{ related.get_absolute_url }}" class="text-decoration-none">
+                                            <h6 class="mb-1">{{ related.title }}</h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>{{ related.total_time }} min
+                                            </small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

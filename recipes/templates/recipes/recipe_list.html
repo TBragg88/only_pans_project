@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}OnlyPans - Discover Amazing Recipes{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Discover Amazing Recipes</h1>
+                <p class="lead mb-4">From quick weeknight dinners to show-stopping desserts, find your next favorite dish.</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-chef-hat" style="font-size: 8rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container my-5">
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <div class="mb-3">
+                    <h3 class="mb-0">
+                        {% if current_tag %}
+                            Recipes tagged: <span class="tag">{{ current_tag }}</span>
+                        {% elif search_query %}
+                            Search results for: "{{ search_query }}"
+                        {% else %}
+                            All Recipes
+                        {% endif %}
+                    </h3>
+                    <small class="text-muted">{{ page_obj.paginator.count }} recipe{{ page_obj.paginator.count|pluralize }} found</small>
+                </div>
+                
+                <!-- Tag Filter Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-filter me-1"></i>Filter by Tag
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'recipe_list' %}">All Recipes</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% for tag in all_tags %}
+                            <li>
+                                <a class="dropdown-item" href="?tag={{ tag.name }}">
+                                    <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li><span class="dropdown-item-text text-muted">No tags available</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Grid -->
+    <div class="row">
+        {% for recipe in page_obj %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <!-- Recipe Image -->
+                    {% if recipe.get_image_url %}
+                        <img src="{{ recipe.get_image_url }}" class="card-img-top recipe-image" alt="{{ recipe.title }}">
+                    {% else %}
+                        <div class="card-img-top recipe-image bg-light d-flex align-items-center justify-content-center">
+                            <i class="fas fa-utensils fa-3x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text text-muted flex-grow-1">{{ recipe.description|truncatewords:15 }}</p>
+                        
+                        <!-- Recipe Meta -->
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>{{ recipe.total_time }} min
+                                <i class="fas fa-users ms-3 me-1"></i>{{ recipe.servings }} serving{{ recipe.servings|pluralize }}
+                                <i class="fas fa-eye ms-3 me-1"></i>{{ recipe.view_count }} view{{ recipe.view_count|pluralize }}
+                            </small>
+                        </div>
+                        
+                        <!-- Tags -->
+                        <div class="mb-3">
+                            {% for tag in recipe.tags.all|slice:":3" %}
+                                <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                            {% endfor %}
+                            {% if recipe.tags.count > 3 %}
+                                <span class="text-muted">+{{ recipe.tags.count|add:"-3" }} more</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- View Recipe Button -->
+                        <a href="{{ recipe.get_absolute_url }}" class="btn btn-primary mt-auto">
+                            <i class="fas fa-book-open me-1"></i>View Recipe
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                    <h3 class="text-muted">No recipes found</h3>
+                    <p class="text-muted">
+                        {% if search_query %}
+                            Try adjusting your search terms or <a href="{% url 'recipe_list' %}">browse all recipes</a>.
+                        {% else %}
+                            Be the first to add a recipe! <a href="/admin/">Add a recipe</a>.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+        <nav aria-label="Recipe pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

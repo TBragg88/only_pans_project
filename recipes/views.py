@@ -1,6 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+# recipes/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Recipe, Tag
+from .forms import RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet
+
 
 def recipe_list(request):
     """Display all recipes with pagination and filtering"""
@@ -53,3 +58,100 @@ def recipe_detail(request, slug):
     }
     
     return render(request, 'recipes/recipe_detail.html', context)
+
+
+@login_required
+def recipe_create(request):
+    """Create a new recipe"""
+    if request.method == 'POST':
+        form = RecipeForm(request.POST, request.FILES)
+        ingredient_formset = RecipeIngredientFormSet(request.POST, prefix='ingredients')
+        step_formset = RecipeStepFormSet(request.POST, request.FILES, prefix='steps')
+        
+        if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
+            recipe = form.save(commit=False)
+            recipe.user = request.user
+            recipe.save()
+            form.save_m2m()  # Save many-to-many relationships (tags)
+            
+            # Save ingredients
+            ingredients = ingredient_formset.save(commit=False)
+            for ingredient in ingredients:
+                ingredient.recipe = recipe
+                ingredient.save()
+            
+            # Save steps
+            steps = step_formset.save(commit=False)
+            for step in steps:
+                step.recipe = recipe
+                step.save()
+            
+            messages.success(request, f'Recipe "{recipe.title}" created successfully!')
+            return redirect('recipe_detail', slug=recipe.slug)
+    else:
+        form = RecipeForm()
+        ingredient_formset = RecipeIngredientFormSet(prefix='ingredients')
+        step_formset = RecipeStepFormSet(prefix='steps')
+    
+    context = {
+        'form': form,
+        'ingredient_formset': ingredient_formset,
+        'step_formset': step_formset,
+        'title': 'Create New Recipe'
+    }
+    return render(request, 'recipes/recipe_form.html', context)
+
+
+@login_required  
+def recipe_edit(request, slug):
+    """Edit an existing recipe"""
+    recipe = get_object_or_404(Recipe, slug=slug, user=request.user)
+    
+    if request.method == 'POST':
+        form = RecipeForm(request.POST, request.FILES, instance=recipe)
+        ingredient_formset = RecipeIngredientFormSet(
+            request.POST, 
+            instance=recipe, 
+            prefix='ingredients'
+        )
+        step_formset = RecipeStepFormSet(
+            request.POST, 
+            request.FILES, 
+            instance=recipe, 
+            prefix='steps'
+        )
+        
+        if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
+            recipe = form.save()
+            ingredient_formset.save()
+            step_formset.save()
+            
+            messages.success(request, f'Recipe "{recipe.title}" updated successfully!')
+            return redirect('recipe_detail', slug=recipe.slug)
+    else:
+        form = RecipeForm(instance=recipe)
+        ingredient_formset = RecipeIngredientFormSet(instance=recipe, prefix='ingredients')
+        step_formset = RecipeStepFormSet(instance=recipe, prefix='steps')
+    
+    context = {
+        'form': form,
+        'ingredient_formset': ingredient_formset,
+        'step_formset': step_formset,
+        'recipe': recipe,
+        'title': f'Edit {recipe.title}'
+    }
+    return render(request, 'recipes/recipe_form.html', context)
+
+
+@login_required
+def recipe_delete(request, slug):
+    """Delete a recipe"""
+    recipe = get_object_or_404(Recipe, slug=slug, user=request.user)
+    
+    if request.method == 'POST':
+        recipe_title = recipe.title
+        recipe.delete()
+        messages.success(request, f'Recipe "{recipe_title}" deleted successfully!')
+        return redirect('recipe_list')
+    
+    return render(request, 'recipes/recipe_confirm_delete.html', {'recipe': recipe})
