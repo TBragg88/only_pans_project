@@ -48,10 +48,16 @@ class Ingredient(models.Model):
     ]
 
     name = models.CharField(max_length=255, unique=True)
-    category = models.CharField(max_length=100, choices=CATEGORIES, default='other')
-    common_unit = models.CharField(max_length=50,
-                                   default='grams',
-                                   help_text='Most common unit for this ingredient')
+    category = models.CharField(
+        max_length=100,
+        choices=CATEGORIES,
+        default='other'
+    )
+    common_unit = models.CharField(
+        max_length=50,
+        default='grams',
+        help_text='Most common unit for this ingredient'
+    )
 
     # Nutritional data per 100g/100ml
     calories_per_100g = models.DecimalField(max_digits=8,
@@ -80,7 +86,11 @@ class Ingredient(models.Model):
                                                  null=True, blank=True)
 
     # Dietary tags (e.g., gluten-free, dairy-free, vegan, etc.)
-    dietary_tags = models.ManyToManyField('Tag', blank=True, limit_choices_to={'tag_type': 'dietary'}, help_text='Dietary restriction tags')
+    dietary_tags = models.ManyToManyField(
+        'Tag', blank=True,
+        limit_choices_to={'tag_type': 'dietary'},
+        help_text='Dietary restriction tags'
+    )
 
     def __str__(self):
         return self.name
@@ -118,14 +128,18 @@ class Recipe(models.Model):
                                    help_text='Tell us about this recipe!')
 
     # Timing
-    prep_time = models.PositiveIntegerField(help_text='Preparation time in minutes')
-    cook_time = models.PositiveIntegerField(help_text='Cooking time in minutes')
+    prep_time = models.PositiveIntegerField(
+        help_text='Preparation time in minutes'
+    )
+    cook_time = models.PositiveIntegerField(
+        help_text='Cooking time in minutes'
+    )
     servings = models.PositiveIntegerField(default=4)
 
     # Media - Cloudinary integration
     image = CloudinaryField(
-        'image', 
-        blank=True, 
+        'image',
+        blank=True,
         null=True,
         folder='recipes/',
         help_text='Upload recipe image'
@@ -143,29 +157,29 @@ class Recipe(models.Model):
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return self.title
-    
+
     def save(self, *args, **kwargs):
         """Auto-generate slug from title"""
         if not self.slug:
             base_slug = slugify(self.title)
             slug = base_slug
             counter = 1
-            
+
             # Ensure unique slug
             while Recipe.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
-            
+
             self.slug = slug
-        
+
         super().save(*args, **kwargs)
-    
+
     def get_absolute_url(self):
         return reverse('recipe_detail', kwargs={'slug': self.slug})
-    
+
     def get_image_url(self):
         """Get image URL - prioritize Cloudinary, fallback to URL field"""
         if self.image:
@@ -173,12 +187,12 @@ class Recipe(models.Model):
         elif self.image_url:
             return self.image_url
         return None  # You might want a default image here
-    
+
     @property
     def total_time(self):
         """Calculate total cooking time"""
         return self.prep_time + self.cook_time
-    
+
     @property
     def average_rating(self):
         """Calculate average rating"""
@@ -186,7 +200,7 @@ class Recipe(models.Model):
         if ratings:
             return sum(r.rating for r in ratings) / len(ratings)
         return 0
-    
+
     @property
     def rating_count(self):
         """Count of ratings"""
@@ -198,26 +212,39 @@ class Recipe(models.Model):
 
 class RecipeIngredient(models.Model):
     """Ingredients used in a specific recipe"""
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients')
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='ingredients'
+    )
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     quantity = models.DecimalField(max_digits=8, decimal_places=2)
-    notes = models.CharField(max_length=100, blank=True, help_text='e.g., "room temperature", "diced"')
+    notes = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text='e.g., "room temperature", "diced"'
+    )
     order = models.PositiveIntegerField(help_text='Order in ingredient list')
-    
+
     def __str__(self):
-        return f"{self.quantity} {self.unit.abbreviation} {self.ingredient.name}"
-    
+        return (
+            f"{self.quantity} {self.unit.abbreviation} "
+            f"{self.ingredient.name}"
+        )
+
     class Meta:
         ordering = ['order']
 
 
 class RecipeStep(models.Model):
     """Individual steps in a recipe"""
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='steps')
+    recipe = models.ForeignKey(Recipe,
+                               on_delete=models.CASCADE,
+                               related_name='steps')
     step_number = models.PositiveIntegerField()
     instruction = models.TextField()
-    
+
     # Cloudinary field for step images
     image = CloudinaryField(
         'image', 
