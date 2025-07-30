@@ -15,12 +15,12 @@ class Tag(models.Model):
         ('cooking_method', 'Cooking Method'),
         ('difficulty', 'Difficulty'),
     ]
-    
+
     name = models.CharField(max_length=100, unique=True)
     tag_type = models.CharField(max_length=50, choices=TAG_TYPES)
     color = models.CharField(max_length=7, default='#6c757d',
                              help_text='Hex color like #FF5733')
-    
+
     def __str__(self):
         return f"{self.name} ({self.get_tag_type_display()})"
 
@@ -46,13 +46,13 @@ class Ingredient(models.Model):
         ('condiments', 'Condiments'),
         ('other', 'Other'),
     ]
-    
+
     name = models.CharField(max_length=255, unique=True)
     category = models.CharField(max_length=100, choices=CATEGORIES, default='other')
     common_unit = models.CharField(max_length=50,
                                    default='grams',
                                    help_text='Most common unit for this ingredient')
-    
+
     # Nutritional data per 100g/100ml
     calories_per_100g = models.DecimalField(max_digits=8,
                                             decimal_places=2,
@@ -78,14 +78,12 @@ class Ingredient(models.Model):
     saturated_fat_per_100g = models.DecimalField(max_digits=8,
                                                  decimal_places=2,
                                                  null=True, blank=True)
-    
+
     # Dietary tags (e.g., gluten-free, dairy-free, vegan, etc.)
     dietary_tags = models.ManyToManyField('Tag', blank=True, limit_choices_to={'tag_type': 'dietary'}, help_text='Dietary restriction tags')
-    
+
     def __str__(self):
         return self.name
-
-
 
     class Meta:
         ordering = ['name']
@@ -98,11 +96,11 @@ class Unit(models.Model):
         ('weight', 'Weight'),
         ('count', 'Count'),
     ]
-    
+
     name = models.CharField(max_length=50, unique=True)
     abbreviation = models.CharField(max_length=10)
     unit_type = models.CharField(max_length=20, choices=UNIT_TYPES)
-    
+
     def __str__(self):
         return f"{self.name} ({self.abbreviation})"
 
@@ -112,16 +110,18 @@ class Unit(models.Model):
 
 class Recipe(models.Model):
     """Main recipe model"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='recipes')
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    description = models.TextField(blank=True, help_text='Tell us about this recipe!')
-    
+    description = models.TextField(blank=True,
+                                   help_text='Tell us about this recipe!')
+
     # Timing
     prep_time = models.PositiveIntegerField(help_text='Preparation time in minutes')
     cook_time = models.PositiveIntegerField(help_text='Cooking time in minutes')
     servings = models.PositiveIntegerField(default=4)
-    
+
     # Media - Cloudinary integration
     image = CloudinaryField(
         'image', 
@@ -130,16 +130,16 @@ class Recipe(models.Model):
         folder='recipes/',
         help_text='Upload recipe image'
     )
-    
+
     # Keep URL field as fallback for external images
     image_url = models.URLField(blank=True, help_text='Or paste image URL')
-    
+
     # Categorization
     tags = models.ManyToManyField(Tag, blank=True)
-    
+
     # Engagement stats (we'll calculate these)
     view_count = models.PositiveIntegerField(default=0)
-    
+
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
