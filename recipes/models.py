@@ -18,7 +18,8 @@ class Tag(models.Model):
     
     name = models.CharField(max_length=100, unique=True)
     tag_type = models.CharField(max_length=50, choices=TAG_TYPES)
-    color = models.CharField(max_length=7, default='#6c757d', help_text='Hex color like #FF5733')
+    color = models.CharField(max_length=7, default='#6c757d',
+                             help_text='Hex color like #FF5733')
     
     def __str__(self):
         return f"{self.name} ({self.get_tag_type_display()})"
@@ -48,17 +49,35 @@ class Ingredient(models.Model):
     
     name = models.CharField(max_length=255, unique=True)
     category = models.CharField(max_length=100, choices=CATEGORIES, default='other')
-    common_unit = models.CharField(max_length=50, default='grams', help_text='Most common unit for this ingredient')
+    common_unit = models.CharField(max_length=50,
+                                   default='grams',
+                                   help_text='Most common unit for this ingredient')
     
     # Nutritional data per 100g/100ml
-    calories_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    protein_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    carbs_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    fat_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    fibre_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    sugars_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    sodium_mg_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    saturated_fat_per_100g = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    calories_per_100g = models.DecimalField(max_digits=8,
+                                            decimal_places=2,
+                                            null=True, blank=True)
+    protein_per_100g = models.DecimalField(max_digits=8,
+                                           decimal_places=2,
+                                           null=True, blank=True)
+    carbs_per_100g = models.DecimalField(max_digits=8,
+                                         decimal_places=2,
+                                         null=True, blank=True)
+    fat_per_100g = models.DecimalField(max_digits=8,
+                                       decimal_places=2,
+                                       null=True, blank=True)
+    fibre_per_100g = models.DecimalField(max_digits=8,
+                                         decimal_places=2,
+                                         null=True, blank=True)
+    sugars_per_100g = models.DecimalField(max_digits=8,
+                                          decimal_places=2,
+                                          null=True, blank=True)
+    sodium_mg_per_100g = models.DecimalField(max_digits=8,
+                                             decimal_places=2,
+                                             null=True, blank=True)
+    saturated_fat_per_100g = models.DecimalField(max_digits=8,
+                                                 decimal_places=2,
+                                                 null=True, blank=True)
     
     # Dietary tags (e.g., gluten-free, dairy-free, vegan, etc.)
     dietary_tags = models.ManyToManyField('Tag', blank=True, limit_choices_to={'tag_type': 'dietary'}, help_text='Dietary restriction tags')
