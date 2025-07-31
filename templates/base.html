@@ -196,10 +196,11 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        {% if show_login_modal and messages %} {% for message in
-                        messages %}
-                        <div class="alert alert-danger">{{ message }}</div>
-                        {% elif %} {% endif %}
+                        {% if show_login_modal and messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
                         <form method="post" action="{% url 'recipe_list' %}">
                             {% csrf_token %}
                             <input
