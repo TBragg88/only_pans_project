@@ -27,82 +27,154 @@
     </head>
     <body>
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="{% url 'recipe_list' %}">
-                    <i class="fas fa-utensils me-2"></i>OnlyPans
-                </a>
-
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'recipe_list' %}">
-                                <i class="fas fa-home me-1"></i>Recipes
-                            </a>
-                        </li>
-                    </ul>
-
-                    <!-- Search Bar -->
-                    <form
-                        class="d-flex me-3"
-                        method="GET"
-                        action="{% url 'recipe_list' %}"
-                    >
-                        <input
-                            class="form-control me-2"
-                            type="search"
-                            name="search"
-                            placeholder="Search recipes..."
-                            value="{{ search_query }}"
-                        />
-                        <button class="btn btn-outline-light" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/">
-                                <i class="fas fa-plus me-1"></i>Add Recipe
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container justify-content-end">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-success me-2" href="{% url 'recipe_create' %}"><i class="fas fa-plus"></i> Create Recipe</a>
+                    <a class="btn btn-outline-light" href="{% url 'logout' %}">Sign Out</a>
+                {% else %}
+                    <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+                {% endif %}
             </div>
         </nav>
 
-        <!-- Main Content -->
-        <main>{% block content %}{% endblock %}</main>
+        <!-- Header Section -->
+        <header class="bg-light py-5 mb-4">
+            <div class="container text-center">
+                <h1 class="display-3 fw-bold mb-3">OnlyPans</h1>
+                <form class="row justify-content-center" method="GET" action="{% url 'recipe_list' %}">
+                    <div class="col-md-8">
+                        <input class="form-control form-control-lg" type="search" name="search" placeholder="Search recipes..." value="{{ search_query }}" />
+                    </div>
+                    <div class="col-md-2 mt-2 mt-md-0">
+                        <button class="btn btn-primary btn-lg w-100" type="submit">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </header>
+
+        <!-- Carousel Section -->
+        <section class="container mb-5">
+            <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Placeholder for dynamic recipe carousel based on time of day -->
+                    {% block recipe_carousel %}
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/900x300?text=Featured+Recipe" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Featured Recipe</h5>
+                            <p>Dynamic recipes will appear here based on time of day and tags.</p>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Content: Recipe Grid -->
+        <main class="container mb-5">
+            {% block content %}{% endblock %}
+        </main>
 
         <!-- Footer -->
-        <footer class="py-4">
+        <footer class="bg-dark text-light py-4 mt-auto">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-8">
+                <div class="row align-items-center mb-3">
+                    <div class="col-md-6">
                         <h5><i class="fas fa-utensils me-2"></i>OnlyPans</h5>
-                        <p class="text-light mb-0">
-                            Discover and share amazing recipes with the world.
-                        </p>
                     </div>
-                    <div class="col-md-4 text-end">
-                        <p class="mb-0">
-                            Made with
-                            <i class="fas fa-heart text-danger"></i> for food
-                            lovers
-                        </p>
+                    <div class="col-md-6 text-end">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a href="#" class="text-light me-3">About Us</a>
+                        <a href="#" class="text-light me-3">Contact Us</a>
+                        <a href="#" class="text-light me-3">Privacy</a>
+                        <span class="text-muted">&copy; 2025 OnlyPans</span>
                     </div>
                 </div>
             </div>
         </footer>
+
+        <!-- Login Modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loginModalLabel">Sign In</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="id_username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="id_password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <span>Don't have an account?</span>
+                            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="reg_username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="reg_username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg_password1" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="reg_password1" name="password1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg_password2" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="reg_password2" name="password2" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Register</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <span>Already have an account?</span>
+                            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
