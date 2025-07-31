@@ -196,6 +196,11 @@
                         ></button>
                     </div>
                     <div class="modal-body">
+                        {% if show_login_modal and messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
                         <form method="post" action="{% url 'recipe_list' %}">
                             {% csrf_token %}
                             <input type="hidden" name="login_submit" value="1" />
@@ -216,8 +221,7 @@
                                 data-bs-dismiss="modal"
                                 data-bs-toggle="modal"
                                 data-bs-target="#registerModal"
-                                >Register</a
-                            >
+                                >Register</a>
                         </div>
                     </div>
                 </div>
