@@ -196,23 +196,44 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        {% if show_login_modal and messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-danger">{{ message }}</div>
-                            {% endfor %}
-                        {% endif %}
+                        {% if show_login_modal and messages %} {% for message in
+                        messages %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %} {% endif %}
                         <form method="post" action="{% url 'recipe_list' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="login_submit" value="1" />
+                            <input
+                                type="hidden"
+                                name="login_submit"
+                                value="1"
+                            />
                             <div class="mb-3">
-                                <label for="id_username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="id_username" name="username" required />
+                                <label for="id_username" class="form-label"
+                                    >Username</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="id_username"
+                                    name="username"
+                                    required
+                                />
                             </div>
                             <div class="mb-3">
-                                <label for="id_password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="id_password" name="password" required />
+                                <label for="id_password" class="form-label"
+                                    >Password</label
+                                >
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="id_password"
+                                    name="password"
+                                    required
+                                />
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                            <button type="submit" class="btn btn-primary w-100">
+                                Sign In
+                            </button>
                         </form>
                         <div class="text-center mt-3">
                             <span>Don't have an account?</span>
@@ -221,7 +242,8 @@
                                 data-bs-dismiss="modal"
                                 data-bs-toggle="modal"
                                 data-bs-target="#registerModal"
-                                >Register</a>
+                                >Register</a
+                            >
                         </div>
                     </div>
                 </div>
