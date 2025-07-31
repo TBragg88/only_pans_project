@@ -199,7 +199,7 @@
                         {% if show_login_modal and messages %} {% for message in
                         messages %}
                         <div class="alert alert-danger">{{ message }}</div>
-                        {% endfor %} {% endif %}
+                        {% elif %} {% endif %}
                         <form method="post" action="{% url 'recipe_list' %}">
                             {% csrf_token %}
                             <input
