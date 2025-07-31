@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Recipe, Tag
 from .forms import RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet
+from accounts.forms import CustomLoginForm
 
 
 def recipe_list(request):
-    """Display all recipes with pagination and filtering"""
+    """Display all recipes with pagination and filtering, and handle login modal POST"""
     recipes = Recipe.objects.all()
     
     # Filter by tag if provided
@@ -25,15 +26,29 @@ def recipe_list(request):
     paginator = Paginator(recipes, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
-    # Get all tags for filter dropdown
     all_tags = Tag.objects.all()
-    
+
+    # Handle login POST
+    login_form = CustomLoginForm()
+    show_login_modal = False
+    if request.method == 'POST' and 'login_submit' in request.POST:
+        login_form = CustomLoginForm(request, data=request.POST)
+        if login_form.is_valid():
+            from django.contrib.auth import login
+            user = login_form.get_user()
+            login(request, user)
+            return redirect('recipe_list')
+        else:
+            show_login_modal = True
+            messages.error(request, 'Invalid username or password.')
+
     context = {
         'page_obj': page_obj,
         'all_tags': all_tags,
         'current_tag': tag_filter,
         'search_query': search_query,
+        'login_form': login_form,
+        'show_login_modal': show_login_modal,
     }
     
     return render(request, 'recipes/recipe_list.html', context)

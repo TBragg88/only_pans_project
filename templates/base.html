@@ -196,35 +196,18 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" action="{% url 'login' %}">
+                        <form method="post" action="{% url 'recipe_list' %}">
                             {% csrf_token %}
+                            <input type="hidden" name="login_submit" value="1" />
                             <div class="mb-3">
-                                <label for="id_username" class="form-label"
-                                    >Username</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="id_username"
-                                    name="username"
-                                    required
-                                />
+                                <label for="id_username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="id_username" name="username" required />
                             </div>
                             <div class="mb-3">
-                                <label for="id_password" class="form-label"
-                                    >Password</label
-                                >
-                                <input
-                                    type="password"
-                                    class="form-control"
-                                    id="id_password"
-                                    name="password"
-                                    required
-                                />
+                                <label for="id_password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="id_password" name="password" required />
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">
-                                Sign In
-                            </button>
+                            <button type="submit" class="btn btn-primary w-100">Sign In</button>
                         </form>
                         <div class="text-center mt-3">
                             <span>Don't have an account?</span>
@@ -322,6 +305,20 @@
 
         <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var loginModal = document.getElementById("loginModal");
+                var hasLoginError = false;
+                // Check for error alert in login modal
+                if (loginModal && loginModal.querySelector(".alert-danger")) {
+                    hasLoginError = true;
+                }
+                if (hasLoginError) {
+                    var modal = new bootstrap.Modal(loginModal);
+                    modal.show();
+                }
+            });
+        </script>
         {% block extra_js %}{% endblock %}
     </body>
 </html>
