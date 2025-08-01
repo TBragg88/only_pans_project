@@ -183,10 +183,16 @@ class Recipe(models.Model):
     def get_image_url(self):
         """Get image URL - prioritize Cloudinary, fallback to URL field"""
         if self.image:
-            return self.image.url
+            try:
+                return self.image.url
+            except Exception:
+                # Fallback if Cloudinary config is dummy/invalid
+                if self.image_url:
+                    return self.image_url
+                return 'https://via.placeholder.com/400x300?text=Recipe+Image'
         elif self.image_url:
             return self.image_url
-        return None  # You might want a default image here
+        return 'https://via.placeholder.com/400x300?text=Recipe+Image'
 
     @property
     def total_time(self):
@@ -263,7 +269,13 @@ class RecipeStep(models.Model):
     def get_image_url(self):
         """Get image URL - prioritize Cloudinary, fallback to URL field"""
         if self.image:
-            return self.image.url
+            try:
+                return self.image.url
+            except Exception:
+                # Fallback if Cloudinary config is dummy/invalid
+                if self.image_url:
+                    return self.image_url
+                return None
         elif self.image_url:
             return self.image_url
         return None

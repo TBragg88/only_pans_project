@@ -5,53 +5,49 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Recipe, Tag
 from .forms import RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet
-from accounts.forms import CustomLoginForm
+
+
+def test_view(request):
+    """Simple test view"""
+    from django.http import HttpResponse
+    return HttpResponse("Test view works!")
 
 
 def recipe_list(request):
-    """Display all recipes with pagination and filtering, and handle login modal POST"""
-    recipes = Recipe.objects.all()
-    
-    # Filter by tag if provided
-    tag_filter = request.GET.get('tag')
-    if tag_filter:
-        recipes = recipes.filter(tags__name=tag_filter)
-    
-    # Search functionality
-    search_query = request.GET.get('search')
-    if search_query:
-        recipes = recipes.filter(title__icontains=search_query)
-    
-    # Pagination - 12 recipes per page
-    paginator = Paginator(recipes, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    all_tags = Tag.objects.all()
+    """Display all recipes with pagination and filtering"""
+    try:
+        recipes = Recipe.objects.all()
+        
+        # Filter by tag if provided
+        tag_filter = request.GET.get('tag')
+        if tag_filter:
+            recipes = recipes.filter(tags__name=tag_filter)
+        
+        # Search functionality
+        search_query = request.GET.get('search')
+        if search_query:
+            recipes = recipes.filter(title__icontains=search_query)
+        
+        # Pagination - 12 recipes per page
+        paginator = Paginator(recipes, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        all_tags = Tag.objects.all()
 
-    # Handle login POST
-    login_form = CustomLoginForm()
-    show_login_modal = False
-    if request.method == 'POST' and 'login_submit' in request.POST:
-        login_form = CustomLoginForm(request, data=request.POST)
-        if login_form.is_valid():
-            from django.contrib.auth import login
-            user = login_form.get_user()
-            login(request, user)
-            return redirect('recipe_list')
-        else:
-            show_login_modal = True
-            messages.error(request, 'Invalid username or password.')
-
-    context = {
-        'page_obj': page_obj,
-        'all_tags': all_tags,
-        'current_tag': tag_filter,
-        'search_query': search_query,
-        'login_form': login_form,
-        'show_login_modal': show_login_modal,
-    }
-    
-    return render(request, 'recipes/recipe_list.html', context)
+        context = {
+            'page_obj': page_obj,
+            'all_tags': all_tags,
+            'current_tag': tag_filter,
+            'search_query': search_query,
+        }
+        
+        return render(request, 'recipes/recipe_list.html', context)
+    except Exception as e:
+        import traceback
+        print(f"ERROR in recipe_list: {e}")
+        traceback.print_exc()
+        from django.http import HttpResponse
+        return HttpResponse(f"Error: {e}", status=500)
 
 
 def recipe_detail(request, slug):

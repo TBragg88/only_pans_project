@@ -196,18 +196,17 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        {% if show_login_modal and messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-danger">{{ message }}</div>
-                            {% endfor %}
-                        {% endif %}
-                        <form method="post" action="{% url 'recipe_list' %}">
+                        <div
+                            id="loginErrors"
+                            class="alert alert-danger"
+                            style="display: none"
+                        ></div>
+                        <form
+                            method="post"
+                            action="{% url 'login' %}"
+                            id="loginForm"
+                        >
                             {% csrf_token %}
-                            <input
-                                type="hidden"
-                                name="login_submit"
-                                value="1"
-                            />
                             <div class="mb-3">
                                 <label for="id_username" class="form-label"
                                     >Username</label
@@ -330,19 +329,88 @@
             </div>
         </div>
 
+        <!-- Toast Container -->
+        <div
+            aria-live="polite"
+            aria-atomic="true"
+            style="position: fixed; top: 20px; right: 20px; z-index: 9999"
+        >
+            <div class="toast-container">
+                {% if messages %} {% for message in messages %}
+                <div
+                    class="toast align-items-center text-white bg-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} border-0"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                >
+                    <div class="d-flex">
+                        <div class="toast-body">{{ message }}</div>
+                        <button
+                            type="button"
+                            class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                </div>
+                {% endfor %} {% endif %}
+            </div>
+        </div>
+
         <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                var loginModal = document.getElementById("loginModal");
-                var hasLoginError = false;
-                // Check for error alert in login modal
-                if (loginModal && loginModal.querySelector(".alert-danger")) {
-                    hasLoginError = true;
-                }
-                if (hasLoginError) {
-                    var modal = new bootstrap.Modal(loginModal);
-                    modal.show();
+                // Show all toast notifications
+                var toastElList = [].slice.call(
+                    document.querySelectorAll(".toast")
+                );
+                var toastList = toastElList.map(function (toastEl) {
+                    return new bootstrap.Toast(toastEl, {
+                        autohide: true,
+                        delay: 4000,
+                    });
+                });
+                toastList.forEach((toast) => toast.show());
+
+                // Handle login form submission via AJAX
+                const loginForm = document.getElementById("loginForm");
+                if (loginForm) {
+                    loginForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+
+                        const formData = new FormData(this);
+                        const errorDiv = document.getElementById("loginErrors");
+
+                        fetch(this.action, {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                            },
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data.success) {
+                                    // Close modal and reload page
+                                    bootstrap.Modal.getInstance(
+                                        document.getElementById("loginModal")
+                                    ).hide();
+                                    location.reload();
+                                } else {
+                                    // Show error in modal
+                                    errorDiv.textContent =
+                                        data.error ||
+                                        "Login failed. Please try again.";
+                                    errorDiv.style.display = "block";
+                                }
+                            })
+                            .catch((error) => {
+                                errorDiv.textContent =
+                                    "An error occurred. Please try again.";
+                                errorDiv.style.display = "block";
+                            });
+                    });
                 }
             });
         </script>
