@@ -403,6 +403,20 @@
             </div>
         </div>
 
+        <!-- Success Toast for Login/Register -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+            <div id="authToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    <strong class="me-auto">OnlyPans</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="authToastMessage">
+                    <!-- Message will be inserted here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Toast Container -->
         <div
             aria-live="polite"
@@ -449,6 +463,21 @@
                 });
                 toastList.forEach((toast) => toast.show());
 
+                // Function to show authentication toast messages
+                function showAuthToast(message) {
+                    const toastElement = document.getElementById("authToast");
+                    const toastMessage = document.getElementById("authToastMessage");
+                    
+                    toastMessage.textContent = message;
+                    
+                    const toast = new bootstrap.Toast(toastElement, {
+                        autohide: true,
+                        delay: 3000
+                    });
+                    
+                    toast.show();
+                }
+
                 // Handle login form submission via AJAX
                 const loginForm = document.getElementById("loginForm");
                 if (loginForm) {
@@ -468,11 +497,18 @@
                             .then((response) => response.json())
                             .then((data) => {
                                 if (data.success) {
-                                    // Close modal and reload page
+                                    // Show welcome toast
+                                    const firstName = data.first_name || data.username;
+                                    showAuthToast(`Welcome back, ${firstName}!`);
+                                    
+                                    // Close modal and reload page after short delay
                                     bootstrap.Modal.getInstance(
                                         document.getElementById("loginModal")
                                     ).hide();
-                                    location.reload();
+                                    
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1500);
                                 } else {
                                     // Show error in modal
                                     errorDiv.textContent =
@@ -508,11 +544,18 @@
                             .then((response) => response.json())
                             .then((data) => {
                                 if (data.success) {
-                                    // Close modal and reload page
+                                    // Show welcome toast
+                                    const firstName = data.first_name || data.username;
+                                    showAuthToast(`Welcome to OnlyPans, ${firstName}!`);
+                                    
+                                    // Close modal and reload page after short delay
                                     bootstrap.Modal.getInstance(
                                         document.getElementById("registerModal")
                                     ).hide();
-                                    location.reload();
+                                    
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1500);
                                 } else {
                                     // Show error in modal
                                     errorDiv.textContent =

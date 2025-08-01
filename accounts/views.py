@@ -24,7 +24,11 @@ def login_view(request):
             
             # Handle AJAX requests
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': True})
+                return JsonResponse({
+                    'success': True,
+                    'username': user.username,
+                    'first_name': user.first_name,
+                })
             
             messages.success(request, f'Welcome back, {user.username}!')
             return redirect('recipe_list')
@@ -55,7 +59,11 @@ def register_view(request):
             
             # Handle AJAX requests
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': True})
+                return JsonResponse({
+                    'success': True,
+                    'username': user.username,
+                    'first_name': user.first_name,
+                })
             
             messages.success(
                 request,
