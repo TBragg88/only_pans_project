@@ -32,7 +32,7 @@ def login_view(request):
             # Handle AJAX requests
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
-                    'success': False, 
+                    'success': False,
                     'error': 'Invalid username or password.'
                 })
             
