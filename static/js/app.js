@@ -17,6 +17,7 @@ function initializeApp() {
     initializeModals();
     initializeDynamicForms();
     initializeTagSelection();
+    initializeRecipeControls();
 }
 
 /**
@@ -165,12 +166,50 @@ function initializeFormImagePreviews() {
  * Toast Notifications
  */
 function initializeToasts() {
-    // Auto-show toasts
-    const toastElements = document.querySelectorAll(".toast");
-    toastElements.forEach((toastEl) => {
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
+    // Only auto-show toasts that have content (Django messages)
+    const messageToasts = document.querySelectorAll(".toast:not(#authToast):not(#recipeSuccessToast)");
+    messageToasts.forEach((toastEl) => {
+        // Check if toast has actual content
+        const toastBody = toastEl.querySelector('.toast-body');
+        if (toastBody && toastBody.textContent.trim()) {
+            const toast = new bootstrap.Toast(toastEl, {
+                autohide: true,
+                delay: 4000,
+            });
+            toast.show();
+        }
     });
+
+    // Check for success messages and show in recipe success toast instead
+    const successMessages = document.querySelectorAll('.toast.bg-custom-success .toast-body');
+    successMessages.forEach((messageBody) => {
+        if (messageBody.textContent.trim()) {
+            showRecipeSuccessToast(messageBody.textContent.trim());
+            // Hide the original success toast
+            const originalToast = messageBody.closest('.toast');
+            if (originalToast) {
+                originalToast.style.display = 'none';
+            }
+        }
+    });
+}
+
+/**
+ * Show Recipe Success Toast
+ */
+function showRecipeSuccessToast(message) {
+    const toastElement = document.getElementById("recipeSuccessToast");
+    const toastMessage = document.getElementById("recipeSuccessToastMessage");
+
+    if (toastElement && toastMessage) {
+        toastMessage.textContent = message;
+
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 5000,
+        });
+        toast.show();
+    }
 }
 
 /**
@@ -360,6 +399,7 @@ window.OnlyPansApp = {
     removeRow,
     addIngredientRow,
     addStepRow,
+    showRecipeSuccessToast,
 };
 
 /**
@@ -405,4 +445,191 @@ function initializeTagSelection() {
             }
         });
     });
+}
+
+/**
+ * Recipe Controls - Servings Scaler and Unit Converter
+ */
+function initializeRecipeControls() {
+    // Servings scaler elements
+    const servingsInputs = document.querySelectorAll(
+        "#servings-scaler, #servings-scaler-mobile"
+    );
+    const decreaseButtons = document.querySelectorAll(
+        "#decrease-servings, #decrease-servings-mobile"
+    );
+    const increaseButtons = document.querySelectorAll(
+        "#increase-servings, #increase-servings-mobile"
+    );
+
+    // Unit system toggles
+    const unitToggles = document.querySelectorAll(
+        "#unit-system-toggle, #unit-system-toggle-mobile"
+    );
+    const unitLabels = document.querySelectorAll(
+        "#unit-system-label, #unit-system-label-mobile"
+    );
+
+    // Get original serving size
+    const originalServings = parseInt(servingsInputs[0]?.dataset.original) || 1;
+    let isAmericanUnits = false;
+
+    // Servings scaler functionality
+    servingsInputs.forEach((input) => {
+        input.addEventListener("change", updateIngredientQuantities);
+        input.addEventListener("input", updateIngredientQuantities);
+    });
+
+    decreaseButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            servingsInputs.forEach((input) => {
+                const current = parseInt(input.value);
+                if (current > 1) {
+                    input.value = current - 1;
+                    updateIngredientQuantities();
+                }
+            });
+        });
+    });
+
+    increaseButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            servingsInputs.forEach((input) => {
+                const current = parseInt(input.value);
+                if (current < 20) {
+                    input.value = current + 1;
+                    updateIngredientQuantities();
+                }
+            });
+        });
+    });
+
+    // Unit system toggle functionality
+    unitToggles.forEach((toggle) => {
+        toggle.addEventListener("change", (e) => {
+            isAmericanUnits = e.target.checked;
+
+            // Sync all toggles
+            unitToggles.forEach((otherToggle) => {
+                otherToggle.checked = isAmericanUnits;
+            });
+
+            // Update labels
+            unitLabels.forEach((label) => {
+                label.textContent = isAmericanUnits ? "US" : "Metric";
+            });
+
+            updateIngredientQuantities();
+        });
+    });
+
+    function updateIngredientQuantities() {
+        const currentServings =
+            parseInt(servingsInputs[0]?.value) || originalServings;
+        const scaleFactor = currentServings / originalServings;
+
+        document.querySelectorAll(".ingredient-amount").forEach((element) => {
+            const originalQuantity = parseFloat(
+                element.dataset.originalQuantity
+            );
+            const unit = element.dataset.unit;
+            const unitName = element.dataset.unitName;
+
+            // Check if this is a "to taste" or similar non-scalable unit
+            const nonScalableUnits = [
+                'to taste', 'taste', 'pinch', 'dash', 'handful', 
+                'splash', 'drizzle', 'sprinkle', 'garnish'
+            ];
+            
+            const isNonScalable = nonScalableUnits.some(nonScalableUnit => 
+                unitName.toLowerCase().includes(nonScalableUnit.toLowerCase())
+            );
+
+            if (isNonScalable) {
+                // Don't scale "to taste" type measurements, and show without quantity
+                element.textContent = unitName; // Just show the unit name
+                return;
+            }
+
+            if (isAmericanUnits) {
+                // Convert to American units
+                const convertedAmount = getAmericanConversion(
+                    originalQuantity,
+                    unitName,
+                    scaleFactor
+                );
+                element.textContent = convertedAmount;
+            } else {
+                // Use metric with scaling
+                const scaledQuantity = originalQuantity * scaleFactor;
+                const formattedQuantity =
+                    scaledQuantity % 1 === 0
+                        ? scaledQuantity.toString()
+                        : scaledQuantity.toFixed(1).replace(/\.?0+$/, "");
+                element.textContent = `${formattedQuantity} ${unit}`;
+            }
+        });
+    }
+
+    function getAmericanConversion(quantity, unitName, scale) {
+        const unit = unitName.toLowerCase();
+        
+        // Check if this is a non-scalable unit
+        const nonScalableUnits = [
+            'to taste', 'taste', 'pinch', 'dash', 'handful', 
+            'splash', 'drizzle', 'sprinkle', 'garnish'
+        ];
+        
+        const isNonScalable = nonScalableUnits.some(nonScalableUnit => 
+            unit.includes(nonScalableUnit.toLowerCase())
+        );
+
+        if (isNonScalable) {
+            // Don't scale "to taste" type measurements, just show unit name
+            return unitName; // Keep original casing
+        }
+
+        const scaledQuantity = quantity * scale;
+
+        // Volume conversions
+        if (unit.includes("ml") || unit.includes("milliliter")) {
+            if (scaledQuantity >= 1000) {
+                const cups = scaledQuantity / 240;
+                return `${cups.toFixed(1)} Cup${cups > 1 ? "s" : ""}`;
+            } else if (scaledQuantity >= 250) {
+                return `${(scaledQuantity / 240).toFixed(1)} Cups`;
+            } else if (scaledQuantity >= 15) {
+                return `${(scaledQuantity / 15).toFixed(1)} Tbsp`;
+            } else {
+                return `${(scaledQuantity / 5).toFixed(1)} Tsp`;
+            }
+        }
+
+        // Weight conversions
+        if (unit.includes("gram") || unit === "g") {
+            if (scaledQuantity >= 450) {
+                return `${(scaledQuantity / 453.6).toFixed(1)} Lb${
+                    scaledQuantity > 900 ? "s" : ""
+                }`;
+            } else if (scaledQuantity >= 28) {
+                return `${(scaledQuantity / 28.35).toFixed(1)} Oz`;
+            }
+        }
+
+        if (unit.includes("kilogram") || unit === "kg") {
+            return `${(scaledQuantity * 2.2).toFixed(1)} Lbs`;
+        }
+
+        // Liter conversions
+        if (unit.includes("liter") || unit === "l") {
+            return `${(scaledQuantity * 4.2).toFixed(1)} Cups`;
+        }
+
+        // Default: return scaled original with proper casing
+        const formattedQuantity =
+            scaledQuantity % 1 === 0
+                ? scaledQuantity.toString()
+                : scaledQuantity.toFixed(1).replace(/\.?0+$/, "");
+        return `${formattedQuantity} ${unitName}`; // Keep original casing
+    }
 }

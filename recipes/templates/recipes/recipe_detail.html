@@ -146,11 +146,44 @@
                             <i class="fas fa-shopping-list me-2"></i>Ingredients
                         </h5>
                     </div>
+                    
+                    <!-- Recipe Controls for Mobile -->
+                    <div class="card-body border-bottom">
+                        <div class="row g-3 mb-3">
+                            <!-- Servings Scaler -->
+                            <div class="col-6">
+                                <label for="servings-scaler-mobile" class="form-label small">Servings:</label>
+                                <div class="input-group input-group-sm">
+                                    <button class="btn btn-outline-secondary" type="button" id="decrease-servings-mobile">-</button>
+                                    <input type="number" class="form-control text-center" id="servings-scaler-mobile" 
+                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
+                                    <button class="btn btn-outline-secondary" type="button" id="increase-servings-mobile">+</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Unit System Toggle -->
+                            <div class="col-6">
+                                <label class="form-label small">Units:</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="unit-system-toggle-mobile">
+                                    <label class="form-check-label small" for="unit-system-toggle-mobile" id="unit-system-label-mobile">
+                                        Metric
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="card-body">
                         {% for ingredient in recipe.ingredients.all %}
-                            <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
                                 <span>{{ ingredient.ingredient.name }}</span>
-                                <strong>{{ ingredient.formatted_quantity }} {{ ingredient.unit.abbreviation }}</strong>
+                                <strong class="ingredient-amount" 
+                                        data-original-quantity="{{ ingredient.quantity }}"
+                                        data-unit="{{ ingredient.unit.abbreviation }}"
+                                        data-unit-name="{{ ingredient.unit.name }}">
+                                    {{ ingredient.smart_display }}
+                                </strong>
                             </div>
                             {% if ingredient.notes %}
                                 <small class="text-muted d-block">{{ ingredient.notes }}</small>
@@ -307,11 +340,44 @@
                         <i class="fas fa-shopping-list me-2"></i>Ingredients
                     </h5>
                 </div>
+                
+                <!-- Recipe Controls -->
+                <div class="card-body border-bottom">
+                    <div class="row g-3 mb-3">
+                        <!-- Servings Scaler -->
+                        <div class="col-6">
+                            <label for="servings-scaler" class="form-label small">Servings:</label>
+                            <div class="input-group input-group-sm">
+                                <button class="btn btn-outline-secondary" type="button" id="decrease-servings">-</button>
+                                <input type="number" class="form-control text-center" id="servings-scaler" 
+                                       value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
+                                <button class="btn btn-outline-secondary" type="button" id="increase-servings">+</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Unit System Toggle -->
+                        <div class="col-6">
+                            <label class="form-label small">Units:</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="unit-system-toggle">
+                                <label class="form-check-label small" for="unit-system-toggle" id="unit-system-label">
+                                    Metric
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="card-body">
                     {% for ingredient in recipe.ingredients.all %}
-                        <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                        <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
                             <span>{{ ingredient.ingredient.name }}</span>
-                            <strong>{{ ingredient.formatted_quantity }} {{ ingredient.unit.abbreviation }}</strong>
+                            <strong class="ingredient-amount" 
+                                    data-original-quantity="{{ ingredient.quantity }}"
+                                    data-unit="{{ ingredient.unit.abbreviation }}"
+                                    data-unit-name="{{ ingredient.unit.name }}">
+                                {{ ingredient.smart_display }}
+                            </strong>
                         </div>
                         {% if ingredient.notes %}
                             <small class="text-muted d-block">{{ ingredient.notes }}</small>

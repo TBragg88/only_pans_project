@@ -233,19 +233,39 @@ class Recipe(models.Model):
         total_fat = 0
         
         for recipe_ingredient in self.ingredients.all():
-            if recipe_ingredient.ingredient:
-                # Convert quantity to grams (assuming most quantities are in grams)
-                quantity_in_grams = float(recipe_ingredient.quantity)
+            if recipe_ingredient.ingredient and recipe_ingredient.unit:
+                # Convert quantity to grams using unit conversion
+                if recipe_ingredient.unit.grams_per_unit:
+                    quantity_in_grams = (
+                        float(recipe_ingredient.quantity) * 
+                        float(recipe_ingredient.unit.grams_per_unit)
+                    )
+                else:
+                    # Fallback: assume quantity is already in grams
+                    quantity_in_grams = float(recipe_ingredient.quantity)
                 
-                # Calculate nutrition based on quantity
-                if recipe_ingredient.ingredient.calories_per_100g:
-                    total_calories += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.calories_per_100g)
-                if recipe_ingredient.ingredient.protein_per_100g:
-                    total_protein += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.protein_per_100g)
-                if recipe_ingredient.ingredient.carbs_per_100g:
-                    total_carbs += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.carbs_per_100g)
-                if recipe_ingredient.ingredient.fat_per_100g:
-                    total_fat += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.fat_per_100g)
+                # Calculate nutrition based on quantity in grams
+                ingredient = recipe_ingredient.ingredient
+                if ingredient.calories_per_100g:
+                    total_calories += (
+                        (quantity_in_grams / 100) * 
+                        float(ingredient.calories_per_100g)
+                    )
+                if ingredient.protein_per_100g:
+                    total_protein += (
+                        (quantity_in_grams / 100) * 
+                        float(ingredient.protein_per_100g)
+                    )
+                if ingredient.carbs_per_100g:
+                    total_carbs += (
+                        (quantity_in_grams / 100) * 
+                        float(ingredient.carbs_per_100g)
+                    )
+                if ingredient.fat_per_100g:
+                    total_fat += (
+                        (quantity_in_grams / 100) * 
+                        float(ingredient.fat_per_100g)
+                    )
         
         # Divide by servings
         servings = self.servings or 1
@@ -289,6 +309,106 @@ class RecipeIngredient(models.Model):
             return str(int(self.quantity))
         else:
             return str(self.quantity).rstrip('0').rstrip('.')
+
+    def smart_display(self):
+        """Return a smart display format that handles 'to taste' style units"""
+        # Units that don't need quantities displayed
+        no_quantity_units = [
+            'to taste', 'taste', 'pinch', 'dash', 'handful', 
+            'splash', 'drizzle', 'sprinkle', 'garnish'
+        ]
+        
+        unit_name = self.unit.name.lower()
+        
+        # Check if this is a "no quantity" unit
+        if any(no_qty_unit in unit_name for no_qty_unit in no_quantity_units):
+            return self.unit.name  # Just return the unit name (e.g., "To taste", "Pinch")
+        
+        # For normal units, show quantity + unit
+        return f"{self.formatted_quantity()} {self.unit.abbreviation}"
+
+    def smart_display_scaled(self, scale_factor=1.0):
+        """Return smart display with scaling, but don't scale 'to taste' type units"""
+        # Units that don't scale
+        no_scale_units = [
+            'to taste', 'taste', 'pinch', 'dash', 'handful', 
+            'splash', 'drizzle', 'sprinkle', 'garnish'
+        ]
+        
+        unit_name = self.unit.name.lower()
+        
+        # Check if this is a "no scale" unit
+        if any(no_scale_unit in unit_name for no_scale_unit in no_scale_units):
+            return self.unit.name  # Just return the unit name without scaling
+        
+        # For normal units, show scaled quantity + unit
+        scaled_qty = self.get_scaled_quantity(scale_factor)
+        return f"{scaled_qty} {self.unit.abbreviation}"
+        """Return quantity scaled by a factor"""
+        scaled = self.quantity * scale_factor
+        if scaled == int(scaled):
+            return str(int(scaled))
+        else:
+            return str(scaled).rstrip('0').rstrip('.')
+
+    def get_american_conversion(self, scale_factor=1.0):
+        """Convert metric units to American equivalents where possible"""
+        scaled_quantity = float(self.quantity) * scale_factor
+        
+        # Conversion mappings (metric to american)
+        conversions = {
+            # Volume conversions
+            'ml': {250: ('cup', 1), 500: ('cups', 2), 1000: ('cups', 4)},
+            'milliliter': {250: ('cup', 1), 500: ('cups', 2), 1000: ('cups', 4)},
+            'liter': {1: ('cups', 4.2)},
+            'l': {1: ('cups', 4.2)},
+            
+            # Weight conversions  
+            'gram': {450: ('lb', 1), 225: ('½ lb', 0.5), 900: ('lbs', 2)},
+            'g': {450: ('lb', 1), 225: ('½ lb', 0.5), 900: ('lbs', 2)},
+            'kilogram': {1: ('lbs', 2.2), 0.5: ('lb', 1.1)},
+            'kg': {1: ('lbs', 2.2), 0.5: ('lb', 1.1)},
+            
+            # Temperature (if ever needed)
+            'celsius': {200: ('°F', 400), 180: ('°F', 350), 220: ('°F', 425)},
+        }
+        
+        unit_name = self.unit.name.lower()
+        
+        # Try exact conversions first
+        if unit_name in conversions:
+            for metric_amount, (us_unit, us_amount) in conversions[unit_name].items():
+                if abs(scaled_quantity - metric_amount) < 0.1:
+                    return f"{us_amount} {us_unit}"
+        
+        # Common volume conversions
+        if unit_name in ['ml', 'milliliter']:
+            if scaled_quantity >= 1000:
+                cups = scaled_quantity / 240  # 1 cup ≈ 240ml
+                if cups == int(cups):
+                    return f"{int(cups)} cup{'s' if cups > 1 else ''}"
+                else:
+                    return f"{cups:.1f} cup{'s' if cups > 1 else ''}"
+            elif scaled_quantity >= 250:
+                return f"{scaled_quantity/240:.1f} cups"
+            elif scaled_quantity >= 15:
+                tbsp = scaled_quantity / 15  # 1 tbsp ≈ 15ml
+                return f"{tbsp:.1f} tbsp"
+            elif scaled_quantity >= 5:
+                tsp = scaled_quantity / 5  # 1 tsp ≈ 5ml
+                return f"{tsp:.1f} tsp"
+        
+        # Common weight conversions
+        elif unit_name in ['gram', 'g']:
+            if scaled_quantity >= 450:
+                lbs = scaled_quantity / 453.6
+                return f"{lbs:.1f} lb{'s' if lbs > 1 else ''}"
+            elif scaled_quantity >= 28:
+                oz = scaled_quantity / 28.35
+                return f"{oz:.1f} oz"
+        
+        # If no conversion found, return original with scale
+        return f"{self.get_scaled_quantity(scale_factor)} {self.unit.abbreviation}"
 
     class Meta:
         ordering = ['order']
