@@ -1,0 +1,10 @@
+# Ignore Django template files
+**/*.html
+**/templates/**
+accounts/templates/**
+recipes/templates/**
+templates/**
+
+# Ignore other Django files that shouldn't be formatted
+**/*.py
+**/migrations/**
