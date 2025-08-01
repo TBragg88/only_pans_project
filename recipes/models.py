@@ -110,6 +110,18 @@ class Unit(models.Model):
     name = models.CharField(max_length=50, unique=True)
     abbreviation = models.CharField(max_length=10)
     unit_type = models.CharField(max_length=20, choices=UNIT_TYPES)
+    
+    # Conversion to grams - for nutritional calculations
+    # For weight units: direct conversion (e.g., 1 kg = 1000g)
+    # For volume units: approximate for water-like density (e.g., 1 cup ≈ 240g)
+    # For count units: average weight (e.g., 1 can ≈ 400g, 1 egg ≈ 50g)
+    grams_per_unit = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text='Approximate grams per unit for nutritional calculations'
+    )
 
     def __str__(self):
         return f"{self.name} ({self.abbreviation})"
@@ -220,10 +232,10 @@ class Recipe(models.Model):
         total_carbs = 0
         total_fat = 0
         
-        for recipe_ingredient in self.recipeingredient_set.all():
+        for recipe_ingredient in self.ingredients.all():
             if recipe_ingredient.ingredient:
                 # Convert quantity to grams (assuming most quantities are in grams)
-                quantity_in_grams = recipe_ingredient.quantity
+                quantity_in_grams = float(recipe_ingredient.quantity)
                 
                 # Calculate nutrition based on quantity
                 if recipe_ingredient.ingredient.calories_per_100g:
