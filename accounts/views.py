@@ -53,7 +53,7 @@ def register_view(request):
             user = form.save()
             login(request, user)  # Auto-login after registration
             messages.success(
-                request, 
+                request,
                 f'Welcome to OnlyPans, {user.username}!'
             )
             return redirect('recipe_list')
@@ -74,7 +74,7 @@ def logout_view(request):
     
     if username:
         messages.success(
-            request, 
+            request,
             f'Goodbye, {username}! You have been logged out.'
         )
     
