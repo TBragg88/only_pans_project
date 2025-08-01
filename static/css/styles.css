@@ -215,3 +215,22 @@
     background-color: #ffffff !important;
     border: 2px solid #28a745 !important;
 }
+
+/* Modal styling to match toast messages */
+.modal-content {
+    border: 2px solid #dc3545;
+}
+
+.modal-header {
+    background-color: #ffffff;
+    border-bottom: 2px solid #dc3545;
+}
+
+.modal-body {
+    background-color: #ffffff;
+}
+
+.modal-footer {
+    background-color: #ffffff;
+    border-top: 2px solid #dc3545;
+}

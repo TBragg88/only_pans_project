@@ -139,15 +139,13 @@
                                     class="d-flex justify-content-between align-items-center mb-2"
                                 >
                                     <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>{{
-                                        recipe.total_time }} min
+                                        <i class="fas fa-clock me-1"></i>{{ recipe.total_time }} min
                                     </small>
                                     <small class="text-warning">
                                         {% if recipe.average_rating > 0 %}
-                                        <i class="fas fa-star me-1"></i>{{
-                                        recipe.average_rating|floatformat:1 }}
+                                            <i class="fas fa-star me-1"></i>{{ recipe.average_rating|floatformat:1 }}
                                         {% else %}
-                                        <i class="far fa-star me-1"></i>No
+                                            <i class="far fa-star me-1"></i>No
                                         ratings {% endif %}
                                     </small>
                                 </div>
@@ -160,7 +158,7 @@
                                     </a>
                                     {% if is_own_profile %}
                                     <a
-                                        href="{% url 'recipe_detail' recipe.slug %}"
+                                        href="{% url 'recipe_edit' recipe.slug %}"
                                         class="btn btn-warning btn-sm"
                                         title="Edit Recipe"
                                     >

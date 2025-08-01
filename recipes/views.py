@@ -123,7 +123,7 @@ def recipe_create(request):
             
             messages.success(
                 request,
-                f'Recipe "{recipe.title}" created successfully!'
+                'Recipe created successfully!'
             )
             return redirect('recipe_detail', slug=recipe.slug)
     else:
@@ -166,7 +166,8 @@ def recipe_edit(request, slug):
             step_formset.save()
 
             messages.success(
-                request, f'Recipe "{recipe.title}" updated successfully!'
+                request,
+                'Recipe updated successfully! Your changes have been saved.'
             )
             return redirect('recipe_detail', slug=recipe.slug)
     else:
@@ -192,10 +193,9 @@ def recipe_delete(request, slug):
     recipe = get_object_or_404(Recipe, slug=slug, user=request.user)
 
     if request.method == 'POST':
-        recipe_title = recipe.title
         recipe.delete()
         messages.success(
-            request, f'Recipe "{recipe_title}" deleted successfully!'
+            request, 'Recipe deleted successfully!'
         )
         return redirect('recipe_list')
 
