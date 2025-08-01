@@ -44,25 +44,38 @@ def login_view(request):
 
 
 @csrf_protect
+@require_http_methods(["GET", "POST"])
 def register_view(request):
+    """Handle user registration."""
     if request.method == 'POST':
         form = CustomRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)  # Auto-login after registration
-            messages.success(request, f'Welcome to OnlyPans, {user.username}!')
+            messages.success(
+                request, 
+                f'Welcome to OnlyPans, {user.username}!'
+            )
             return redirect('recipe_list')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
         form = CustomRegisterForm()
+    
     return render(request, 'registration/register.html', {'form': form})
 
 
 @csrf_protect
+@require_http_methods(["POST"])
 def logout_view(request):
+    """Handle user logout."""
     username = request.user.username if request.user.is_authenticated else None
     logout(request)
+    
     if username:
-        messages.success(request, f'Goodbye, {username}! You have been logged out.')
+        messages.success(
+            request, 
+            f'Goodbye, {username}! You have been logged out.'
+        )
+    
     return redirect('recipe_list')
