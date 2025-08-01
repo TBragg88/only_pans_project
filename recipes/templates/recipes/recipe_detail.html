@@ -20,23 +20,61 @@
                 <h1 class="display-5 fw-bold mb-3">{{ recipe.title }}</h1>
                 <p class="lead text-muted">{{ recipe.description }}</p>
                 
-                <!-- Recipe Meta -->
-                <div class="d-flex flex-wrap gap-4 mb-3">
-                    <div>
-                        <i class="fas fa-clock text-primary me-1"></i>
-                        <strong>Prep:</strong> {{ recipe.prep_time }} min
+                <!-- Recipe Meta & Rating -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <div class="d-flex flex-wrap gap-4">
+                        <div>
+                            <i class="fas fa-clock text-primary me-1"></i>
+                            <strong>Prep:</strong> {{ recipe.prep_time }} min
+                        </div>
+                        <div>
+                            <i class="fas fa-fire text-primary me-1"></i>
+                            <strong>Cook:</strong> {{ recipe.cook_time }} min
+                        </div>
+                        <div>
+                            <i class="fas fa-users text-primary me-1"></i>
+                            <strong>Serves:</strong> {{ recipe.servings }}
+                        </div>
+                        <div>
+                            <i class="fas fa-eye text-primary me-1"></i>
+                            <strong>Views:</strong> {{ recipe.view_count }}
+                        </div>
                     </div>
-                    <div>
-                        <i class="fas fa-fire text-primary me-1"></i>
-                        <strong>Cook:</strong> {{ recipe.cook_time }} min
-                    </div>
-                    <div>
-                        <i class="fas fa-users text-primary me-1"></i>
-                        <strong>Serves:</strong> {{ recipe.servings }}
-                    </div>
-                    <div>
-                        <i class="fas fa-eye text-primary me-1"></i>
-                        <strong>Views:</strong> {{ recipe.view_count }}
+                    
+                    <!-- Rating Display & Interactive Form -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rating-container">
+                            <!-- Total Rating Display (background) -->
+                            <div class="rating-display">
+                                <div class="stars total-stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= recipe.average_rating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-muted"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <small class="text-muted">({{ recipe.rating_count }} rating{{ recipe.rating_count|pluralize }})</small>
+                            </div>
+                            
+                            <!-- Interactive User Rating (overlay) -->
+                            {% if user.is_authenticated %}
+                                <form method="post" id="rating-form" class="rating-form-hidden">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="rating" id="rating-value" value="{% if user_rating %}{{ user_rating.rating }}{% endif %}">
+                                    <input type="hidden" name="rating_submit" value="1">
+                                </form>
+                                
+                                <div class="user-rating-overlay" data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
+                                    {% for i in "12345" %}
+                                        <i class="star-interactive far fa-star" data-rating="{{ forloop.counter }}" 
+                                           title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
+                                           {% if user_rating and forloop.counter <= user_rating.rating %}class="rating-star-active"{% endif %}></i>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
@@ -53,12 +91,75 @@
             <!-- Recipe Image -->
             <div class="mb-5">
                 {% if recipe.get_image_url %}
-                    <img src="{{ recipe.get_image_url }}" class="img-fluid rounded shadow" alt="{{ recipe.title }}" style="width: 100%; max-height: 400px; object-fit: cover;">
+                    <img src="{{ recipe.get_image_url }}" class="recipe-header-image" alt="{{ recipe.title }}">
                 {% else %}
-                    <div class="default-recipe-image rounded shadow" style="width: 100%; height: 400px;">
-                        <i class="fas fa-utensils fa-4x"></i>
+                    <div class="recipe-placeholder-image">
+                        <i class="fas fa-utensils fa-4x text-muted"></i>
                     </div>
                 {% endif %}
+            </div>
+
+            <!-- Nutritional Information -->
+            <div class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Nutrition Per Serving
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="nutrition-stat">
+                                    <h4 class="text-primary mb-1">{{ recipe.nutrition_per_serving.calories }}</h4>
+                                    <small class="text-muted">Calories</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="nutrition-stat">
+                                    <h4 class="text-success mb-1">{{ recipe.nutrition_per_serving.protein }}g</h4>
+                                    <small class="text-muted">Protein</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="nutrition-stat">
+                                    <h4 class="text-warning mb-1">{{ recipe.nutrition_per_serving.carbs }}g</h4>
+                                    <small class="text-muted">Carbs</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <div class="nutrition-stat">
+                                    <h4 class="text-info mb-1">{{ recipe.nutrition_per_serving.fat }}g</h4>
+                                    <small class="text-muted">Fat</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredients Section for Mobile -->
+            <div class="d-lg-none mb-5">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-shopping-list me-2"></i>Ingredients
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% for ingredient in recipe.ingredients.all %}
+                            <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                                <span>{{ ingredient.ingredient.name }}</span>
+                                <strong>{{ ingredient.formatted_quantity }} {{ ingredient.unit.abbreviation }}</strong>
+                            </div>
+                            {% if ingredient.notes %}
+                                <small class="text-muted d-block">{{ ingredient.notes }}</small>
+                            {% endif %}
+                        {% empty %}
+                            <p class="text-muted mb-0">No ingredients listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <!-- Instructions -->
@@ -72,14 +173,14 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 40px; height: 40px;">
+                                    <div class="recipe-step-number">
                                         <strong>{{ step.step_number }}</strong>
                                     </div>
                                 </div>
                                 <div class="col-md-10">
                                     <p class="mb-0">{{ step.instruction }}</p>
                                     {% if step.get_image_url %}
-                                        <img src="{{ step.get_image_url }}" class="img-fluid rounded mt-3" alt="Step {{ step.step_number }}" style="max-height: 200px;">
+                                        <img src="{{ step.get_image_url }}" class="recipe-step-image" alt="Step {{ step.step_number }}">
                                     {% endif %}
                                 </div>
                             </div>
@@ -89,12 +190,118 @@
                     <p class="text-muted">No instructions available.</p>
                 {% endfor %}
             </div>
+
+            <!-- Comments Section -->
+            <div class="mb-5">
+                <h3 class="mb-4">
+                    <i class="fas fa-comments text-primary me-2"></i>Comments
+                    <span class="badge bg-secondary">{{ recipe.comments.count }}</span>
+                </h3>
+
+                <!-- Add Comment Form -->
+                {% if user.is_authenticated %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title">Share your thoughts</h6>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ comment_form.content }}
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <small class="text-muted">Maximum 500 characters</small>
+                                    <button type="submit" name="comment_submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane me-1"></i>Post Comment
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <a href="{% url 'accounts:login' %}" class="alert-link">Log in</a> to share your thoughts about this recipe.
+                    </div>
+                {% endif %}
+
+                <!-- Comments List -->
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="comment-avatar">
+                                            <strong>{{ comment.user.username|slice:":1"|upper }}</strong>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">{{ comment.user.username }}</h6>
+                                            <small class="text-muted">{{ comment.created_at|date:"F j, Y g:i A" }}</small>
+                                        </div>
+                                    </div>
+                                    {% if user.is_authenticated %}
+                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}">
+                                            <i class="fas fa-reply me-1"></i>Reply
+                                        </button>
+                                    {% endif %}
+                                </div>
+                                <p class="mb-0">{{ comment.content }}</p>
+                                
+                                <!-- Reply Form (hidden by default) -->
+                                {% if user.is_authenticated %}
+                                    <div class="reply-form mt-3 reply-form-hidden" id="reply-form-{{ comment.id }}">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="parent_comment_id" value="{{ comment.id }}">
+                                            <div class="mb-2">
+                                                <textarea name="content" class="form-control" rows="2" placeholder="Write a reply..." required maxlength="500"></textarea>
+                                            </div>
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button type="button" class="btn btn-sm btn-secondary cancel-reply">Cancel</button>
+                                                <button type="submit" name="comment_submit" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-paper-plane me-1"></i>Reply
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Show Replies -->
+                                {% if comment.replies.exists %}
+                                    <div class="replies mt-3 ms-4">
+                                        {% for reply in comment.replies.all %}
+                                            <div class="card mb-2">
+                                                <div class="card-body py-2">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="comment-avatar-sm">
+                                                            <strong>{{ reply.user.username|slice:":1"|upper }}</strong>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <div class="d-flex align-items-center mb-1">
+                                                                <h6 class="mb-0 me-2 comment-username-sm">{{ reply.user.username }}</h6>
+                                                                <small class="text-muted">{{ reply.created_at|date:"F j, Y g:i A" }}</small>
+                                                            </div>
+                                                            <p class="mb-0 comment-text-sm">{{ reply.content }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Ingredients -->
-            <div class="card mb-4">
+            <!-- Ingredients (Desktop) -->
+            <div class="card mb-4 d-none d-lg-block">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-shopping-list me-2"></i>Ingredients
@@ -102,12 +309,12 @@
                 </div>
                 <div class="card-body">
                     {% for ingredient in recipe.ingredients.all %}
-                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
                             <span>{{ ingredient.ingredient.name }}</span>
-                            <strong>{{ ingredient.quantity }} {{ ingredient.unit.abbreviation }}</strong>
+                            <strong>{{ ingredient.formatted_quantity }} {{ ingredient.unit.abbreviation }}</strong>
                         </div>
                         {% if ingredient.notes %}
-                            <small class="text-muted">{{ ingredient.notes }}</small>
+                            <small class="text-muted d-block">{{ ingredient.notes }}</small>
                         {% endif %}
                     {% empty %}
                         <p class="text-muted mb-0">No ingredients listed.</p>
@@ -143,6 +350,18 @@
                 </div>
             </div>
 
+            <!-- Recipe Actions -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="window.print()">
+                        <i class="fas fa-print me-1"></i>Print Recipe
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ recipe.title }}', url: window.location.href})">
+                        <i class="fas fa-share me-1"></i>Share
+                    </button>
+                </div>
+            </div>
+
             <!-- Related Recipes -->
             {% if related_recipes %}
                 <div class="card">
@@ -153,13 +372,13 @@
                     </div>
                     <div class="card-body p-0">
                         {% for related in related_recipes %}
-                            <div class="border-bottom p-3">
+                            <div class="{% if not forloop.last %}border-bottom{% endif %} p-3">
                                 <div class="row align-items-center">
                                     <div class="col-4">
                                         {% if related.get_image_url %}
-                                            <img src="{{ related.get_image_url }}" class="img-fluid rounded" alt="{{ related.title }}" style="height: 60px; width: 100%; object-fit: cover;">
+                                            <img src="{{ related.get_image_url }}" class="related-recipe-thumbnail" alt="{{ related.title }}">
                                         {% else %}
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 60px;">
+                                            <div class="related-recipe-placeholder">
                                                 <i class="fas fa-utensils text-muted"></i>
                                             </div>
                                         {% endif %}
@@ -181,4 +400,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
+from recipes.models import Tag
 
 
 class CustomLoginForm(AuthenticationForm):
@@ -161,8 +162,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            'bio', 'dietary_preferences', 'profile_image',
-            'show_dietary_preferences', 'show_email'
+            'bio', 'dietary_tags', 'favorite_cuisines', 'preferred_difficulty',
+            'profile_image', 'show_dietary_preferences', 'show_email'
         ]
         widgets = {
             'bio': forms.Textarea(attrs={
@@ -171,27 +172,50 @@ class UserProfileForm(forms.ModelForm):
                 'placeholder': ('Tell us about yourself, your cooking style, '
                                 'favorite cuisines, etc.')
             }),
-            'dietary_preferences': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': ('e.g., vegetarian, gluten-free, dairy-free, '
-                                'keto, vegan (comma-separated)')
+            'dietary_tags': forms.CheckboxSelectMultiple(attrs={
+                'class': 'form-check-input'
+            }),
+            'favorite_cuisines': forms.CheckboxSelectMultiple(attrs={
+                'class': 'form-check-input'
+            }),
+            'preferred_difficulty': forms.Select(attrs={
+                'class': 'form-select'
             }),
         }
         labels = {
             'bio': 'About Me',
-            'dietary_preferences': 'Dietary Preferences & Restrictions',
+            'dietary_tags': 'Dietary Restrictions & Preferences',
+            'favorite_cuisines': 'Favorite Cuisines',
+            'preferred_difficulty': 'Preferred Recipe Difficulty',
             'profile_image': 'Profile Picture',
         }
         help_texts = {
-            'dietary_preferences': ('Enter dietary preferences separated '
-                                    'by commas (e.g., vegetarian, '
-                                    'gluten-free)'),
+            'dietary_tags': ('Select all dietary restrictions that apply to '
+                             'you. Recipes will be filtered accordingly.'),
+            'favorite_cuisines': ('Choose cuisines you enjoy - we\'ll '
+                                  'prioritize these in recommendations.'),
+            'preferred_difficulty': ('Select your preferred cooking '
+                                     'difficulty level for recommendations.'),
             'profile_image': 'Upload a profile picture (JPG, PNG, or GIF)',
         }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        
+        # Set up tag field querysets
+        self.fields['dietary_tags'].queryset = Tag.objects.filter(
+            tag_type='dietary'
+        ).order_by('name')
+        self.fields['favorite_cuisines'].queryset = Tag.objects.filter(
+            tag_type='cuisine'
+        ).order_by('name')
+        self.fields['preferred_difficulty'].queryset = Tag.objects.filter(
+            tag_type='difficulty'
+        ).order_by('name')
+        
+        # Add empty option for difficulty
+        self.fields['preferred_difficulty'].empty_label = "No preference"
         
         if self.user:
             # Pre-populate User model fields
@@ -226,5 +250,7 @@ class UserProfileForm(forms.ModelForm):
             if commit:
                 self.user.save()
                 profile.save()
+                # Save many-to-many relationships
+                self.save_m2m()
         
         return profile

@@ -12,7 +12,7 @@
                 <p class="lead mb-4">From quick weeknight dinners to show-stopping desserts, find your next favorite dish.</p>
             </div>
             <div class="col-lg-4 text-center">
-                <i class="fas fa-chef-hat" style="font-size: 8rem; opacity: 0.3;"></i>
+                <i class="fas fa-chef-hat empty-state-icon"></i>
             </div>
         </div>
     </div>
@@ -25,7 +25,9 @@
             <div class="d-flex flex-wrap align-items-center justify-content-between">
                 <div class="mb-3">
                     <h3 class="mb-0">
-                        {% if current_tag %}
+                        {% if for_you %}
+                            <i class="fas fa-heart text-danger me-2"></i>Recommended for You
+                        {% elif current_tag %}
                             Recipes tagged: <span class="tag">{{ current_tag }}</span>
                         {% elif dietary_filter %}
                             Dietary preference: <span class="tag tag-dietary">{{ dietary_filter }}</span>
@@ -38,44 +40,71 @@
                     <small class="text-muted">{{ page_obj.paginator.count }} recipe{{ page_obj.paginator.count|pluralize }} found</small>
                 </div>
                 
-                <!-- Tag Filter Dropdown -->
-                <div class="dropdown me-2">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-filter me-1"></i>Filter by Tag
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'recipe_list' %}">All Recipes</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        {% for tag in all_tags %}
-                            <li>
-                                <a class="dropdown-item" href="?tag={{ tag.name }}">
-                                    <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
-                                </a>
-                            </li>
-                        {% empty %}
-                            <li><span class="dropdown-item-text text-muted">No tags available</span></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <!-- For You Button -->
+                    {% if user_has_preferences %}
+                        <a href="?for_you=1" class="btn {% if for_you %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                            <i class="fas fa-heart me-1"></i>For You
+                        </a>
+                    {% endif %}
+                <div class="d-flex flex-wrap gap-2">
+                    <!-- For You Button -->
+                    {% if user_has_preferences %}
+                        <a href="?for_you=1" class="btn {% if for_you %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                            <i class="fas fa-heart me-1"></i>For You
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Tag Filter Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-1"></i>Filter by Tag
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-lg">
+                            <li><a class="dropdown-item" href="{% url 'recipe_list' %}"><strong>All Recipes</strong></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            {% regroup all_tags by tag_type as tags_by_type %}
+                            {% for tag_type in tags_by_type %}
+                                <li>
+                                    <h6 class="dropdown-header">
+                                        <i class="fas fa-{% if tag_type.grouper == 'dietary' %}leaf{% elif tag_type.grouper == 'cuisine' %}globe{% elif tag_type.grouper == 'meal_type' %}clock{% elif tag_type.grouper == 'cooking_method' %}fire{% else %}star{% endif %} me-2"></i>
+                                        {{ tag_type.list.0.get_tag_type_display }}
+                                    </h6>
+                                </li>
+                                {% for tag in tag_type.list %}
+                                    <li>
+                                        <a class="dropdown-item" href="?tag={{ tag.name }}">
+                                            <span class="tag-small" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                                {% if not forloop.last %}<li><hr class="dropdown-divider"></li>{% endif %}
+                            {% empty %}
+                                <li><span class="dropdown-item-text text-muted">No tags available</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-                <!-- Dietary Preferences Filter -->
-                <div class="dropdown">
-                    <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-leaf me-1"></i>Dietary Preferences
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'recipe_list' %}">All Dietary Types</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        {% for tag in dietary_tags %}
-                            <li>
-                                <a class="dropdown-item" href="?dietary={{ tag.name }}">
-                                    <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
-                                </a>
-                            </li>
-                        {% empty %}
-                            <li><span class="dropdown-item-text text-muted">No dietary tags available</span></li>
-                        {% endfor %}
-                    </ul>
+                    <!-- Quick Dietary Filter -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-leaf me-1"></i>Dietary
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'recipe_list' %}"><strong>All Dietary Types</strong></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% for tag in dietary_tags %}
+                                <li>
+                                    <a class="dropdown-item" href="?tag={{ tag.name }}">
+                                        <span class="tag-small" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li><span class="dropdown-item-text text-muted">No dietary tags available</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,7 +125,27 @@
                     {% endif %}
                     
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ recipe.title }}</h5>
+                            <div class="rating-display ms-2">
+                                {% if recipe.average_rating > 0 %}
+                                    <div class="stars small">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= recipe.average_rating %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% elif forloop.counter <= recipe.average_rating|floatformat:0 %}
+                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-muted"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <small class="text-muted">({{ recipe.rating_count }})</small>
+                                {% else %}
+                                    <small class="text-muted">No ratings</small>
+                                {% endif %}
+                            </div>
+                        </div>
                         <p class="card-text text-muted flex-grow-1">{{ recipe.description|truncatewords:15 }}</p>
                         
                         <!-- Recipe Meta -->
@@ -171,4 +220,5 @@
         </nav>
     {% endif %}
 </div>
+
 {% endblock %}

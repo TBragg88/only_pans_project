@@ -56,7 +56,7 @@
                             <li>
                                 <a
                                     class="dropdown-item"
-                                    href="{% url 'profile' %}"
+                                    href="{% url 'accounts:profile' %}"
                                     ><i class="fas fa-user me-2"></i>My
                                     Profile</a
                                 >
@@ -248,12 +248,11 @@
                     <div class="modal-body">
                         <div
                             id="loginErrors"
-                            class="alert alert-danger"
-                            style="display: none"
+                            class="alert alert-danger alert-hidden"
                         ></div>
                         <form
                             method="post"
-                            action="{% url 'login' %}"
+                            action="{% url 'accounts:login' %}"
                             id="loginForm"
                         >
                             {% csrf_token %}
@@ -325,13 +324,12 @@
                         <!-- Error display for registration -->
                         <div
                             id="registerErrors"
-                            class="alert alert-danger"
-                            style="display: none"
+                            class="alert alert-danger alert-hidden"
                         ></div>
 
                         <form
                             method="post"
-                            action="{% url 'register' %}"
+                            action="{% url 'accounts:register' %}"
                             id="registerForm"
                         >
                             {% csrf_token %}
@@ -438,24 +436,14 @@
             </div>
         </div>
 
-        <!-- Success Toast for Login/Register - Centered -->
-        <div
-            class="toast-container"
-            style="
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 1055;
-            "
-        >
+        <!-- Success Toast for Login/Register - Top Center -->
+        <div class="toast-container-auth">
             <div
                 id="authToast"
-                class="toast"
+                class="toast toast-min-width"
                 role="alert"
                 aria-live="assertive"
                 aria-atomic="true"
-                style="min-width: 350px"
             >
                 <div class="toast-header">
                     <i class="fas fa-check-circle text-success me-2"></i>
@@ -473,26 +461,19 @@
             </div>
         </div>
 
-        <!-- Toast Container - Centered -->
+        <!-- Toast Container - Top Center -->
         <div
+            class="toast-container-messages"
             aria-live="polite"
             aria-atomic="true"
-            style="
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 9999;
-            "
         >
             <div class="toast-container">
                 {% if messages %} {% for message in messages %}
                 <div
-                    class="toast align-items-center {% if message.tags == 'success' %}{% else %}text-white{% endif %} {% if message.tags == 'error' %}bg-danger{% elif message.tags == 'success' %}bg-custom-success{% else %}bg-info{% endif %} border-0"
+                    class="toast align-items-center toast-min-width {% if message.tags == 'success' %}{% else %}text-white{% endif %} {% if message.tags == 'error' %}bg-danger{% elif message.tags == 'success' %}bg-custom-success{% else %}bg-info{% endif %} border-0"
                     role="alert"
                     aria-live="assertive"
                     aria-atomic="true"
-                    style="min-width: 350px"
                 >
                     <div class="d-flex">
                         <div class="toast-body fs-5 py-3">{{ message }}</div>
@@ -510,20 +491,11 @@
 
         <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Custom App JS -->
+        <script src="{% static 'js/app.js' %}"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // Show only Django message toasts (not our auth toast)
-                var messageToasts = document.querySelectorAll(
-                    ".toast:not(#authToast)"
-                );
-                messageToasts.forEach(function (toastEl) {
-                    var toast = new bootstrap.Toast(toastEl, {
-                        autohide: true,
-                        delay: 4000,
-                    });
-                    toast.show();
-                });
-
                 // Function to show authentication toast messages
                 function showAuthToast(message) {
                     const toastElement = document.getElementById("authToast");
@@ -647,7 +619,7 @@
                     logoutBtn.addEventListener("click", function (e) {
                         e.preventDefault();
 
-                        fetch("{% url 'logout' %}", {
+                        fetch("{% url 'accounts:logout' %}", {
                             method: "POST",
                             headers: {
                                 "X-Requested-With": "XMLHttpRequest",
@@ -671,7 +643,7 @@
                             .catch((error) => {
                                 console.error("Logout error:", error);
                                 // Fallback to regular logout
-                                window.location.href = "{% url 'logout' %}";
+                                window.location.href = "{% url 'accounts:logout' %}";
                             });
                     });
                 }

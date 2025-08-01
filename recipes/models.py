@@ -212,6 +212,38 @@ class Recipe(models.Model):
         """Count of ratings"""
         return self.ratings.count()
 
+    @property
+    def nutrition_per_serving(self):
+        """Calculate nutritional information per serving"""
+        total_calories = 0
+        total_protein = 0
+        total_carbs = 0
+        total_fat = 0
+        
+        for recipe_ingredient in self.recipeingredient_set.all():
+            if recipe_ingredient.ingredient:
+                # Convert quantity to grams (assuming most quantities are in grams)
+                quantity_in_grams = recipe_ingredient.quantity
+                
+                # Calculate nutrition based on quantity
+                if recipe_ingredient.ingredient.calories_per_100g:
+                    total_calories += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.calories_per_100g)
+                if recipe_ingredient.ingredient.protein_per_100g:
+                    total_protein += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.protein_per_100g)
+                if recipe_ingredient.ingredient.carbs_per_100g:
+                    total_carbs += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.carbs_per_100g)
+                if recipe_ingredient.ingredient.fat_per_100g:
+                    total_fat += (quantity_in_grams / 100) * float(recipe_ingredient.ingredient.fat_per_100g)
+        
+        # Divide by servings
+        servings = self.servings or 1
+        return {
+            'calories': round(total_calories / servings, 1),
+            'protein': round(total_protein / servings, 1),
+            'carbs': round(total_carbs / servings, 1),
+            'fat': round(total_fat / servings, 1),
+        }
+
     class Meta:
         ordering = ['-created_at']
 
@@ -238,6 +270,13 @@ class RecipeIngredient(models.Model):
             f"{self.quantity} {self.unit.abbreviation} "
             f"{self.ingredient.name}"
         )
+
+    def formatted_quantity(self):
+        """Return quantity without unnecessary decimals"""
+        if self.quantity == int(self.quantity):
+            return str(int(self.quantity))
+        else:
+            return str(self.quantity).rstrip('0').rstrip('.')
 
     class Meta:
         ordering = ['order']
@@ -287,6 +326,14 @@ class RecipeStep(models.Model):
 
 class Rating(models.Model):
     """User ratings for recipes (1-5 stars)."""
+    RATING_CHOICES = [
+        (1, '1 Star'),
+        (2, '2 Stars'),
+        (3, '3 Stars'),
+        (4, '4 Stars'),
+        (5, '5 Stars'),
+    ]
+    
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -294,6 +341,7 @@ class Rating(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField(
+        choices=RATING_CHOICES,
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         help_text='Rating from 1 to 5 stars'
     )
@@ -308,4 +356,42 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('recipe', 'user')
+        ordering = ['-created_at']
+
+
+class Comment(models.Model):
+    """User comments/reviews for recipes."""
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(
+        help_text='Share your experience with this recipe'
+    )
+    parent_comment = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='replies',
+        help_text='Reply to another comment'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        title = (self.recipe.title[:20] + "..."
+                 if len(self.recipe.title) > 20
+                 else self.recipe.title)
+        comment_type = "replied to" if self.parent_comment else "commented on"
+        return f"{self.user.username} {comment_type} {title}"
+
+    @property
+    def is_reply(self):
+        """Check if this is a reply to another comment"""
+        return self.parent_comment is not None
+
+    class Meta:
         ordering = ['-created_at']

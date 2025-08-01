@@ -23,10 +23,37 @@ class UserProfile(models.Model):
         help_text='Upload profile image'
     )
     
-    # Dietary preferences as JSON field (for now, simple text)
+    # Dietary preferences as JSON field (for future expansion)
     dietary_preferences = models.TextField(
         blank=True,
-        help_text='Enter dietary restrictions: vegan, gluten-free, etc.'
+        help_text='Legacy field - use dietary_tags instead'
+    )
+    
+    # New tag-based preferences
+    dietary_tags = models.ManyToManyField(
+        'recipes.Tag',
+        blank=True,
+        related_name='users_with_dietary_preference',
+        limit_choices_to={'tag_type': 'dietary'},
+        help_text='Select your dietary restrictions and preferences'
+    )
+    
+    favorite_cuisines = models.ManyToManyField(
+        'recipes.Tag',
+        blank=True,
+        related_name='users_who_favorite',
+        limit_choices_to={'tag_type': 'cuisine'},
+        help_text='Select your favorite cuisines'
+    )
+    
+    preferred_difficulty = models.ForeignKey(
+        'recipes.Tag',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='users_with_preferred_difficulty',
+        limit_choices_to={'tag_type': 'difficulty'},
+        help_text='Your preferred recipe difficulty level'
     )
     
     # Premium features (for future expansion)
@@ -104,6 +131,66 @@ class UserProfile(models.Model):
             return 0
         
         return round(total_rating / total_recipes_with_ratings, 1)
+    
+    def get_recommended_recipes(self, limit=10):
+        """Get recipes recommended based on user preferences."""
+        from recipes.models import Recipe
+        
+        # Start with all recipes
+        recipes = Recipe.objects.all()
+        
+        # Filter by dietary preferences (must match ALL dietary restrictions)
+        if self.dietary_tags.exists():
+            for dietary_tag in self.dietary_tags.all():
+                recipes = recipes.filter(tags=dietary_tag)
+        
+        # Prefer recipes from favorite cuisines
+        if self.favorite_cuisines.exists():
+            cuisine_recipes = Recipe.objects.filter(
+                tags__in=self.favorite_cuisines.all()
+            ).distinct()
+            
+            # If we have dietary restrictions, apply them to cuisine prefs
+            if self.dietary_tags.exists():
+                for dietary_tag in self.dietary_tags.all():
+                    cuisine_recipes = cuisine_recipes.filter(tags=dietary_tag)
+            
+            # Combine dietary-filtered recipes with cuisine preferences
+            recipes = recipes.union(cuisine_recipes)
+        
+        # Filter by preferred difficulty if set
+        if self.preferred_difficulty:
+            preferred_recipes = recipes.filter(tags=self.preferred_difficulty)
+            if preferred_recipes.exists():
+                recipes = preferred_recipes
+        
+        # Order by rating and limit
+        return (recipes.distinct()
+                .order_by('-view_count', '-created_at')[:limit])
+    
+    def matches_dietary_restrictions(self, recipe):
+        """Check if a recipe matches user's dietary restrictions."""
+        if not self.dietary_tags.exists():
+            return True
+        
+        # Recipe must have ALL user's dietary tags
+        user_dietary_tags = set(self.dietary_tags.all())
+        recipe_tags = set(recipe.tags.filter(tag_type='dietary'))
+        
+        return user_dietary_tags.issubset(recipe_tags)
+    
+    def get_dietary_summary(self):
+        """Get a readable summary of dietary preferences."""
+        if not self.dietary_tags.exists():
+            return "No dietary restrictions"
+        
+        tags = [tag.name for tag in self.dietary_tags.all()]
+        if len(tags) == 1:
+            return tags[0]
+        elif len(tags) == 2:
+            return f"{tags[0]} and {tags[1]}"
+        else:
+            return f"{', '.join(tags[:-1])}, and {tags[-1]}"
 
 
 @receiver(post_save, sender=User)

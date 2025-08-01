@@ -1,7 +1,8 @@
 # recipes/forms.py
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Recipe, RecipeIngredient, RecipeStep, Tag, Ingredient, Unit
+from .models import (Recipe, RecipeIngredient, RecipeStep, Tag, Ingredient, 
+                     Unit, Comment, Rating)
 
 class RecipeForm(forms.ModelForm):
     """Main recipe form"""
@@ -52,6 +53,24 @@ class RecipeForm(forms.ModelForm):
         # Make tags optional and group by type
         self.fields['tags'].required = False
         self.fields['tags'].queryset = Tag.objects.all().order_by('tag_type', 'name')
+        
+        # Create a custom widget that groups tags by category
+        tag_choices = []
+        current_type = None
+        for tag in Tag.objects.all().order_by('tag_type', 'name'):
+            if tag.tag_type != current_type:
+                if current_type is not None:
+                    tag_choices.append(('', ''))  # Add separator
+                current_type = tag.tag_type
+                header = f'--- {tag.get_tag_type_display()} ---'
+                tag_choices.append((header, ''))
+            tag_choices.append((tag.id, tag.name))
+        
+        # Update help text
+        help_text = ("Select all applicable tags. Choose from dietary "
+                     "restrictions, cuisines, meal types, cooking methods, "
+                     "and difficulty levels.")
+        self.fields['tags'].help_text = help_text
 
 
 class RecipeIngredientForm(forms.ModelForm):
@@ -88,8 +107,10 @@ class RecipeIngredientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Order ingredients alphabetically
-        self.fields['ingredient'].queryset = Ingredient.objects.all().order_by('name')
-        self.fields['unit'].queryset = Unit.objects.all().order_by('unit_type', 'name')
+        ingredients = Ingredient.objects.all().order_by('name')
+        self.fields['ingredient'].queryset = ingredients
+        units = Unit.objects.all().order_by('unit_type', 'name')
+        self.fields['unit'].queryset = units
 
 
 class RecipeStepForm(forms.ModelForm):
@@ -132,10 +153,40 @@ RecipeIngredientFormSet = inlineformset_factory(
 
 RecipeStepFormSet = inlineformset_factory(
     Recipe,
-    RecipeStep, 
+    RecipeStep,
     form=RecipeStepForm,
     extra=3,  # Start with 3 empty step forms
     can_delete=True,
     min_num=1,  # Require at least 1 step
     validate_min=True
 )
+
+
+class CommentForm(forms.ModelForm):
+    """Form for adding comments to recipes"""
+    
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Share your thoughts about this recipe...',
+                'maxlength': '500'
+            })
+        }
+
+
+class RatingForm(forms.ModelForm):
+    """Form for rating recipes"""
+    
+    class Meta:
+        model = Rating
+        fields = ['rating']
+        widgets = {
+            'rating': forms.Select(
+                choices=Rating.RATING_CHOICES,
+                attrs={'class': 'form-select'}
+            )
+        }

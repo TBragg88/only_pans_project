@@ -6,7 +6,7 @@
     {% endfor %}
 {% endif %}
 
-<form method="post" action="{% url 'login' %}" id="loginForm">
+<form method="post" action="{% url 'accounts:login' %}" id="loginForm">
     {% csrf_token %} {% if form.non_field_errors %}
     <div class="alert alert-danger">{{ form.non_field_errors }}</div>
     {% endif %}

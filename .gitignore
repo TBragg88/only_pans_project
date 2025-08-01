@@ -1,1 +1,40 @@
 env.py
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
+staticfiles/
+media/
+
+# VS Code
+.vscode/
+
+# Temporary files
+*~
+*.tmp
+*.swp
+*.bak
+*_backup.*
+*_temp.*
+*_new.*
+*_old.*
+cleanup_*.sh
+verify_*.sh
+
+# Environment
+.env
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db

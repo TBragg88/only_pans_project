@@ -104,12 +104,31 @@
             <!-- Tags -->
             <div class="form-section">
                 <h4><i class="fas fa-tags me-2"></i>Tags</h4>
-                <div class="tag-selection">
-                    {% for tag in form.tags %}
-                        <input type="checkbox" class="tag-checkbox" id="{{ tag.id_for_label }}" name="{{ tag.html_name }}" value="{{ tag.choice_value }}" {% if tag.choice_value in form.tags.value %}checked{% endif %}>
-                        <label for="{{ tag.id_for_label }}" class="tag-label" style="background-color: {{ tag.choice_label.color }};">
-                            {{ tag.choice_label.name }}
-                        </label>
+                <p class="text-muted small mb-3">{{ form.tags.help_text }}</p>
+                
+                <div class="tag-categories">
+                    {% regroup form.tags.field.queryset by tag_type as tags_by_type %}
+                    {% for tag_type in tags_by_type %}
+                        <div class="tag-category mb-4">
+                            <h6 class="tag-category-title">
+                                <i class="fas fa-{% if tag_type.grouper == 'dietary' %}leaf{% elif tag_type.grouper == 'cuisine' %}globe{% elif tag_type.grouper == 'meal_type' %}clock{% elif tag_type.grouper == 'cooking_method' %}fire{% else %}star{% endif %} me-2"></i>
+                                {{ tag_type.list.0.get_tag_type_display }}
+                            </h6>
+                            <div class="tag-selection">
+                                {% for tag in tag_type.list %}
+                                    <input type="checkbox" class="tag-checkbox d-none" 
+                                           id="id_tags_{{ tag.id }}" 
+                                           name="tags" 
+                                           value="{{ tag.id }}" 
+                                           {% if form.tags.value and tag.id in form.tags.value %}checked{% endif %}>
+                                    <label for="id_tags_{{ tag.id }}" class="tag tag-selectable me-2 mb-2" 
+                                           style="background-color: {{ tag.color }};"
+                                           title="{{ tag.name }} - {{ tag.get_tag_type_display }}">
+                                        {{ tag.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
                 {% if form.tags.errors %}
@@ -236,20 +255,4 @@
     </div>
 </div>
 
-<script>
-// Simple JavaScript for adding/removing form rows
-function removeRow(button) {
-    button.closest('.ingredient-row, .step-row').remove();
-}
-
-function addIngredientRow() {
-    // This is a simplified version - you'd normally clone the last empty form
-    alert('Add ingredient functionality would go here');
-}
-
-function addStepRow() {
-    // This is a simplified version - you'd normally clone the last empty form  
-    alert('Add step functionality would go here');
-}
-</script>
 {% endblock %}

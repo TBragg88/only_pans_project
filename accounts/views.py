@@ -184,7 +184,7 @@ def profile_edit_view(request):
                 request,
                 'Profile updated successfully! Your changes have been saved.'
             )
-            return redirect('profile')
+            return redirect('accounts:profile')
         else:
             messages.error(
                 request,

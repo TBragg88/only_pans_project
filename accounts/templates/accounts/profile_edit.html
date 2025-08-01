@@ -99,12 +99,7 @@
                                     <img
                                         src="{{ user.profile.get_profile_image_url }}"
                                         alt="Current profile picture"
-                                        class="rounded-circle"
-                                        style="
-                                            width: 80px;
-                                            height: 80px;
-                                            object-fit: cover;
-                                        "
+                                        class="rounded-circle profile-avatar-sm"
                                     />
                                 </div>
                             </div>
@@ -132,26 +127,83 @@
                             {% endif %}
                         </div>
 
-                        <!-- Dietary Preferences -->
+                        <!-- Food Preferences -->
                         <h5 class="border-bottom pb-2 mb-4 mt-4">
-                            Dietary Preferences
+                            <i class="fas fa-utensils me-2"></i>Food Preferences
                         </h5>
-                        <div class="mb-3">
-                            <label
-                                for="{{ form.dietary_preferences.id_for_label }}"
-                                class="form-label"
-                            >
-                                {{ form.dietary_preferences.label }}
+                        
+                        <!-- Dietary Restrictions -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-leaf me-2 text-success"></i>{{ form.dietary_tags.label }}
                             </label>
-                            {{ form.dietary_preferences }}
-                            {% if form.dietary_preferences.help_text %}
-                            <div class="form-text">
-                                {{ form.dietary_preferences.help_text }}
+                            {% if form.dietary_tags.help_text %}
+                            <div class="form-text mb-3">
+                                {{ form.dietary_tags.help_text }}
                             </div>
                             {% endif %}
-                            {% if form.dietary_preferences.errors %}
+                            <div class="tag-selection">
+                                {% for choice in form.dietary_tags %}
+                                    <input type="checkbox" class="tag-checkbox d-none" id="{{ choice.id_for_label }}" 
+                                           name="{{ choice.name }}" value="{{ choice.choice_value }}" 
+                                           {% if choice.choice_value in form.dietary_tags.value %}checked{% endif %}>
+                                    <label for="{{ choice.id_for_label }}" class="tag tag-selectable me-2 mb-2">
+                                        {{ choice.choice_label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            {% if form.dietary_tags.errors %}
                             <div class="text-danger small">
-                                {{ form.dietary_preferences.errors.0 }}
+                                {{ form.dietary_tags.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Favorite Cuisines -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-globe me-2 text-primary"></i>{{ form.favorite_cuisines.label }}
+                            </label>
+                            {% if form.favorite_cuisines.help_text %}
+                            <div class="form-text mb-3">
+                                {{ form.favorite_cuisines.help_text }}
+                            </div>
+                            {% endif %}
+                            <div class="tag-selection">
+                                {% for choice in form.favorite_cuisines %}
+                                    <input type="checkbox" class="tag-checkbox d-none" id="{{ choice.id_for_label }}" 
+                                           name="{{ choice.name }}" value="{{ choice.choice_value }}" 
+                                           {% if choice.choice_value in form.favorite_cuisines.value %}checked{% endif %}>
+                                    <label for="{{ choice.id_for_label }}" class="tag tag-selectable me-2 mb-2">
+                                        {{ choice.choice_label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            </div>
+                            {% if form.favorite_cuisines.errors %}
+                            <div class="text-danger small">
+                                {{ form.favorite_cuisines.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Preferred Difficulty -->
+                        <div class="mb-4">
+                            <label
+                                for="{{ form.preferred_difficulty.id_for_label }}"
+                                class="form-label"
+                            >
+                                <i class="fas fa-star me-2 text-warning"></i>{{ form.preferred_difficulty.label }}
+                            </label>
+                            {{ form.preferred_difficulty }}
+                            {% if form.preferred_difficulty.help_text %}
+                            <div class="form-text">
+                                {{ form.preferred_difficulty.help_text }}
+                            </div>
+                            {% endif %}
+                            {% if form.preferred_difficulty.errors %}
+                            <div class="text-danger small">
+                                {{ form.preferred_difficulty.errors.0 }}
                             </div>
                             {% endif %}
                         </div>
@@ -197,7 +249,7 @@
                         <!-- Form Actions -->
                         <div class="d-flex justify-content-between">
                             <a
-                                href="{% url 'profile' %}"
+                                href="{% url 'accounts:profile' %}"
                                 class="btn btn-secondary"
                             >
                                 <i class="fas fa-arrow-left me-2"></i>Cancel
@@ -212,30 +264,5 @@
         </div>
     </div>
 </div>
-{% endblock %} {% block extra_js %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Preview profile image on file selection
-        const profileImageInput = document.querySelector(
-            'input[type="file"][name="profile_image"]'
-        );
-        if (profileImageInput) {
-            profileImageInput.addEventListener("change", function (e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const currentImg = document.querySelector(
-                            'img[alt="Current profile picture"]'
-                        );
-                        if (currentImg) {
-                            currentImg.src = e.target.result;
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-    });
-</script>
+
 {% endblock %}

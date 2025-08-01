@@ -1,0 +1,188 @@
+// OnlyPans Recipe App ERD for dbdiagram.io
+// Copy and paste this into https://dbdiagram.io/d
+
+Table User {
+  user_id int [pk, increment]
+  username varchar(255) [unique, not null]
+  email varchar(255) [unique, not null]
+  password_hash varchar(255) [not null]
+  first_name varchar(100)
+  last_name varchar(100)
+  profile_image_url text
+  bio text
+  dietary_preferences text [note: 'JSON array: ["vegan", "gluten-free"]']
+  is_premium boolean [default: false]
+  subscription_type varchar(20) [note: 'free/basic/premium']
+  subscription_expires_at datetime [note: 'null for free users']
+  total_followers int [default: 0]
+  total_following int [default: 0]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+}
+
+Table UserFollows {
+  follow_id int [pk, increment]
+  follower_id int [ref: > User.user_id, note: 'user doing the following']
+  following_id int [ref: > User.user_id, note: 'user being followed']
+  created_at datetime [default: `now()`]
+  
+  Indexes {
+    (follower_id, following_id) [unique, name: 'prevent_duplicate_follows']
+  }
+}
+
+Table RecipeBook {
+  book_id int [pk, increment]
+  user_id int [ref: > User.user_id]
+  title varchar(255) [not null]
+  description text
+  cover_image_url text
+  price decimal(10,2) [note: 'null for free books']
+  is_premium boolean [default: false]
+  slug varchar(255) [unique, not null]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+}
+
+Table Recipe {
+  recipe_id int [pk, increment]
+  user_id int [ref: > User.user_id]
+  book_id int [ref: > RecipeBook.book_id, note: 'null if not part of a book']
+  title varchar(255) [not null]
+  slug varchar(255) [unique, not null, note: 'for clean URLs like /recipe/amazing-chocolate-cake']
+  description text [note: 'backstory/blurb about the recipe']
+  prep_time int [note: 'minutes']
+  cook_time int [note: 'minutes']
+  base_servings int [note: 'original servings for scaling calculations']
+  main_image_url text [note: 'cloudinary hosted image']
+  is_public boolean [default: true]
+  is_premium boolean [default: false, note: 'requires subscription to view']
+  total_likes int [default: 0]
+  average_rating decimal(3,2) [default: 0.00]
+  total_ratings int [default: 0]
+  view_count int [default: 0]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+}
+
+Table Tag {
+  tag_id int [pk, increment]
+  name varchar(100) [unique, not null]
+  tag_type varchar(50) [note: 'cuisine/meal_type/dietary/cooking_method/time/course']
+  color varchar(7) [note: 'hex color for UI']
+  icon_url text
+  created_at datetime [default: `now()`]
+}
+
+Table RecipeTag {
+  recipe_tag_id int [pk, increment]
+  recipe_id int [ref: > Recipe.recipe_id]
+  tag_id int [ref: > Tag.tag_id]
+  created_at datetime [default: `now()`]
+  
+  Indexes {
+    (recipe_id, tag_id) [unique, name: 'prevent_duplicate_tags']
+  }
+}
+
+Table Ingredient {
+  ingredient_id int [pk, increment]
+  name varchar(255) [unique, not null]
+  category varchar(100) [note: 'produce/meat/dairy/spices/etc']
+  
+  // Nutritional data per 100g for calculations
+  calories_per_100g decimal(8,2)
+  protein_per_100g decimal(8,2) 
+  carbs_per_100g decimal(8,2)
+  fat_per_100g decimal(8,2)
+  fiber_per_100g decimal(8,2)
+  sugar_per_100g decimal(8,2)
+  sodium_per_100g decimal(8,2)
+  
+  dietary_flags text [note: 'JSON: ["dairy", "gluten", "nuts"] - allergens this contains']
+  created_at datetime [default: `now()`]
+}
+
+Table Unit {
+  unit_id int [pk, increment]
+  name varchar(50) [unique, not null, note: 'cup, tablespoon, teaspoon, gram, ounce, etc']
+  abbreviation varchar(10) [note: 'cup, tbsp, tsp, g, oz']
+  unit_type varchar(20) [note: 'volume/weight/count']
+  grams_conversion decimal(10,4) [note: 'how many grams this unit equals (for 1 unit)']
+  ml_conversion decimal(10,4) [note: 'how many ml this unit equals (for 1 unit)']
+}
+
+Table RecipeIngredient {
+  recipe_ingredient_id int [pk, increment]
+  recipe_id int [ref: > Recipe.recipe_id]
+  ingredient_id int [ref: > Ingredient.ingredient_id]
+  unit_id int [ref: > Unit.unit_id]
+  quantity decimal(10,3) [note: 'numeric amount: 2.5, 0.25, etc']
+  display_quantity varchar(50) [note: 'display version: "2 1/2", "1/4", "a pinch"']
+  notes text [note: 'room temperature, sifted, etc']
+  display_order int [note: 'order in ingredient list']
+}
+
+Table RecipeStep {
+  step_id int [pk, increment]
+  recipe_id int [ref: > Recipe.recipe_id]
+  step_number int [note: '1, 2, 3...']
+  instruction text [not null]
+  estimated_time int [note: 'minutes for this step']
+  created_at datetime [default: `now()`]
+}
+
+Table StepImage {
+  step_image_id int [pk, increment]
+  step_id int [ref: > RecipeStep.step_id]
+  image_url text [note: 'cloudinary hosted']
+  alt_text varchar(255) [note: 'accessibility description']
+  display_order int [note: 'if multiple images per step']
+  uploaded_at datetime [default: `now()`]
+}
+
+Table Rating {
+  rating_id int [pk, increment]
+  recipe_id int [ref: > Recipe.recipe_id]
+  user_id int [ref: > User.user_id]
+  rating_value int [note: '1-5 stars']
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  
+  Indexes {
+    (recipe_id, user_id) [unique, name: 'one_rating_per_user_per_recipe']
+  }
+}
+
+Table UserLikes {
+  like_id int [pk, increment]
+  user_id int [ref: > User.user_id]
+  recipe_id int [ref: > Recipe.recipe_id]
+  created_at datetime [default: `now()`]
+  
+  Indexes {
+    (user_id, recipe_id) [unique, name: 'prevent_duplicate_likes']
+  }
+}
+
+Table Comment {
+  comment_id int [pk, increment]
+  recipe_id int [ref: > Recipe.recipe_id]
+  user_id int [ref: > User.user_id]
+  comment_text text [not null]
+  parent_comment_id int [ref: > Comment.comment_id, note: 'null for top-level comments']
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+}
+
+Table Purchase {
+  purchase_id int [pk, increment]
+  user_id int [ref: > User.user_id]
+  book_id int [ref: > RecipeBook.book_id, note: 'null for subscription purchases']
+  recipe_id int [ref: > Recipe.recipe_id, note: 'null for book/subscription purchases']
+  purchase_type varchar(20) [note: 'book/recipe/subscription']
+  amount decimal(10,2) [not null]
+  payment_status varchar(20) [default: 'pending', note: 'pending/completed/failed/refunded']
+  stripe_payment_id varchar(255)
+  created_at datetime [default: `now()`]
+}

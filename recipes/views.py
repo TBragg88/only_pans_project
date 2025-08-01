@@ -9,8 +9,9 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet
-from .models import Recipe, Tag
+from .forms import (RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet,
+                    CommentForm, RatingForm)
+from .models import Recipe, Tag, Comment, Rating
 
 
 def test_view(request):
@@ -21,6 +22,14 @@ def test_view(request):
 def recipe_list(request):
     """Display all recipes with pagination and filtering."""
     recipes = Recipe.objects.all()
+    
+    # Check if user wants personalized recommendations
+    if request.user.is_authenticated and request.GET.get('for_you') == '1':
+        # Get personalized recommendations
+        recommended_recipes = request.user.profile.get_recommended_recipes(
+            limit=50)
+        if recommended_recipes:
+            recipes = recommended_recipes
     
     # Filter by tag if provided
     tag_filter = request.GET.get('tag')
@@ -45,6 +54,18 @@ def recipe_list(request):
             Q(tags__name__icontains=search_query)
         ).distinct()
     
+    # Apply dietary restrictions for authenticated users
+    if (request.user.is_authenticated and
+            request.user.profile.dietary_tags.exists() and
+            not tag_filter and not dietary_filter and not search_query):
+        # Filter out recipes that don't match user's dietary restrictions
+        compatible_recipes = []
+        for recipe in recipes:
+            if request.user.profile.matches_dietary_restrictions(recipe):
+                compatible_recipes.append(recipe.id)
+        if compatible_recipes:
+            recipes = recipes.filter(id__in=compatible_recipes)
+    
     # Pagination - 12 recipes per page
     paginator = Paginator(recipes, 12)
     page_number = request.GET.get('page')
@@ -61,18 +82,91 @@ def recipe_list(request):
         'current_tag': tag_filter,
         'current_dietary': dietary_filter,
         'search_query': search_query,
+        'for_you': request.GET.get('for_you') == '1',
+        'user_has_preferences': (
+            request.user.is_authenticated and
+            (request.user.profile.dietary_tags.exists() or
+             request.user.profile.favorite_cuisines.exists())
+        ),
     }
     
     return render(request, 'recipes/recipe_list.html', context)
 
 
 def recipe_detail(request, slug):
-    """Display individual recipe details"""
+    """Display individual recipe details with comments and ratings"""
     recipe = get_object_or_404(Recipe, slug=slug)
     
     # Increment view count
     recipe.view_count += 1
     recipe.save()
+    
+    # Get comments for this recipe (only top-level comments)
+    comments = Comment.objects.filter(
+        recipe=recipe,
+        parent_comment=None
+    ).order_by('-created_at')
+    
+    # Get user's existing rating if logged in
+    user_rating = None
+    if request.user.is_authenticated:
+        try:
+            user_rating = Rating.objects.get(recipe=recipe, user=request.user)
+        except Rating.DoesNotExist:
+            pass
+    
+    # Handle comment form submission
+    if request.method == 'POST' and 'comment_submit' in request.POST:
+        if request.user.is_authenticated:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.recipe = recipe
+                comment.user = request.user
+                
+                # Handle reply to another comment
+                parent_comment_id = request.POST.get('parent_comment_id')
+                if parent_comment_id:
+                    try:
+                        parent_comment = Comment.objects.get(
+                            id=parent_comment_id,
+                            recipe=recipe
+                        )
+                        comment.parent_comment = parent_comment
+                        messages.success(request, "Reply added successfully!")
+                    except Comment.DoesNotExist:
+                        messages.error(request, "Invalid comment to reply to.")
+                        return redirect('recipe_detail', slug=recipe.slug)
+                else:
+                    messages.success(request, "Comment added successfully!")
+                
+                comment.save()
+                return redirect('recipe_detail', slug=recipe.slug)
+        else:
+            messages.error(request, "Please log in to comment.")
+    
+    # Handle rating form submission
+    if request.method == 'POST' and 'rating_submit' in request.POST:
+        if request.user.is_authenticated:
+            rating_form = RatingForm(request.POST)
+            if rating_form.is_valid():
+                # Update or create rating
+                rating, created = Rating.objects.update_or_create(
+                    recipe=recipe,
+                    user=request.user,
+                    defaults={'rating': rating_form.cleaned_data['rating']}
+                )
+                if created:
+                    messages.success(request, "Rating added successfully!")
+                else:
+                    messages.success(request, "Rating updated successfully!")
+                return redirect('recipe_detail', slug=recipe.slug)
+        else:
+            messages.error(request, "Please log in to rate.")
+    
+    # Initialize forms for GET requests
+    comment_form = CommentForm()
+    rating_form = RatingForm()
     
     # Get related recipes (same tags)
     related_recipes = Recipe.objects.filter(
@@ -82,6 +176,10 @@ def recipe_detail(request, slug):
     context = {
         'recipe': recipe,
         'related_recipes': related_recipes,
+        'comments': comments,
+        'comment_form': comment_form,
+        'rating_form': rating_form,
+        'user_rating': user_rating,
     }
     
     return render(request, 'recipes/recipe_detail.html', context)
