@@ -70,13 +70,21 @@ def recipe_detail(request, slug):
 
 @login_required
 def recipe_create(request):
-    """Create a new recipe"""
+    """Create a new recipe."""
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES)
-        ingredient_formset = RecipeIngredientFormSet(request.POST, prefix='ingredients')
-        step_formset = RecipeStepFormSet(request.POST, request.FILES, prefix='steps')
+        ingredient_formset = RecipeIngredientFormSet(
+            request.POST,
+            prefix='ingredients'
+        )
+        step_formset = RecipeStepFormSet(
+            request.POST,
+            request.FILES,
+            prefix='steps'
+        )
         
-        if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
+        if (form.is_valid() and ingredient_formset.is_valid()
+                and step_formset.is_valid()):
             recipe = form.save(commit=False)
             recipe.user = request.user
             recipe.save()
@@ -94,7 +102,10 @@ def recipe_create(request):
                 step.recipe = recipe
                 step.save()
             
-            messages.success(request, f'Recipe "{recipe.title}" created successfully!')
+            messages.success(
+                request,
+                f'Recipe "{recipe.title}" created successfully!'
+            )
             return redirect('recipe_detail', slug=recipe.slug)
     else:
         form = RecipeForm()
