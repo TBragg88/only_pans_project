@@ -19,11 +19,10 @@ import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 import dj_database_url
-from django.contrib.messages import constants as messages
 
 # Import env.py if it exists (for local development)
 if os.path.isfile('env.py'):
-    import env
+    import env  # noqa: F401
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
