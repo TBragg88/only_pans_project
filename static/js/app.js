@@ -167,10 +167,12 @@ function initializeFormImagePreviews() {
  */
 function initializeToasts() {
     // Only auto-show toasts that have content (Django messages)
-    const messageToasts = document.querySelectorAll(".toast:not(#authToast):not(#recipeSuccessToast)");
+    const messageToasts = document.querySelectorAll(
+        ".toast:not(#authToast):not(#recipeSuccessToast)"
+    );
     messageToasts.forEach((toastEl) => {
         // Check if toast has actual content
-        const toastBody = toastEl.querySelector('.toast-body');
+        const toastBody = toastEl.querySelector(".toast-body");
         if (toastBody && toastBody.textContent.trim()) {
             const toast = new bootstrap.Toast(toastEl, {
                 autohide: true,
@@ -181,14 +183,16 @@ function initializeToasts() {
     });
 
     // Check for success messages and show in recipe success toast instead
-    const successMessages = document.querySelectorAll('.toast.bg-custom-success .toast-body');
+    const successMessages = document.querySelectorAll(
+        ".toast.bg-custom-success .toast-body"
+    );
     successMessages.forEach((messageBody) => {
         if (messageBody.textContent.trim()) {
             showRecipeSuccessToast(messageBody.textContent.trim());
             // Hide the original success toast
-            const originalToast = messageBody.closest('.toast');
+            const originalToast = messageBody.closest(".toast");
             if (originalToast) {
-                originalToast.style.display = 'none';
+                originalToast.style.display = "none";
             }
         }
     });
@@ -537,11 +541,18 @@ function initializeRecipeControls() {
 
             // Check if this is a "to taste" or similar non-scalable unit
             const nonScalableUnits = [
-                'to taste', 'taste', 'pinch', 'dash', 'handful', 
-                'splash', 'drizzle', 'sprinkle', 'garnish'
+                "to taste",
+                "taste",
+                "pinch",
+                "dash",
+                "handful",
+                "splash",
+                "drizzle",
+                "sprinkle",
+                "garnish",
             ];
-            
-            const isNonScalable = nonScalableUnits.some(nonScalableUnit => 
+
+            const isNonScalable = nonScalableUnits.some((nonScalableUnit) =>
                 unitName.toLowerCase().includes(nonScalableUnit.toLowerCase())
             );
 
@@ -573,14 +584,21 @@ function initializeRecipeControls() {
 
     function getAmericanConversion(quantity, unitName, scale) {
         const unit = unitName.toLowerCase();
-        
+
         // Check if this is a non-scalable unit
         const nonScalableUnits = [
-            'to taste', 'taste', 'pinch', 'dash', 'handful', 
-            'splash', 'drizzle', 'sprinkle', 'garnish'
+            "to taste",
+            "taste",
+            "pinch",
+            "dash",
+            "handful",
+            "splash",
+            "drizzle",
+            "sprinkle",
+            "garnish",
         ];
-        
-        const isNonScalable = nonScalableUnits.some(nonScalableUnit => 
+
+        const isNonScalable = nonScalableUnits.some((nonScalableUnit) =>
             unit.includes(nonScalableUnit.toLowerCase())
         );
 
