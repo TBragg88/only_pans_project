@@ -1,10 +1,6 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load profile_extras %}
-
-{% block title %}{{ profile_user.profile.full_display_name }}'s Profile - OnlyPans{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% load profile_extras %} {% block
+title %}{{ profile_user.profile.full_display_name }}'s Profile - OnlyPans{%
+endblock %} {% block content %}
 <div class="container-fluid">
     <div class="row">
         <!-- Profile Header -->
@@ -13,65 +9,98 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-3 text-center">
-                            <img 
-                                src="{{ user_profile.get_profile_image_url }}" 
+                            <img
+                                src="{{ user_profile.get_profile_image_url }}"
                                 alt="{{ profile_user.profile.full_display_name }}"
-                                class="rounded-circle img-fluid mb-3" 
-                                style="width: 150px; height: 150px; object-fit: cover;"
+                                class="rounded-circle img-fluid mb-3"
+                                style="
+                                    width: 150px;
+                                    height: 150px;
+                                    object-fit: cover;
+                                "
                             />
                         </div>
                         <div class="col-md-9">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start mb-3"
+                            >
                                 <div>
-                                    <h2 class="mb-1">{{ profile_user.profile.full_display_name }}</h2>
-                                    <p class="text-muted mb-2">@{{ profile_user.username }}</p>
-                                    {% if user_profile.show_email or is_own_profile %}
-                                        <p class="text-muted mb-2">
-                                            <i class="fas fa-envelope me-2"></i>{{ profile_user.email }}
-                                        </p>
+                                    <h2 class="mb-1">
+                                        {{
+                                        profile_user.profile.full_display_name
+                                        }}
+                                    </h2>
+                                    <p class="text-muted mb-2">
+                                        @{{ profile_user.username }}
+                                    </p>
+                                    {% if user_profile.show_email or
+                                    is_own_profile %}
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-envelope me-2"></i>{{
+                                        profile_user.email }}
+                                    </p>
                                     {% endif %}
                                 </div>
                                 {% if is_own_profile %}
-                                    <a href="{% url 'profile_edit' %}" class="btn btn-primary">
-                                        <i class="fas fa-edit me-2"></i>Edit Profile
-                                    </a>
+                                <a
+                                    href="{% url 'profile_edit' %}"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fas fa-edit me-2"></i>Edit Profile
+                                </a>
                                 {% endif %}
                             </div>
-                            
+
                             {% if user_profile.bio %}
-                                <p class="mb-3">{{ user_profile.bio }}</p>
+                            <p class="mb-3">{{ user_profile.bio }}</p>
+                            {% endif %} {% if user_profile.dietary_preferences
+                            and user_profile.show_dietary_preferences or
+                            is_own_profile %}
+                            <div class="mb-3">
+                                <strong>Dietary Preferences:</strong>
+                                {% for preference in
+                                user_profile.dietary_preferences|split:"," %}
+                                <span class="badge bg-secondary me-1"
+                                    >{{ preference.strip }}</span
+                                >
+                                {% endfor %}
+                            </div>
                             {% endif %}
-                            
-                            {% if user_profile.dietary_preferences and user_profile.show_dietary_preferences or is_own_profile %}
-                                <div class="mb-3">
-                                    <strong>Dietary Preferences:</strong>
-                                    {% for preference in user_profile.dietary_preferences|split:"," %}
-                                        <span class="badge bg-secondary me-1">{{ preference.strip }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                            
+
                             <div class="row text-center">
                                 <div class="col-md-3">
-                                    <h5 class="mb-0 text-primary">{{ recipe_count }}</h5>
-                                    <small class="text-muted">Recipe{{ recipe_count|pluralize }}</small>
+                                    <h5 class="mb-0 text-primary">
+                                        {{ recipe_count }}
+                                    </h5>
+                                    <small class="text-muted"
+                                        >Recipe{{ recipe_count|pluralize
+                                        }}</small
+                                    >
                                 </div>
                                 <div class="col-md-3">
                                     <h5 class="mb-0 text-warning">
-                                        {% if average_rating > 0 %}
-                                            {{ average_rating }}/5
-                                        {% else %}
-                                            -
-                                        {% endif %}
+                                        {% if average_rating > 0 %} {{
+                                        average_rating }}/5 {% else %} - {%
+                                        endif %}
                                     </h5>
-                                    <small class="text-muted">Average Rating</small>
+                                    <small class="text-muted"
+                                        >Average Rating</small
+                                    >
                                 </div>
                                 <div class="col-md-3">
-                                    <h5 class="mb-0 text-info">{{ user_profile.total_followers }}</h5>
-                                    <small class="text-muted">Follower{{ user_profile.total_followers|pluralize }}</small>
+                                    <h5 class="mb-0 text-info">
+                                        {{ user_profile.total_followers }}
+                                    </h5>
+                                    <small class="text-muted"
+                                        >Follower{{
+                                        user_profile.total_followers|pluralize
+                                        }}</small
+                                    >
                                 </div>
                                 <div class="col-md-3">
-                                    <h5 class="mb-0 text-success">{{ user_profile.total_following }}</h5>
+                                    <h5 class="mb-0 text-success">
+                                        {{ user_profile.total_following }}
+                                    </h5>
                                     <small class="text-muted">Following</small>
                                 </div>
                             </div>
@@ -80,133 +109,175 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Recipes Section -->
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3>
-                    {% if is_own_profile %}
-                        My Recipes
-                    {% else %}
-                        {{ profile_user.profile.display_name }}'s Recipes
-                    {% endif %}
+                    {% if is_own_profile %} My Recipes {% else %} {{
+                    profile_user.profile.display_name }}'s Recipes {% endif %}
                     <span class="badge bg-primary">{{ recipe_count }}</span>
                 </h3>
                 {% if is_own_profile and recipe_count > 0 %}
-                    <small class="text-muted">Click on recipes to edit or delete them</small>
+                <small class="text-muted"
+                    >Click on recipes to edit or delete them</small
+                >
                 {% endif %}
             </div>
-            
+
             {% if user_recipes %}
-                <div class="row">
-                    {% for recipe in user_recipes %}
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100 shadow-sm recipe-card">
-                                {% if recipe.get_image_url %}
-                                    <img 
-                                        src="{{ recipe.get_image_url }}" 
-                                        class="card-img-top" 
-                                        alt="{{ recipe.title }}"
-                                        style="height: 200px; object-fit: cover;"
-                                    />
-                                {% endif %}
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ recipe.title }}</h5>
-                                    <p class="card-text text-muted flex-grow-1">
-                                        {{ recipe.description|truncatewords:15 }}
-                                    </p>
-                                    <div class="mt-auto">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <small class="text-muted">
-                                                <i class="fas fa-clock me-1"></i>{{ recipe.total_time }} min
-                                            </small>
-                                            <small class="text-warning">
-                                                {% if recipe.average_rating > 0 %}
-                                                    <i class="fas fa-star me-1"></i>{{ recipe.average_rating|floatformat:1 }}
-                                                {% else %}
-                                                    <i class="far fa-star me-1"></i>No ratings
-                                                {% endif %}
-                                            </small>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="{% url 'recipe_detail' recipe.slug %}" class="btn btn-outline-primary btn-sm flex-grow-1">
-                                                <i class="fas fa-eye me-1"></i>View
-                                            </a>
-                                            {% if is_own_profile %}
-                                                <a href="{% url 'recipe_detail' recipe.slug %}" class="btn btn-warning btn-sm" title="Edit Recipe">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('{{ recipe.slug }}', '{{ recipe.title }}')" title="Delete Recipe">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            {% endif %}
-                                        </div>
-                                    </div>
+            <div class="row">
+                {% for recipe in user_recipes %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm recipe-card">
+                        {% if recipe.get_image_url %}
+                        <img
+                            src="{{ recipe.get_image_url }}"
+                            class="card-img-top"
+                            alt="{{ recipe.title }}"
+                            style="height: 200px; object-fit: cover"
+                        />
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ recipe.title }}</h5>
+                            <p class="card-text text-muted flex-grow-1">
+                                {{ recipe.description|truncatewords:15 }}
+                            </p>
+                            <div class="mt-auto">
+                                <div
+                                    class="d-flex justify-content-between align-items-center mb-2"
+                                >
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{
+                                        recipe.total_time }} min
+                                    </small>
+                                    <small class="text-warning">
+                                        {% if recipe.average_rating > 0 %}
+                                        <i class="fas fa-star me-1"></i>{{
+                                        recipe.average_rating|floatformat:1 }}
+                                        {% else %}
+                                        <i class="far fa-star me-1"></i>No
+                                        ratings {% endif %}
+                                    </small>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a
+                                        href="{% url 'recipe_detail' recipe.slug %}"
+                                        class="btn btn-outline-primary btn-sm flex-grow-1"
+                                    >
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                    {% if is_own_profile %}
+                                    <a
+                                        href="{% url 'recipe_detail' recipe.slug %}"
+                                        class="btn btn-warning btn-sm"
+                                        title="Edit Recipe"
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button
+                                        class="btn btn-danger btn-sm"
+                                        onclick="confirmDelete('{{ recipe.slug }}', '{{ recipe.title }}')"
+                                        title="Delete Recipe"
+                                    >
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
-                    <h4 class="text-muted">No recipes yet</h4>
-                    {% if is_own_profile %}
-                        <p class="text-muted mb-4">Start sharing your delicious recipes with the OnlyPans community!</p>
-                        <a href="{% url 'recipe_create' %}" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Create Your First Recipe
-                        </a>
-                    {% else %}
-                        <p class="text-muted">{{ profile_user.profile.display_name }} hasn't shared any recipes yet.</p>
-                    {% endif %}
-                </div>
+            <div class="text-center py-5">
+                <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No recipes yet</h4>
+                {% if is_own_profile %}
+                <p class="text-muted mb-4">
+                    Start sharing your delicious recipes with the OnlyPans
+                    community!
+                </p>
+                <a href="{% url 'recipe_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Create Your First Recipe
+                </a>
+                {% else %}
+                <p class="text-muted">
+                    {{ profile_user.profile.display_name }} hasn't shared any
+                    recipes yet.
+                </p>
+                {% endif %}
+            </div>
             {% endif %}
         </div>
     </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteModalLabel">Delete Recipe</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete <strong id="recipeTitle"></strong>? This action cannot be undone.
+                Are you sure you want to delete
+                <strong id="recipeTitle"></strong>? This action cannot be
+                undone.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="#" id="deleteLink" class="btn btn-danger">Delete Recipe</a>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <a href="#" id="deleteLink" class="btn btn-danger"
+                    >Delete Recipe</a
+                >
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-function confirmDelete(slug, title) {
-    document.getElementById('recipeTitle').textContent = title;
-    document.getElementById('deleteLink').href = '/recipes/' + slug + '/delete/';
-    
-    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    deleteModal.show();
-}
+    function confirmDelete(slug, title) {
+        document.getElementById("recipeTitle").textContent = title;
+        document.getElementById("deleteLink").href =
+            "/recipes/" + slug + "/delete/";
 
-// Add hover effects to recipe cards
-document.addEventListener('DOMContentLoaded', function() {
-    const recipeCards = document.querySelectorAll('.recipe-card');
-    recipeCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
+        var deleteModal = new bootstrap.Modal(
+            document.getElementById("deleteModal")
+        );
+        deleteModal.show();
+    }
+
+    // Add hover effects to recipe cards
+    document.addEventListener("DOMContentLoaded", function () {
+        const recipeCards = document.querySelectorAll(".recipe-card");
+        recipeCards.forEach((card) => {
+            card.addEventListener("mouseenter", function () {
+                this.style.transform = "translateY(-5px)";
+                this.style.transition = "transform 0.3s ease";
+            });
+            card.addEventListener("mouseleave", function () {
+                this.style.transform = "translateY(0)";
+            });
         });
     });
-});
 </script>
 {% endblock %}

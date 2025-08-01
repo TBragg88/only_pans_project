@@ -1,9 +1,5 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Edit Profile - OnlyPans{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Edit Profile -
+OnlyPans{% endblock %} {% block content %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -16,143 +12,185 @@
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        
+
                         <!-- Basic Information -->
-                        <h5 class="border-bottom pb-2 mb-4">Basic Information</h5>
+                        <h5 class="border-bottom pb-2 mb-4">
+                            Basic Information
+                        </h5>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                <label
+                                    for="{{ form.first_name.id_for_label }}"
+                                    class="form-label"
+                                >
                                     {{ form.first_name.label }}
                                 </label>
-                                {{ form.first_name }}
-                                {% if form.first_name.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.first_name.errors.0 }}
-                                    </div>
+                                {{ form.first_name }} {% if
+                                form.first_name.errors %}
+                                <div class="text-danger small">
+                                    {{ form.first_name.errors.0 }}
+                                </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                <label
+                                    for="{{ form.last_name.id_for_label }}"
+                                    class="form-label"
+                                >
                                     {{ form.last_name.label }}
                                 </label>
-                                {{ form.last_name }}
-                                {% if form.last_name.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.last_name.errors.0 }}
-                                    </div>
+                                {{ form.last_name }} {% if form.last_name.errors
+                                %}
+                                <div class="text-danger small">
+                                    {{ form.last_name.errors.0 }}
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
-                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                            <label
+                                for="{{ form.email.id_for_label }}"
+                                class="form-label"
+                            >
                                 {{ form.email.label }}
                             </label>
-                            {{ form.email }}
-                            {% if form.email.errors %}
-                                <div class="text-danger small">
-                                    {{ form.email.errors.0 }}
-                                </div>
+                            {{ form.email }} {% if form.email.errors %}
+                            <div class="text-danger small">
+                                {{ form.email.errors.0 }}
+                            </div>
                             {% endif %}
                         </div>
-                        
+
                         <!-- Profile Picture -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">Profile Picture</h5>
+                        <h5 class="border-bottom pb-2 mb-4 mt-4">
+                            Profile Picture
+                        </h5>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.profile_image.id_for_label }}" class="form-label">
+                                <label
+                                    for="{{ form.profile_image.id_for_label }}"
+                                    class="form-label"
+                                >
                                     {{ form.profile_image.label }}
                                 </label>
-                                {{ form.profile_image }}
-                                {% if form.profile_image.help_text %}
-                                    <div class="form-text">{{ form.profile_image.help_text }}</div>
-                                {% endif %}
-                                {% if form.profile_image.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.profile_image.errors.0 }}
-                                    </div>
+                                {{ form.profile_image }} {% if
+                                form.profile_image.help_text %}
+                                <div class="form-text">
+                                    {{ form.profile_image.help_text }}
+                                </div>
+                                {% endif %} {% if form.profile_image.errors %}
+                                <div class="text-danger small">
+                                    {{ form.profile_image.errors.0 }}
+                                </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Current Picture</label>
+                                <label class="form-label"
+                                    >Current Picture</label
+                                >
                                 <div>
-                                    <img 
-                                        src="{{ user.profile.get_profile_image_url }}" 
+                                    <img
+                                        src="{{ user.profile.get_profile_image_url }}"
                                         alt="Current profile picture"
-                                        class="rounded-circle" 
-                                        style="width: 80px; height: 80px; object-fit: cover;"
+                                        class="rounded-circle"
+                                        style="
+                                            width: 80px;
+                                            height: 80px;
+                                            object-fit: cover;
+                                        "
                                     />
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- About Me -->
                         <h5 class="border-bottom pb-2 mb-4 mt-4">About Me</h5>
                         <div class="mb-3">
-                            <label for="{{ form.bio.id_for_label }}" class="form-label">
+                            <label
+                                for="{{ form.bio.id_for_label }}"
+                                class="form-label"
+                            >
                                 {{ form.bio.label }}
                             </label>
-                            {{ form.bio }}
-                            {% if form.bio.help_text %}
-                                <div class="form-text">{{ form.bio.help_text }}</div>
-                            {% endif %}
-                            {% if form.bio.errors %}
-                                <div class="text-danger small">
-                                    {{ form.bio.errors.0 }}
-                                </div>
+                            {{ form.bio }} {% if form.bio.help_text %}
+                            <div class="form-text">
+                                {{ form.bio.help_text }}
+                            </div>
+                            {% endif %} {% if form.bio.errors %}
+                            <div class="text-danger small">
+                                {{ form.bio.errors.0 }}
+                            </div>
                             {% endif %}
                         </div>
-                        
+
                         <!-- Dietary Preferences -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">Dietary Preferences</h5>
+                        <h5 class="border-bottom pb-2 mb-4 mt-4">
+                            Dietary Preferences
+                        </h5>
                         <div class="mb-3">
-                            <label for="{{ form.dietary_preferences.id_for_label }}" class="form-label">
+                            <label
+                                for="{{ form.dietary_preferences.id_for_label }}"
+                                class="form-label"
+                            >
                                 {{ form.dietary_preferences.label }}
                             </label>
-                            {{ form.dietary_preferences }}
-                            {% if form.dietary_preferences.help_text %}
-                                <div class="form-text">{{ form.dietary_preferences.help_text }}</div>
-                            {% endif %}
-                            {% if form.dietary_preferences.errors %}
-                                <div class="text-danger small">
-                                    {{ form.dietary_preferences.errors.0 }}
-                                </div>
+                            {{ form.dietary_preferences }} {% if
+                            form.dietary_preferences.help_text %}
+                            <div class="form-text">
+                                {{ form.dietary_preferences.help_text }}
+                            </div>
+                            {% endif %} {% if form.dietary_preferences.errors %}
+                            <div class="text-danger small">
+                                {{ form.dietary_preferences.errors.0 }}
+                            </div>
                             {% endif %}
                         </div>
-                        
+
                         <!-- Privacy Settings -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">Privacy Settings</h5>
+                        <h5 class="border-bottom pb-2 mb-4 mt-4">
+                            Privacy Settings
+                        </h5>
                         <div class="mb-3">
                             <div class="form-check">
                                 {{ form.show_dietary_preferences }}
-                                <label class="form-check-label" for="{{ form.show_dietary_preferences.id_for_label }}">
+                                <label
+                                    class="form-check-label"
+                                    for="{{ form.show_dietary_preferences.id_for_label }}"
+                                >
                                     {{ form.show_dietary_preferences.label }}
                                 </label>
                             </div>
                             {% if form.show_dietary_preferences.errors %}
-                                <div class="text-danger small">
-                                    {{ form.show_dietary_preferences.errors.0 }}
-                                </div>
+                            <div class="text-danger small">
+                                {{ form.show_dietary_preferences.errors.0 }}
+                            </div>
                             {% endif %}
                         </div>
-                        
+
                         <div class="mb-4">
                             <div class="form-check">
                                 {{ form.show_email }}
-                                <label class="form-check-label" for="{{ form.show_email.id_for_label }}">
+                                <label
+                                    class="form-check-label"
+                                    for="{{ form.show_email.id_for_label }}"
+                                >
                                     {{ form.show_email.label }}
                                 </label>
                             </div>
                             {% if form.show_email.errors %}
-                                <div class="text-danger small">
-                                    {{ form.show_email.errors.0 }}
-                                </div>
+                            <div class="text-danger small">
+                                {{ form.show_email.errors.0 }}
+                            </div>
                             {% endif %}
                         </div>
-                        
+
                         <!-- Form Actions -->
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'profile' %}" class="btn btn-secondary">
+                            <a
+                                href="{% url 'profile' %}"
+                                class="btn btn-secondary"
+                            >
                                 <i class="fas fa-arrow-left me-2"></i>Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">
@@ -165,28 +203,30 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Preview profile image on file selection
-    const profileImageInput = document.querySelector('input[type="file"][name="profile_image"]');
-    if (profileImageInput) {
-        profileImageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const currentImg = document.querySelector('img[alt="Current profile picture"]');
-                    if (currentImg) {
-                        currentImg.src = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-});
+    document.addEventListener("DOMContentLoaded", function () {
+        // Preview profile image on file selection
+        const profileImageInput = document.querySelector(
+            'input[type="file"][name="profile_image"]'
+        );
+        if (profileImageInput) {
+            profileImageInput.addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const currentImg = document.querySelector(
+                            'img[alt="Current profile picture"]'
+                        );
+                        if (currentImg) {
+                            currentImg.src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
 </script>
 {% endblock %}

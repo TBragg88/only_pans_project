@@ -32,47 +32,74 @@
                 <a class="navbar-brand" href="{% url 'recipe_list' %}">
                     <i class="fas fa-utensils me-2"></i>OnlyPans
                 </a>
-                
+
                 <div class="d-flex align-items-center">
                     {% if user.is_authenticated %}
-                        <span class="text-light me-3">
-                            Welcome, 
-                            {% if user.first_name %}
-                                {{ user.first_name }}
-                            {% else %}
-                                {{ user.username }}
-                            {% endif %}!
-                        </span>
-                        <div class="dropdown me-2">
-                            <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-book me-2"></i>My Recipes</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Favorites</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-success" href="{% url 'recipe_create' %}">
-                            <i class="fas fa-plus"></i> Create Recipe
-                        </a>
+                    <span class="text-light me-3">
+                        Welcome, {% if user.first_name %} {{ user.first_name }}
+                        {% else %} {{ user.username }} {% endif %}!
+                    </span>
+                    <div class="dropdown me-2">
+                        <button
+                            class="btn btn-outline-light dropdown-toggle"
+                            type="button"
+                            id="userDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul
+                            class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="userDropdown"
+                        >
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'profile' %}"
+                                    ><i class="fas fa-user me-2"></i>My
+                                    Profile</a
+                                >
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#"
+                                    ><i class="fas fa-book me-2"></i>My
+                                    Recipes</a
+                                >
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#"
+                                    ><i class="fas fa-heart me-2"></i
+                                    >Favorites</a
+                                >
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item" href="#" id="logoutBtn"
+                                    ><i class="fas fa-sign-out-alt me-2"></i
+                                    >Sign Out</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <a class="btn btn-success" href="{% url 'recipe_create' %}">
+                        <i class="fas fa-plus"></i> Create Recipe
+                    </a>
                     {% else %}
-                        <button
-                            class="btn btn-outline-light me-2"
-                            data-bs-toggle="modal"
-                            data-bs-target="#loginModal"
-                        >
-                            Sign In
-                        </button>
-                        <button
-                            class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#registerModal"
-                        >
-                            Register
-                        </button>
+                    <button
+                        class="btn btn-outline-light me-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#loginModal"
+                    >
+                        Sign In
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#registerModal"
+                    >
+                        Register
+                    </button>
                     {% endif %}
                 </div>
             </div>
@@ -301,12 +328,18 @@
                             class="alert alert-danger"
                             style="display: none"
                         ></div>
-                        
-                        <form method="post" action="{% url 'register' %}" id="registerForm">
+
+                        <form
+                            method="post"
+                            action="{% url 'register' %}"
+                            id="registerForm"
+                        >
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="reg_first_name" class="form-label"
+                                    <label
+                                        for="reg_first_name"
+                                        class="form-label"
                                         >First Name</label
                                     >
                                     <input
@@ -319,7 +352,9 @@
                                     />
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="reg_last_name" class="form-label"
+                                    <label
+                                        for="reg_last_name"
+                                        class="form-label"
                                         >Last Name</label
                                     >
                                     <input
@@ -404,12 +439,33 @@
         </div>
 
         <!-- Success Toast for Login/Register - Centered -->
-        <div class="toast-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1055;">
-            <div id="authToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+        <div
+            class="toast-container"
+            style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1055;
+            "
+        >
+            <div
+                id="authToast"
+                class="toast"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                style="min-width: 350px"
+            >
                 <div class="toast-header">
                     <i class="fas fa-check-circle text-success me-2"></i>
                     <strong class="me-auto">OnlyPans</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="toast"
+                        aria-label="Close"
+                    ></button>
                 </div>
                 <div class="toast-body fs-5 py-3" id="authToastMessage">
                     <!-- Message will be inserted here -->
@@ -421,30 +477,34 @@
         <div
             aria-live="polite"
             aria-atomic="true"
-            style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"
+            style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+            "
         >
             <div class="toast-container">
-                {% if messages %}
-                    {% for message in messages %}
-                        <div
-                            class="toast align-items-center text-white bg-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} border-0"
-                            role="alert"
-                            aria-live="assertive"
-                            aria-atomic="true"
-                            style="min-width: 350px;"
-                        >
-                            <div class="d-flex">
-                                <div class="toast-body fs-5 py-3">{{ message }}</div>
-                                <button
-                                    type="button"
-                                    class="btn-close btn-close-white me-2 m-auto"
-                                    data-bs-dismiss="toast"
-                                    aria-label="Close"
-                                ></button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
+                {% if messages %} {% for message in messages %}
+                <div
+                    class="toast align-items-center text-white bg-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} border-0"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                    style="min-width: 350px"
+                >
+                    <div class="d-flex">
+                        <div class="toast-body fs-5 py-3">{{ message }}</div>
+                        <button
+                            type="button"
+                            class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                </div>
+                {% endfor %} {% endif %}
             </div>
         </div>
 
@@ -453,7 +513,9 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 // Show only Django message toasts (not our auth toast)
-                var messageToasts = document.querySelectorAll(".toast:not(#authToast)");
+                var messageToasts = document.querySelectorAll(
+                    ".toast:not(#authToast)"
+                );
                 messageToasts.forEach(function (toastEl) {
                     var toast = new bootstrap.Toast(toastEl, {
                         autohide: true,
@@ -465,15 +527,16 @@
                 // Function to show authentication toast messages
                 function showAuthToast(message) {
                     const toastElement = document.getElementById("authToast");
-                    const toastMessage = document.getElementById("authToastMessage");
-                    
+                    const toastMessage =
+                        document.getElementById("authToastMessage");
+
                     toastMessage.textContent = message;
-                    
+
                     const toast = new bootstrap.Toast(toastElement, {
                         autohide: true,
-                        delay: 3000
+                        delay: 3000,
                     });
-                    
+
                     toast.show();
                 }
 
@@ -497,14 +560,17 @@
                             .then((data) => {
                                 if (data.success) {
                                     // Show welcome toast
-                                    const firstName = data.first_name || data.username;
-                                    showAuthToast(`Welcome back, ${firstName}!`);
-                                    
+                                    const firstName =
+                                        data.first_name || data.username;
+                                    showAuthToast(
+                                        `Welcome back, ${firstName}!`
+                                    );
+
                                     // Close modal and reload page after short delay
                                     bootstrap.Modal.getInstance(
                                         document.getElementById("loginModal")
                                     ).hide();
-                                    
+
                                     setTimeout(() => {
                                         location.reload();
                                     }, 1500);
@@ -531,7 +597,8 @@
                         e.preventDefault();
 
                         const formData = new FormData(this);
-                        const errorDiv = document.getElementById("registerErrors");
+                        const errorDiv =
+                            document.getElementById("registerErrors");
 
                         fetch(this.action, {
                             method: "POST",
@@ -544,14 +611,17 @@
                             .then((data) => {
                                 if (data.success) {
                                     // Show welcome toast
-                                    const firstName = data.first_name || data.username;
-                                    showAuthToast(`Welcome to OnlyPans, ${firstName}!`);
-                                    
+                                    const firstName =
+                                        data.first_name || data.username;
+                                    showAuthToast(
+                                        `Welcome to OnlyPans, ${firstName}!`
+                                    );
+
                                     // Close modal and reload page after short delay
                                     bootstrap.Modal.getInstance(
                                         document.getElementById("registerModal")
                                     ).hide();
-                                    
+
                                     setTimeout(() => {
                                         location.reload();
                                     }, 1500);
@@ -581,7 +651,9 @@
                             method: "POST",
                             headers: {
                                 "X-Requested-With": "XMLHttpRequest",
-                                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                "X-CSRFToken": document.querySelector(
+                                    "[name=csrfmiddlewaretoken]"
+                                ).value,
                             },
                         })
                             .then((response) => response.json())
@@ -589,7 +661,7 @@
                                 if (data.success) {
                                     // Show goodbye toast
                                     showAuthToast(data.message);
-                                    
+
                                     // Reload page after short delay
                                     setTimeout(() => {
                                         location.reload();
@@ -605,21 +677,26 @@
                 }
 
                 // Clear errors when modals are opened
-                document.getElementById("loginModal").addEventListener("show.bs.modal", function () {
-                    const errorDiv = document.getElementById("loginErrors");
-                    if (errorDiv) {
-                        errorDiv.style.display = "none";
-                        errorDiv.textContent = "";
-                    }
-                });
+                document
+                    .getElementById("loginModal")
+                    .addEventListener("show.bs.modal", function () {
+                        const errorDiv = document.getElementById("loginErrors");
+                        if (errorDiv) {
+                            errorDiv.style.display = "none";
+                            errorDiv.textContent = "";
+                        }
+                    });
 
-                document.getElementById("registerModal").addEventListener("show.bs.modal", function () {
-                    const errorDiv = document.getElementById("registerErrors");
-                    if (errorDiv) {
-                        errorDiv.style.display = "none";
-                        errorDiv.textContent = "";
-                    }
-                });
+                document
+                    .getElementById("registerModal")
+                    .addEventListener("show.bs.modal", function () {
+                        const errorDiv =
+                            document.getElementById("registerErrors");
+                        if (errorDiv) {
+                            errorDiv.style.display = "none";
+                            errorDiv.textContent = "";
+                        }
+                    });
             });
         </script>
         {% block extra_js %}{% endblock %}
