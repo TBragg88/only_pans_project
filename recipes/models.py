@@ -283,3 +283,29 @@ class RecipeStep(models.Model):
     class Meta:
         ordering = ['step_number']
         unique_together = ('recipe', 'step_number')
+
+
+class Rating(models.Model):
+    """User ratings for recipes (1-5 stars)."""
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='ratings'
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text='Rating from 1 to 5 stars'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        title = (self.recipe.title[:20] + "..."
+                 if len(self.recipe.title) > 20
+                 else self.recipe.title)
+        return f"{self.user.username} rated {title}: {self.rating}/5"
+
+    class Meta:
+        unique_together = ('recipe', 'user')
+        ordering = ['-created_at']

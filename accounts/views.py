@@ -46,18 +46,37 @@ def login_view(request):
 @csrf_protect
 @require_http_methods(["GET", "POST"])
 def register_view(request):
-    """Handle user registration."""
+    """Handle user registration with AJAX support."""
     if request.method == 'POST':
         form = CustomRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)  # Auto-login after registration
+            
+            # Handle AJAX requests
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            
             messages.success(
                 request,
                 f'Welcome to OnlyPans, {user.username}!'
             )
             return redirect('recipe_list')
         else:
+            # Handle AJAX requests
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                # Get first error message from form
+                error_message = "Please correct the errors below."
+                if form.errors:
+                    first_field_errors = next(iter(form.errors.values()))
+                    if first_field_errors:
+                        error_message = first_field_errors[0]
+                
+                return JsonResponse({
+                    'success': False,
+                    'error': error_message
+                })
+            
             messages.error(request, 'Please correct the errors below.')
     else:
         form = CustomRegisterForm()
@@ -65,8 +84,7 @@ def register_view(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
-@csrf_protect
-@require_http_methods(["POST"])
+@require_http_methods(["GET", "POST"])
 def logout_view(request):
     """Handle user logout."""
     username = request.user.username if request.user.is_authenticated else None
