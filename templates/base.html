@@ -451,17 +451,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // Show all toast notifications
-                var toastElList = [].slice.call(
-                    document.querySelectorAll(".toast")
-                );
-                var toastList = toastElList.map(function (toastEl) {
-                    return new bootstrap.Toast(toastEl, {
+                // Show only Django message toasts (not our auth toast)
+                var messageToasts = document.querySelectorAll(".toast:not(#authToast)");
+                console.log("Found", messageToasts.length, "Django message toasts");
+                messageToasts.forEach(function (toastEl) {
+                    console.log("Showing toast:", toastEl.textContent.trim());
+                    var toast = new bootstrap.Toast(toastEl, {
                         autohide: true,
                         delay: 4000,
                     });
+                    toast.show();
                 });
-                toastList.forEach((toast) => toast.show());
 
                 // Function to show authentication toast messages
                 function showAuthToast(message) {

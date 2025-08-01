@@ -95,13 +95,18 @@ def register_view(request):
 @require_http_methods(["GET", "POST"])
 def logout_view(request):
     """Handle user logout."""
-    username = request.user.username if request.user.is_authenticated else None
-    logout(request)
-    
-    if username:
+    if request.user.is_authenticated:
+        # Get display name (first name or username)
+        display_name = (request.user.first_name
+                        if request.user.first_name
+                        else request.user.username)
+        logout(request)
+        
         messages.success(
             request,
-            f'Goodbye, {username}! You have been logged out.'
+            f'Goodbye, {display_name}! You have been logged out.'
         )
+    else:
+        logout(request)
     
     return redirect('recipe_list')
