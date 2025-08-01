@@ -5,6 +5,7 @@ Views for the recipes app.
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -26,21 +27,39 @@ def recipe_list(request):
     if tag_filter:
         recipes = recipes.filter(tags__name=tag_filter)
     
-    # Search functionality
+    # Filter by dietary preference if provided
+    dietary_filter = request.GET.get('dietary')
+    if dietary_filter:
+        # Find recipes with tags that match the dietary preference
+        recipes = recipes.filter(
+            tags__name__icontains=dietary_filter,
+            tags__tag_type='dietary'
+        )
+    
+    # Search functionality - search in title, description, and dietary tags
     search_query = request.GET.get('search')
     if search_query:
-        recipes = recipes.filter(title__icontains=search_query)
+        recipes = recipes.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(tags__name__icontains=search_query)
+        ).distinct()
     
     # Pagination - 12 recipes per page
     paginator = Paginator(recipes, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    
+    # Get all tags for filtering
     all_tags = Tag.objects.all()
+    dietary_tags = Tag.objects.filter(tag_type='dietary')
 
     context = {
         'page_obj': page_obj,
         'all_tags': all_tags,
+        'dietary_tags': dietary_tags,
         'current_tag': tag_filter,
+        'current_dietary': dietary_filter,
         'search_query': search_query,
     }
     
@@ -121,35 +140,40 @@ def recipe_create(request):
     return render(request, 'recipes/recipe_form.html', context)
 
 
-@login_required  
+@login_required
 def recipe_edit(request, slug):
     """Edit an existing recipe"""
     recipe = get_object_or_404(Recipe, slug=slug, user=request.user)
-    
+
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES, instance=recipe)
         ingredient_formset = RecipeIngredientFormSet(
-            request.POST, 
-            instance=recipe, 
+            request.POST,
+            instance=recipe,
             prefix='ingredients'
         )
         step_formset = RecipeStepFormSet(
-            request.POST, 
-            request.FILES, 
-            instance=recipe, 
+            request.POST,
+            request.FILES,
+            instance=recipe,
             prefix='steps'
         )
-        
-        if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
+
+        if (form.is_valid() and ingredient_formset.is_valid() and
+                step_formset.is_valid()):
             recipe = form.save()
             ingredient_formset.save()
             step_formset.save()
-            
-            messages.success(request, f'Recipe "{recipe.title}" updated successfully!')
+
+            messages.success(
+                request, f'Recipe "{recipe.title}" updated successfully!'
+            )
             return redirect('recipe_detail', slug=recipe.slug)
     else:
         form = RecipeForm(instance=recipe)
-        ingredient_formset = RecipeIngredientFormSet(instance=recipe, prefix='ingredients')
+        ingredient_formset = RecipeIngredientFormSet(
+            instance=recipe, prefix='ingredients'
+        )
         step_formset = RecipeStepFormSet(instance=recipe, prefix='steps')
     
     context = {
@@ -166,11 +190,16 @@ def recipe_edit(request, slug):
 def recipe_delete(request, slug):
     """Delete a recipe"""
     recipe = get_object_or_404(Recipe, slug=slug, user=request.user)
-    
+
     if request.method == 'POST':
         recipe_title = recipe.title
         recipe.delete()
-        messages.success(request, f'Recipe "{recipe_title}" deleted successfully!')
+        messages.success(
+            request, f'Recipe "{recipe_title}" deleted successfully!'
+        )
         return redirect('recipe_list')
-    
-    return render(request, 'recipes/recipe_confirm_delete.html', {'recipe': recipe})
+
+    return render(
+        request, 'recipes/recipe_confirm_delete.html', {'recipe': recipe}
+    )
+

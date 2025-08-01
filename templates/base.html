@@ -488,7 +488,7 @@
             <div class="toast-container">
                 {% if messages %} {% for message in messages %}
                 <div
-                    class="toast align-items-center text-white bg-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} border-0"
+                    class="toast align-items-center {% if message.tags == 'success' %}{% else %}text-white{% endif %} {% if message.tags == 'error' %}bg-danger{% elif message.tags == 'success' %}bg-custom-success{% else %}bg-info{% endif %} border-0"
                     role="alert"
                     aria-live="assertive"
                     aria-atomic="true"
@@ -662,9 +662,9 @@
                                     // Show goodbye toast
                                     showAuthToast(data.message);
 
-                                    // Reload page after short delay
+                                    // Redirect to home page after short delay
                                     setTimeout(() => {
-                                        location.reload();
+                                        window.location.href = "{% url 'recipe_list' %}";
                                     }, 1500);
                                 }
                             })

@@ -27,6 +27,8 @@
                     <h3 class="mb-0">
                         {% if current_tag %}
                             Recipes tagged: <span class="tag">{{ current_tag }}</span>
+                        {% elif dietary_filter %}
+                            Dietary preference: <span class="tag tag-dietary">{{ dietary_filter }}</span>
                         {% elif search_query %}
                             Search results for: "{{ search_query }}"
                         {% else %}
@@ -37,7 +39,7 @@
                 </div>
                 
                 <!-- Tag Filter Dropdown -->
-                <div class="dropdown">
+                <div class="dropdown me-2">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="fas fa-filter me-1"></i>Filter by Tag
                     </button>
@@ -52,6 +54,26 @@
                             </li>
                         {% empty %}
                             <li><span class="dropdown-item-text text-muted">No tags available</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Dietary Preferences Filter -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-leaf me-1"></i>Dietary Preferences
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'recipe_list' %}">All Dietary Types</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% for tag in dietary_tags %}
+                            <li>
+                                <a class="dropdown-item" href="?dietary={{ tag.name }}">
+                                    <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li><span class="dropdown-item-text text-muted">No dietary tags available</span></li>
                         {% endfor %}
                     </ul>
                 </div>

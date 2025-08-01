@@ -32,7 +32,7 @@ def login_view(request):
                     'first_name': user.first_name,
                 })
             
-            messages.success(request, f'Welcome back, {user.username}!')
+            messages.success(request, 'Login successful! Welcome back.')
             return redirect('recipe_list')
         else:
             # Handle AJAX requests
@@ -69,7 +69,7 @@ def register_view(request):
             
             messages.success(
                 request,
-                f'Welcome to OnlyPans, {user.username}!'
+                'Registration successful! Welcome to OnlyPans.'
             )
             return redirect('recipe_list')
         else:
@@ -114,7 +114,7 @@ def logout_view(request):
         logout(request)
         messages.success(
             request,
-            f'Goodbye, {display_name}! You have been logged out.'
+            'Logout successful! See you next time.'
         )
     else:
         logout(request)
@@ -182,7 +182,7 @@ def profile_edit_view(request):
             form.save()
             messages.success(
                 request,
-                'Your profile has been updated successfully!'
+                'Profile updated successfully! Your changes have been saved.'
             )
             return redirect('profile')
         else:
