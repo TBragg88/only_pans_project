@@ -46,6 +46,16 @@ class UserProfile(models.Model):
     total_followers = models.PositiveIntegerField(default=0)
     total_following = models.PositiveIntegerField(default=0)
     
+    # Privacy settings
+    show_dietary_preferences = models.BooleanField(
+        default=True,
+        help_text='Allow other users to see your dietary preferences'
+    )
+    show_email = models.BooleanField(
+        default=False,
+        help_text='Allow other users to see your email address'
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

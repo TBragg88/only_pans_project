@@ -48,11 +48,11 @@
                                 <i class="fas fa-user"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>My Profile</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-book me-2"></i>My Recipes</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Favorites</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                             </ul>
                         </div>
                         <a class="btn btn-success" href="{% url 'recipe_create' %}">
@@ -403,15 +403,15 @@
             </div>
         </div>
 
-        <!-- Success Toast for Login/Register -->
-        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-            <div id="authToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <!-- Success Toast for Login/Register - Centered -->
+        <div class="toast-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1055;">
+            <div id="authToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
                 <div class="toast-header">
                     <i class="fas fa-check-circle text-success me-2"></i>
                     <strong class="me-auto">OnlyPans</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <div class="toast-body" id="authToastMessage">
+                <div class="toast-body fs-5 py-3" id="authToastMessage">
                     <!-- Message will be inserted here -->
                 </div>
             </div>
@@ -454,9 +454,7 @@
             document.addEventListener("DOMContentLoaded", function () {
                 // Show only Django message toasts (not our auth toast)
                 var messageToasts = document.querySelectorAll(".toast:not(#authToast)");
-                console.log("Found", messageToasts.length, "Django message toasts");
                 messageToasts.forEach(function (toastEl) {
-                    console.log("Showing toast:", toastEl.textContent.trim());
                     var toast = new bootstrap.Toast(toastEl, {
                         autohide: true,
                         delay: 4000,
@@ -569,6 +567,39 @@
                                 errorDiv.textContent =
                                     "An error occurred. Please try again.";
                                 errorDiv.style.display = "block";
+                            });
+                    });
+                }
+
+                // Handle logout via AJAX
+                const logoutBtn = document.getElementById("logoutBtn");
+                if (logoutBtn) {
+                    logoutBtn.addEventListener("click", function (e) {
+                        e.preventDefault();
+
+                        fetch("{% url 'logout' %}", {
+                            method: "POST",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            },
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data.success) {
+                                    // Show goodbye toast
+                                    showAuthToast(data.message);
+                                    
+                                    // Reload page after short delay
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1500);
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Logout error:", error);
+                                // Fallback to regular logout
+                                window.location.href = "{% url 'logout' %}";
                             });
                     });
                 }
