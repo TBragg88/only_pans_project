@@ -194,6 +194,8 @@ class Recipe(models.Model):
 
     def get_image_url(self):
         """Get image URL - prioritize Cloudinary, fallback to URL field"""
+        from django.templatetags.static import static
+        
         if self.image:
             try:
                 return self.image.url
@@ -201,10 +203,10 @@ class Recipe(models.Model):
                 # Fallback if Cloudinary config is dummy/invalid
                 if self.image_url:
                     return self.image_url
-                return 'https://via.placeholder.com/400x300?text=Recipe+Image'
+                return static('images/default_recipe.png')
         elif self.image_url:
             return self.image_url
-        return 'https://via.placeholder.com/400x300?text=Recipe+Image'
+        return static('images/default_recipe.png')
 
     @property
     def total_time(self):

@@ -91,12 +91,14 @@ class UserProfile(models.Model):
     
     def get_profile_image_url(self):
         """Get profile image URL with fallback."""
+        from django.templatetags.static import static
+        
         if self.profile_image:
             try:
                 return self.profile_image.url
             except Exception:
-                return 'https://via.placeholder.com/150x150?text=Profile'
-        return 'https://via.placeholder.com/150x150?text=Profile'
+                return static('images/default_user.jpg')
+        return static('images/default_user.jpg')
     
     @property
     def display_name(self):
