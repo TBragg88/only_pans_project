@@ -94,9 +94,8 @@ class RecipeStepForm(forms.ModelForm):
     
     class Meta:
         model = RecipeStep
-        fields = ['step_number', 'instruction', 'image']
+        fields = ['instruction', 'image']
         widgets = {
-            'step_number': forms.HiddenInput(),
             'instruction': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,

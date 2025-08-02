@@ -240,10 +240,11 @@ def recipe_create(request):
                 ingredient.recipe = recipe
                 ingredient.save()
             
-            # Save steps
+            # Save steps with automatic numbering
             steps = step_formset.save(commit=False)
-            for step in steps:
+            for i, step in enumerate(steps, 1):
                 step.recipe = recipe
+                step.step_number = i
                 step.save()
             
             messages.success(
@@ -294,7 +295,14 @@ def recipe_edit(request, slug):
                 step_formset.is_valid()):
             recipe = form.save()
             ingredient_formset.save()
-            step_formset.save()
+            
+            # Save steps with automatic numbering
+            steps = step_formset.save(commit=False)
+            for i, step in enumerate(steps, 1):
+                if step.recipe_id:  # Only update existing steps
+                    step.step_number = i
+                    step.save()
+            step_formset.save_m2m() if hasattr(step_formset, 'save_m2m') else None
 
             messages.success(
                 request,
