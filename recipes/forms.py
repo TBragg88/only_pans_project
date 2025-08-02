@@ -59,7 +59,7 @@ class RecipeIngredientForm(forms.ModelForm):
     
     class Meta:
         model = RecipeIngredient
-        fields = ['ingredient', 'quantity', 'unit', 'notes', 'order']
+        fields = ['ingredient', 'quantity', 'unit', 'notes']
         widgets = {
             'ingredient': forms.Select(attrs={
                 'class': 'form-control ingredient-select',
@@ -77,8 +77,7 @@ class RecipeIngredientForm(forms.ModelForm):
             'notes': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Notes (optional)'
-            }),
-            'order': forms.HiddenInput()
+            })
         }
 
     def __init__(self, *args, **kwargs):
@@ -87,6 +86,23 @@ class RecipeIngredientForm(forms.ModelForm):
         self.fields['unit'].queryset = Unit.objects.all().order_by('name')
         self.fields['ingredient'].empty_label = "Select ingredient..."
         self.fields['unit'].empty_label = "Select unit..."
+
+    def clean(self):
+        cleaned_data = super().clean()
+        ingredient = cleaned_data.get('ingredient')
+        quantity = cleaned_data.get('quantity')
+        unit = cleaned_data.get('unit')
+        
+        # Only validate if this form has data (not a blank extra form)
+        if ingredient or quantity or unit:
+            if not ingredient:
+                raise forms.ValidationError("Please select an ingredient.")
+            if not quantity:
+                raise forms.ValidationError("Please enter a quantity.")
+            if not unit:
+                raise forms.ValidationError("Please select a unit.")
+        
+        return cleaned_data
 
 
 class RecipeStepForm(forms.ModelForm):

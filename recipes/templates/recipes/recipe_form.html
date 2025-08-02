@@ -18,6 +18,57 @@
             <i class="fas fa-plus-circle text-primary me-2"></i>{{ title }}
         </h2>
 
+        <!-- Error Summary -->
+        {% if form.errors or ingredient_formset.errors or step_formset.errors %}
+        <div class="alert alert-danger" role="alert">
+            <h5><i class="fas fa-exclamation-triangle me-2"></i>Please correct the following errors:</h5>
+            <ul class="mb-0">
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li>{{ field.label }}: {{ field.errors|first }}</li>
+                    {% endif %}
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endif %}
+                {% if ingredient_formset.errors %}
+                    {% for error in ingredient_formset.non_form_errors %}
+                        <li>Ingredients: {{ error }}</li>
+                    {% endfor %}
+                    {% for formset_form in ingredient_formset %}
+                        {% if formset_form.errors %}
+                            {% for field_name, errors in formset_form.errors.items %}
+                                {% if field_name != '__all__' %}
+                                    <li>Ingredient {{ forloop.counter }} - {{ field_name }}: {{ errors|first }}</li>
+                                {% else %}
+                                    <li>Ingredient {{ forloop.counter }}: {{ errors|first }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if step_formset.errors %}
+                    {% for error in step_formset.non_form_errors %}
+                        <li>Instructions: {{ error }}</li>
+                    {% endfor %}
+                    {% for formset_form in step_formset %}
+                        {% if formset_form.errors %}
+                            {% for field_name, errors in formset_form.errors.items %}
+                                {% if field_name != '__all__' %}
+                                    <li>Step {{ forloop.counter }} - {{ field_name }}: {{ errors|first }}</li>
+                                {% else %}
+                                    <li>Step {{ forloop.counter }}: {{ errors|first }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+
         <form method="post" enctype="multipart/form-data" id="recipe-form">
             {% csrf_token %}
             

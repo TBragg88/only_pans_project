@@ -234,10 +234,11 @@ def recipe_create(request):
             recipe.save()
             form.save_m2m()  # Save many-to-many relationships (tags)
             
-            # Save ingredients
+            # Save ingredients with automatic ordering
             ingredients = ingredient_formset.save(commit=False)
-            for ingredient in ingredients:
+            for i, ingredient in enumerate(ingredients, 1):
                 ingredient.recipe = recipe
+                ingredient.order = i
                 ingredient.save()
             
             # Save steps with automatic numbering
@@ -254,10 +255,7 @@ def recipe_create(request):
             return redirect('recipe_detail', slug=recipe.slug)
         else:
             # Form validation failed - errors will be displayed in template
-            messages.error(
-                request, 
-                'Please correct the errors below and try again.'
-            )
+            pass
     else:
         form = RecipeForm()
         ingredient_formset = RecipeIngredientFormSet(prefix='ingredients')
@@ -294,7 +292,14 @@ def recipe_edit(request, slug):
         if (form.is_valid() and ingredient_formset.is_valid() and
                 step_formset.is_valid()):
             recipe = form.save()
-            ingredient_formset.save()
+            
+            # Save ingredients with automatic ordering
+            ingredients = ingredient_formset.save(commit=False)
+            for i, ingredient in enumerate(ingredients, 1):
+                if ingredient.recipe_id:  # Only update existing ingredients
+                    ingredient.order = i
+                    ingredient.save()
+            ingredient_formset.save_m2m() if hasattr(ingredient_formset, 'save_m2m') else None
             
             # Save steps with automatic numbering
             steps = step_formset.save(commit=False)
