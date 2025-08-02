@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Liked Recipes - OnlyPans{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-heart text-danger me-2"></i>My Liked Recipes</h2>
+            <p class="text-muted">
+                You have liked {{ total_liked }} recipe{{ total_liked|pluralize }}
+            </p>
+        </div>
+    </div>
+
+    {% if page_obj %}
+    <div class="row">
+        {% for recipe in page_obj %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card recipe-card h-100">
+                <div class="position-relative">
+                    <img src="{{ recipe.get_image_url }}" 
+                         class="card-img-top" 
+                         alt="{{ recipe.title }}"
+                         style="height: 200px; object-fit: cover;">
+                    
+                    <!-- Like button overlay -->
+                    <div class="position-absolute top-0 end-0 p-2">
+                        <form action="{% url 'toggle_like' recipe.slug %}" method="post" class="like-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ recipe.title }}</h5>
+                    <p class="card-text text-muted flex-grow-1">{{ recipe.description|truncatewords:15 }}</p>
+                    
+                    <div class="recipe-meta mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>{{ recipe.total_time }} min
+                            <i class="fas fa-users ms-2 me-1"></i>{{ recipe.servings }} serving{{ recipe.servings|pluralize }}
+                            <i class="fas fa-heart ms-2 me-1"></i>{{ recipe.like_count }}
+                        </small>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ recipe.get_absolute_url }}" class="btn btn-primary">
+                            View Recipe
+                        </a>
+                        <small class="text-muted">
+                            by {{ recipe.author.username }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Liked recipes pagination">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-heart-broken fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No liked recipes yet</h4>
+        <p class="text-muted">Start exploring recipes and heart the ones you love!</p>
+        <a href="{% url 'recipe_list' %}" class="btn btn-primary">
+            <i class="fas fa-search me-2"></i>Browse Recipes
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Handle like button AJAX
+document.querySelectorAll('.like-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const button = this.querySelector('button');
+        const icon = button.querySelector('i');
+        
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.liked) {
+                // Remove this card since it's no longer liked
+                this.closest('.col-lg-4').remove();
+                
+                // Update total count if displayed
+                const totalElement = document.querySelector('.text-muted');
+                if (totalElement) {
+                    const currentCount = parseInt(totalElement.textContent.match(/\d+/)[0]);
+                    const newCount = currentCount - 1;
+                    totalElement.textContent = `You have liked ${newCount} recipe${newCount !== 1 ? 's' : ''}`;
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

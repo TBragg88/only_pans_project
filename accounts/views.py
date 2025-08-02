@@ -150,6 +150,19 @@ def profile_view(request, username=None):
     # Get user's recipes
     user_recipes = profile_user.recipes.all().order_by('-created_at')
     
+    # Get follow/like information
+    follower_count = user_profile.get_follower_count()
+    following_count = user_profile.get_following_count()
+    is_following = False
+    if request.user.is_authenticated and not is_own_profile:
+        is_following = user_profile.is_following(profile_user)
+    
+    # Get liked recipes if viewing own profile
+    liked_recipes = []
+    if is_own_profile:
+        liked_recipe_objects = user_profile.get_liked_recipes()[:6]  # Show first 6
+        liked_recipes = [like.recipe for like in liked_recipe_objects]
+    
     context = {
         'profile_user': profile_user,
         'user_profile': user_profile,
@@ -157,6 +170,11 @@ def profile_view(request, username=None):
         'user_recipes': user_recipes,
         'recipe_count': user_recipes.count(),
         'average_rating': user_profile.get_average_recipe_rating(),
+        'follower_count': follower_count,
+        'following_count': following_count,
+        'is_following': is_following,
+        'liked_recipes': liked_recipes,
+        'liked_count': len(user_profile.get_liked_recipes()) if is_own_profile else 0,
     }
     
     return render(request, 'accounts/profile.html', context)

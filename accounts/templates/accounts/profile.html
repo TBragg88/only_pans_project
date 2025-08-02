@@ -117,17 +117,41 @@
                                     </h5>
                                     <small class="text-muted">Average Rating</small>
                                 </div>
-                                </div>
                                 <div class="col-md-3">
                                     <h5 class="mb-0 text-info">
-                                        {{ user_profile.total_followers }}
+                                        {{ follower_count }}
                                     </h5>
-                                    <small class="text-muted">Follower{{ user_profile.total_followers|pluralize }}</small>
+                                    <small class="text-muted">Follower{{ follower_count|pluralize }}</small>
                                 </div>
                                 <div class="col-md-3">
                                     <h5 class="mb-0 text-success">
-                                        {{ user_profile.total_following }}
+                                        {{ following_count }}
                                     </h5>
+                                    <small class="text-muted">Following</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Follow Button for other users -->
+                            {% if not is_own_profile and user.is_authenticated %}
+                            <div class="text-center mt-3">
+                                <form action="{% url 'toggle_follow' profile_user.username %}" method="post" class="follow-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn {% if is_following %}btn-outline-primary{% else %}btn-primary{% endif %}">
+                                        <i class="fas {% if is_following %}fa-user-minus{% else %}fa-user-plus{% endif %} me-2"></i>
+                                        {% if is_following %}Unfollow{% else %}Follow{% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Liked Recipes count for own profile -->
+                            {% if is_own_profile and liked_count > 0 %}
+                            <div class="text-center mt-3">
+                                <a href="{% url 'liked_recipes' %}" class="btn btn-outline-danger">
+                                    <i class="fas fa-heart me-2"></i>{{ liked_count }} Liked Recipe{{ liked_count|pluralize }}
+                                </a>
+                            </div>
+                            {% endif %}
                                     <small class="text-muted">Following</small>
                                 </div>
                             </div>
@@ -139,18 +163,34 @@
 
         <!-- Recipes Section -->
         <div class="col-12">
+            {% if is_own_profile %}
+            <!-- Tab Navigation for Own Profile -->
+            <nav>
+                <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-recipes-tab" data-bs-toggle="tab" data-bs-target="#nav-recipes" type="button" role="tab" aria-controls="nav-recipes" aria-selected="true">
+                        <i class="fas fa-utensils me-2"></i>My Recipes ({{ recipe_count }})
+                    </button>
+                    <button class="nav-link" id="nav-liked-tab" data-bs-toggle="tab" data-bs-target="#nav-liked" type="button" role="tab" aria-controls="nav-liked" aria-selected="false">
+                        <i class="fas fa-heart me-2"></i>Liked Recipes ({{ liked_count }})
+                    </button>
+                </div>
+            </nav>
+            
+            <div class="tab-content mt-4" id="nav-tabContent">
+                <!-- My Recipes Tab -->
+                <div class="tab-pane fade show active" id="nav-recipes" role="tabpanel" aria-labelledby="nav-recipes-tab">
+                    {% if recipe_count > 0 %}
+                    <small class="text-muted mb-3 d-block">Click on recipes to edit or delete them</small>
+                    {% endif %}
+            {% else %}
+            <!-- Regular heading for other users -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3>
-                    {% if is_own_profile %} My Recipes {% else %} {{
-                    profile_user.profile.display_name }}'s Recipes {% endif %}
+                    {{ profile_user.profile.display_name }}'s Recipes
                     <span class="badge bg-primary">{{ recipe_count }}</span>
                 </h3>
-                {% if is_own_profile and recipe_count > 0 %}
-                <small class="text-muted"
-                    >Click on recipes to edit or delete them</small
-                >
-                {% endif %}
             </div>
+            {% endif %}
 
             {% if user_recipes %}
             <div class="row">
@@ -233,6 +273,77 @@
                     recipes yet.
                 </p>
                 {% endif %}
+            </div>
+            {% endif %}
+            
+            {% if is_own_profile %}
+                </div>
+                
+                <!-- Liked Recipes Tab -->
+                <div class="tab-pane fade" id="nav-liked" role="tabpanel" aria-labelledby="nav-liked-tab">
+                    {% if liked_recipes %}
+                    <div class="row">
+                        {% for recipe in liked_recipes %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm recipe-card">
+                                <div class="position-relative">
+                                    {% if recipe.get_image_url %}
+                                    <img src="{{ recipe.get_image_url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                                    {% endif %}
+                                    
+                                    <!-- Unlike button -->
+                                    <div class="position-absolute top-0 end-0 p-2">
+                                        <form action="{% url 'toggle_like' recipe.slug %}" method="post" class="like-form">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ recipe.title }}</h5>
+                                    <p class="card-text text-muted flex-grow-1">{{ recipe.description|truncatewords:15 }}</p>
+                                    
+                                    <div class="mt-auto">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>{{ recipe.total_time }} min
+                                            </small>
+                                            <small class="text-muted">by {{ recipe.author.username }}</small>
+                                        </div>
+                                        <a href="{{ recipe.get_absolute_url }}" class="btn btn-primary w-100">
+                                            View Recipe
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if liked_count > 6 %}
+                    <div class="text-center mt-4">
+                        <a href="{% url 'liked_recipes' %}" class="btn btn-outline-primary">
+                            View All {{ liked_count }} Liked Recipes
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-heart-broken fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">No liked recipes yet</h4>
+                        <p class="text-muted mb-4">
+                            Start exploring recipes and heart the ones you love!
+                        </p>
+                        <a href="{% url 'recipe_list' %}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Browse Recipes
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         </div>

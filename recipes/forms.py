@@ -4,6 +4,7 @@ from django.forms import inlineformset_factory
 from .models import (Recipe, RecipeIngredient, RecipeStep, Tag, Ingredient, 
                      Unit, Comment, Rating)
 
+
 class RecipeForm(forms.ModelForm):
     """Main recipe form"""
     
@@ -13,157 +14,102 @@ class RecipeForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter recipe title...'
+                'placeholder': 'Recipe title'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
-                'rows': 4,
-                'placeholder': 'Tell us about this recipe...'
+                'rows': 3,
+                'placeholder': 'Brief description of your recipe'
             }),
             'prep_time': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'min': '0',
-                'placeholder': 'Minutes'
+                'placeholder': 'Prep time in minutes'
             }),
             'cook_time': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'min': '0',
-                'placeholder': 'Minutes'
+                'placeholder': 'Cook time in minutes'
             }),
             'servings': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'min': '1',
                 'placeholder': 'Number of servings'
             }),
-            'image': forms.FileInput(attrs={
-                'class': 'form-control',
-                'accept': 'image/*'
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control'
             }),
             'image_url': forms.URLInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Or paste image URL (optional)'
+                'placeholder': 'Or enter image URL'
             }),
             'tags': forms.CheckboxSelectMultiple(attrs={
                 'class': 'form-check-input'
             })
         }
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make tags optional and group by type
-        self.fields['tags'].required = False
+        # Group tags by type for better display
         self.fields['tags'].queryset = Tag.objects.all().order_by('tag_type', 'name')
-        
-        # Create a custom widget that groups tags by category
-        tag_choices = []
-        current_type = None
-        for tag in Tag.objects.all().order_by('tag_type', 'name'):
-            if tag.tag_type != current_type:
-                if current_type is not None:
-                    tag_choices.append(('', ''))  # Add separator
-                current_type = tag.tag_type
-                header = f'--- {tag.get_tag_type_display()} ---'
-                tag_choices.append((header, ''))
-            tag_choices.append((tag.id, tag.name))
-        
-        # Update help text
-        help_text = ("Select all applicable tags. Choose from dietary "
-                     "restrictions, cuisines, meal types, cooking methods, "
-                     "and difficulty levels.")
-        self.fields['tags'].help_text = help_text
 
 
 class RecipeIngredientForm(forms.ModelForm):
-    """Form for recipe ingredients"""
+    """Form for individual recipe ingredients"""
     
     class Meta:
         model = RecipeIngredient
         fields = ['ingredient', 'quantity', 'unit', 'notes', 'order']
         widgets = {
             'ingredient': forms.Select(attrs={
-                'class': 'form-select ingredient-select',
-                'data-placeholder': 'Choose ingredient...'
+                'class': 'form-control ingredient-select',
+                'data-placeholder': 'Select an ingredient'
             }),
             'quantity': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'step': '0.01',
-                'min': '0',
-                'placeholder': 'Amount'
+                'placeholder': 'Amount',
+                'step': '0.1',
+                'min': '0'
             }),
             'unit': forms.Select(attrs={
-                'class': 'form-select',
-                'data-placeholder': 'Unit...'
+                'class': 'form-control unit-select'
             }),
             'notes': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'e.g., diced, room temp...'
+                'placeholder': 'Notes (optional)'
             }),
-            'order': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'min': '1'
-            })
+            'order': forms.HiddenInput()
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Order ingredients alphabetically
-        ingredients = Ingredient.objects.all().order_by('name')
-        self.fields['ingredient'].queryset = ingredients
-        units = Unit.objects.all().order_by('unit_type', 'name')
-        self.fields['unit'].queryset = units
+        self.fields['ingredient'].queryset = Ingredient.objects.all().order_by('name')
+        self.fields['unit'].queryset = Unit.objects.all().order_by('name')
+        self.fields['ingredient'].empty_label = "Select ingredient..."
+        self.fields['unit'].empty_label = "Select unit..."
 
 
 class RecipeStepForm(forms.ModelForm):
-    """Form for recipe steps"""
+    """Form for individual recipe steps"""
     
     class Meta:
         model = RecipeStep
-        fields = ['step_number', 'instruction', 'image', 'image_url']
+        fields = ['step_number', 'instruction', 'image']
         widgets = {
-            'step_number': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'min': '1'
-            }),
+            'step_number': forms.HiddenInput(),
             'instruction': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Describe this step in detail...'
+                'placeholder': 'Describe this step...'
             }),
-            'image': forms.FileInput(attrs={
-                'class': 'form-control',
-                'accept': 'image/*'
-            }),
-            'image_url': forms.URLInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Or paste image URL (optional)'
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control'
             })
         }
 
 
-# Create formsets for dynamic adding of ingredients and steps
-RecipeIngredientFormSet = inlineformset_factory(
-    Recipe, 
-    RecipeIngredient,
-    form=RecipeIngredientForm,
-    extra=5,  # Start with 5 empty ingredient forms
-    can_delete=True,
-    min_num=1,  # Require at least 1 ingredient
-    validate_min=True
-)
-
-RecipeStepFormSet = inlineformset_factory(
-    Recipe,
-    RecipeStep,
-    form=RecipeStepForm,
-    extra=3,  # Start with 3 empty step forms
-    can_delete=True,
-    min_num=1,  # Require at least 1 step
-    validate_min=True
-)
-
-
 class CommentForm(forms.ModelForm):
-    """Form for adding comments to recipes"""
+    """Form for recipe comments"""
     
     class Meta:
         model = Comment
@@ -172,8 +118,7 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Share your thoughts about this recipe...',
-                'maxlength': '500'
+                'placeholder': 'Share your thoughts about this recipe...'
             })
         }
 
@@ -185,8 +130,36 @@ class RatingForm(forms.ModelForm):
         model = Rating
         fields = ['rating']
         widgets = {
-            'rating': forms.Select(
-                choices=Rating.RATING_CHOICES,
-                attrs={'class': 'form-select'}
-            )
+            'rating': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'max': '5',
+                'step': '1'
+            })
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['rating'].required = True
+
+
+# Create formsets for dynamic adding of ingredients and steps
+RecipeIngredientFormSet = inlineformset_factory(
+    Recipe, 
+    RecipeIngredient,
+    form=RecipeIngredientForm,
+    extra=1,  # Start with just 1 empty ingredient form
+    can_delete=True,
+    min_num=1,  # Require at least 1 ingredient
+    validate_min=True,
+)
+
+RecipeStepFormSet = inlineformset_factory(
+    Recipe,
+    RecipeStep,
+    form=RecipeStepForm,
+    extra=1,  # Start with just 1 empty step form
+    can_delete=True,
+    min_num=1,  # Require at least 1 step
+    validate_min=True,
+)

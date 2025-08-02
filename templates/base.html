@@ -39,52 +39,27 @@
                         Welcome, {% if user.first_name %} {{ user.first_name }}
                         {% else %} {{ user.username }} {% endif %}!
                     </span>
-                    <div class="dropdown me-2">
-                        <button
-                            class="btn btn-outline-light dropdown-toggle"
-                            type="button"
-                            id="userDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <i class="fas fa-user"></i>
-                        </button>
-                        <ul
-                            class="dropdown-menu dropdown-menu-end"
-                            aria-labelledby="userDropdown"
-                        >
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'accounts:profile' %}"
-                                    ><i class="fas fa-user me-2"></i>My
-                                    Profile</a
-                                >
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"
-                                    ><i class="fas fa-book me-2"></i>My
-                                    Recipes</a
-                                >
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"
-                                    ><i class="fas fa-heart me-2"></i
-                                    >Favorites</a
-                                >
-                            </li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li>
-                                <a class="dropdown-item" href="#" id="logoutBtn"
-                                    ><i class="fas fa-sign-out-alt me-2"></i
-                                    >Sign Out</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
-                    <a class="btn btn-success" href="{% url 'recipe_create' %}">
-                        <i class="fas fa-plus"></i> Create Recipe
+                    
+                    <!-- Profile & Actions -->
+                    <a class="btn btn-outline-light me-2" href="{% url 'accounts:profile' %}">
+                        <i class="fas fa-user me-1"></i>Profile
                     </a>
+                    
+                    <!-- Liked Recipes -->
+                    <a class="btn btn-outline-light me-2" href="{% url 'liked_recipes' %}">
+                        <i class="fas fa-heart me-1"></i>Liked Recipes
+                    </a>
+                    
+                    <!-- Create Recipe -->
+                    <a class="btn btn-success me-2" href="{% url 'recipe_create' %}">
+                        <i class="fas fa-plus me-1"></i>Create Recipe
+                    </a>
+                    
+                    <!-- Logout -->
+                    <a class="btn btn-outline-danger" href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                    </a>
+                    
                     {% else %}
                     <button
                         class="btn btn-outline-light me-2"
@@ -134,59 +109,6 @@
                 </form>
             </div>
         </header>
-
-        <!-- Carousel Section -->
-        <section class="container mb-5">
-            <div
-                id="recipeCarousel"
-                class="carousel slide"
-                data-bs-ride="carousel"
-            >
-                <div class="carousel-inner">
-                    <!-- Placeholder for dynamic recipe carousel based on time of day -->
-                    {% block recipe_carousel %}
-                    <div class="carousel-item active">
-                        <img
-                            src="https://via.placeholder.com/900x300?text=Featured+Recipe"
-                            class="d-block w-100"
-                            alt="..."
-                        />
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Featured Recipe</h5>
-                            <p>
-                                Dynamic recipes will appear here based on time
-                                of day and tags.
-                            </p>
-                        </div>
-                    </div>
-                    {% endblock %}
-                </div>
-                <button
-                    class="carousel-control-prev"
-                    type="button"
-                    data-bs-target="#recipeCarousel"
-                    data-bs-slide="prev"
-                >
-                    <span
-                        class="carousel-control-prev-icon"
-                        aria-hidden="true"
-                    ></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button
-                    class="carousel-control-next"
-                    type="button"
-                    data-bs-target="#recipeCarousel"
-                    data-bs-slide="next"
-                >
-                    <span
-                        class="carousel-control-next-icon"
-                        aria-hidden="true"
-                    ></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </section>
 
         <!-- Main Content: Recipe Grid -->
         <main class="container mb-5">{% block content %}{% endblock %}</main>

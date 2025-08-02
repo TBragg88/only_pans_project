@@ -1,0 +1,110 @@
+[
+    {
+        "model": "recipes.recipeingredient",
+        "pk": 201,
+        "fields": {
+            "recipe": 101,
+            "ingredient": 23,
+            "quantity": "400.00",
+            "unit": 9,
+            "order": 1,
+            "notes": "Spaghetti or any pasta shape"
+        }
+    },
+    {
+        "model": "recipes.recipeingredient",
+        "pk": 202,
+        "fields": {
+            "recipe": 101,
+            "ingredient": 4,
+            "quantity": "400.00",
+            "unit": 9,
+            "order": 2,
+            "notes": "Canned crushed tomatoes"
+        }
+    },
+    {
+        "model": "recipes.recipeingredient",
+        "pk": 203,
+        "fields": {
+            "recipe": 101,
+            "ingredient": 3,
+            "quantity": "3.00",
+            "unit": 16,
+            "order": 3,
+            "notes": "Minced"
+        }
+    },
+    {
+        "model": "recipes.recipeingredient",
+        "pk": 204,
+        "fields": {
+            "recipe": 101,
+            "ingredient": 27,
+            "quantity": "3.00",
+            "unit": 2,
+            "order": 4,
+            "notes": "Extra virgin"
+        }
+    },
+    {
+        "model": "recipes.recipeingredient",
+        "pk": 205,
+        "fields": {
+            "recipe": 101,
+            "ingredient": 32,
+            "quantity": "10.00",
+            "unit": 9,
+            "order": 5,
+            "notes": "Fresh leaves"
+        }
+    },
+    {
+        "model": "recipes.recipeingredient",
+        "pk": 206,
+        "fields": {
+            "recipe": 101,
+            "ingredient": 93,
+            "quantity": "50.00",
+            "unit": 9,
+            "order": 6,
+            "notes": "Freshly grated"
+        }
+    },
+    {
+        "model": "recipes.recipestep",
+        "pk": 201,
+        "fields": {
+            "recipe": 101,
+            "step_number": 1,
+            "instruction": "Bring a large pot of salted water to boil. Add the pasta and cook according to package directions until al dente. Reserve 1 cup of pasta water before draining."
+        }
+    },
+    {
+        "model": "recipes.recipestep",
+        "pk": 202,
+        "fields": {
+            "recipe": 101,
+            "step_number": 2,
+            "instruction": "While pasta cooks, heat olive oil in a large skillet over medium heat. Add minced garlic and cook for 1 minute until fragrant."
+        }
+    },
+    {
+        "model": "recipes.recipestep",
+        "pk": 203,
+        "fields": {
+            "recipe": 101,
+            "step_number": 3,
+            "instruction": "Add crushed tomatoes to the skillet. Season with salt and pepper. Let simmer for 15-20 minutes, stirring occasionally, until sauce thickens."
+        }
+    },
+    {
+        "model": "recipes.recipestep",
+        "pk": 204,
+        "fields": {
+            "recipe": 101,
+            "step_number": 4,
+            "instruction": "Add the cooked pasta to the sauce and toss to combine. Add pasta water as needed to achieve desired consistency. Stir in fresh basil and serve immediately with grated Parmesan cheese."
+        }
+    }
+]

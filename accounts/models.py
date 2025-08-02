@@ -194,6 +194,27 @@ class UserProfile(models.Model):
         else:
             return f"{', '.join(tags[:-1])}, and {tags[-1]}"
 
+    def get_follower_count(self):
+        """Get actual follower count from Follow model"""
+        return self.user.followers.count()
+
+    def get_following_count(self):
+        """Get actual following count from Follow model"""
+        return self.user.following.count()
+
+    def is_following(self, user):
+        """Check if this user is following another user"""
+        from recipes.models import Follow
+        return Follow.objects.filter(
+            follower=self.user, 
+            followed=user
+        ).exists()
+
+    def get_liked_recipes(self):
+        """Get recipes this user has liked"""
+        from recipes.models import RecipeLike
+        return RecipeLike.objects.filter(user=self.user).select_related('recipe')
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

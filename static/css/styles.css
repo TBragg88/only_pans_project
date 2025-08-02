@@ -20,26 +20,39 @@
 
 /* ===== 1. CSS VARIABLES & ROOT STYLES ===== */
 :root {
-    --primary-color: #0d6efd;
-    --secondary-color: #6c757d;
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --warning-color: #ffc107;
-    --info-color: #17a2b8;
-    --light-color: #f8f9fa;
-    --dark-color: #212529;
+    /* Warm, inviting color palette */
+    --primary-color: #d2691e; /* Chocolate orange */
+    --primary-hover: #b8591a;
+    --secondary-color: #8b4513; /* Saddle brown */
+    --secondary-hover: #6f3610;
 
-    --primary-hover: #0b5ed7;
-    --secondary-hover: #5a6268;
+    --success-color: #228b22; /* Forest green */
+    --danger-color: #dc3545;
+    --warning-color: #ff8c00; /* Dark orange */
+    --info-color: #4682b4; /* Steel blue */
+
+    --light-color: #fdf6f0; /* Warm white */
+    --dark-color: #2f1b14; /* Dark brown */
+
+    /* Warm accent colors */
+    --warm-beige: #f5deb3;
+    --warm-cream: #fff8dc;
+    --warm-orange: #ffa500;
+    --warm-red: #cd5c5c;
+    --warm-yellow: #ffd700;
+
+    /* Background gradients */
+    --warm-gradient: linear-gradient(135deg, #fdf6f0 0%, #f5deb3 100%);
+    --primary-gradient: linear-gradient(135deg, #d2691e 0%, #ff8c00 100%);
 
     --border-radius-sm: 0.375rem;
     --border-radius: 0.5rem;
     --border-radius-lg: 0.75rem;
     --border-radius-xl: 1rem;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 1px 2px rgba(139, 69, 19, 0.1);
+    --shadow: 0 2px 4px rgba(139, 69, 19, 0.15);
+    --shadow-lg: 0 4px 8px rgba(139, 69, 19, 0.2);
 
     --transition-fast: 0.15s ease;
     --transition: 0.3s ease;
@@ -52,6 +65,8 @@ body {
         sans-serif;
     line-height: 1.6;
     color: var(--dark-color);
+    background: var(--warm-gradient);
+    min-height: 100vh;
 }
 
 .page-container {
@@ -64,6 +79,31 @@ body {
     flex: 1;
     padding-top: 2rem;
     padding-bottom: 2rem;
+}
+
+/* Warm welcome message styling */
+.navbar .text-light {
+    color: var(--warm-cream) !important;
+    font-weight: 500;
+}
+
+/* Enhanced navigation */
+.navbar-dark {
+    background: linear-gradient(
+        135deg,
+        var(--dark-color) 0%,
+        var(--secondary-color) 100%
+    ) !important;
+    box-shadow: var(--shadow-lg);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar-brand:hover {
+    color: var(--warm-orange) !important;
 }
 
 .section-header {
@@ -203,7 +243,59 @@ body {
 .ingredient-row:hover,
 .step-row:hover {
     background: #e9ecef;
-    transform: translateX(2px);
+    /* Removed transform to prevent movement on hover */
+}
+
+/* Prevent movement on form select hover */
+.form-select:hover,
+.ingredient-select:hover {
+    transform: none !important;
+}
+
+/* Stable form controls */
+.form-control,
+.form-select {
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Ingredient Autocomplete Styles */
+.ingredient-autocomplete {
+    position: relative;
+}
+
+.ingredient-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.dropdown.show .ingredient-suggestions {
+    display: block;
+}
+
+.ingredient-suggestions .dropdown-item {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #f8f9fa;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ingredient-suggestions .dropdown-item:hover,
+.ingredient-suggestions .dropdown-item.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.ingredient-suggestions .dropdown-item:last-child {
+    border-bottom: none;
 }
 
 .btn-delete-row {
@@ -576,6 +668,64 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
+/* Enhanced Recipe Cards */
+.recipe-card {
+    background: var(--warm-cream);
+    border: 1px solid rgba(139, 69, 19, 0.1);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.recipe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.25);
+    border-color: var(--primary-color);
+}
+
+.recipe-card .card-img-top {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+    transition: var(--transition);
+}
+
+.recipe-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* Like Button Styling */
+.like-btn {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid rgba(220, 53, 69, 0.3) !important;
+    transition: var(--transition);
+    font-weight: 600;
+}
+
+.like-btn:hover {
+    background: rgba(220, 53, 69, 0.1) !important;
+    border-color: var(--danger-color) !important;
+    transform: scale(1.1);
+}
+
+.like-btn.btn-danger {
+    background: var(--danger-color) !important;
+    border-color: var(--danger-color) !important;
+    color: white !important;
+}
+
+.like-btn.btn-danger:hover {
+    background: #c82333 !important;
+    border-color: #c82333 !important;
+}
+
+.like-count {
+    margin-left: 0.25rem;
+    font-size: 0.85rem;
+}
+
 .card-image-top {
     height: 200px;
     object-fit: cover;
@@ -593,7 +743,7 @@ body {
 
 /* Default Image Placeholder */
 .default-recipe-image {
-    background: linear-gradient(135deg, var(--light-color), #e9ecef);
+    background: linear-gradient(135deg, var(--warm-beige), var(--warm-cream));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -880,6 +1030,22 @@ body {
     font-weight: 600;
     margin-right: 1rem;
     flex-shrink: 0;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    border: 3px solid var(--warm-cream);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .comment-avatar-sm {
@@ -1208,4 +1374,86 @@ body {
     .comment-reply {
         margin-left: 1rem;
     }
+}
+
+/* ===== WARM COLOR OVERRIDES ===== */
+/* Override Bootstrap primary color */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Warm accent buttons */
+.btn-warm {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition);
+}
+
+.btn-warm:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+    color: white;
+}
+
+/* Enhanced header styling */
+.bg-light {
+    background: var(--warm-gradient) !important;
+}
+
+/* Carousel styling */
+#recipeCarousel .card {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: var(--border-radius-xl);
+}
+
+/* Form enhancements */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(210, 105, 30, 0.25);
+}
+
+/* Tag styling */
+.tag {
+    background: var(--warm-orange);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius-lg);
+    font-weight: 500;
+    display: inline-block;
+    margin: 0.125rem;
+    transition: var(--transition);
+}
+
+.tag:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* Like button animation */
+.like-form button {
+    transition: var(--transition);
+}
+
+.like-form button:active {
+    transform: scale(0.95);
 }

@@ -278,6 +278,17 @@ class Recipe(models.Model):
             'fat': round(total_fat / servings, 1),
         }
 
+    @property
+    def like_count(self):
+        """Count of likes"""
+        return self.likes.count()
+
+    def is_liked_by(self, user):
+        """Check if a user has liked this recipe"""
+        if not user.is_authenticated:
+            return False
+        return self.likes.filter(user=user).exists()
+
     class Meta:
         ordering = ['-created_at']
 
@@ -528,4 +539,48 @@ class Comment(models.Model):
         return self.parent_comment is not None
 
     class Meta:
+        ordering = ['-created_at']
+
+
+class Follow(models.Model):
+    """Users following other users"""
+    follower = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following'
+    )
+    followed = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='followers'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.follower.username} follows {self.followed.username}"
+
+    class Meta:
+        unique_together = ('follower', 'followed')
+        ordering = ['-created_at']
+
+
+class RecipeLike(models.Model):
+    """Users liking recipes"""
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='liked_recipes'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='likes'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} likes {self.recipe.title}"
+
+    class Meta:
+        unique_together = ('user', 'recipe')
         ordering = ['-created_at']

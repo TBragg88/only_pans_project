@@ -18,7 +18,64 @@
             <!-- Recipe Header -->
             <div class="mb-4">
                 <h1 class="display-5 fw-bold mb-3">{{ recipe.title }}</h1>
-                <p class="lead text-muted">{{ recipe.description }}</p>
+                
+                <!-- Author Info Section -->
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="author-avatar me-3">
+                            <strong>{{ recipe.user.username|slice:":1"|upper }}</strong>
+                        </div>
+                        <div>
+                            <p class="mb-0">Added by 
+                                <a href="{% url 'accounts:profile_detail' recipe.user.username %}" class="text-decoration-none fw-bold">
+                                    {{ recipe.user.username }}
+                                </a>
+                            </p>
+                            <small class="text-muted">{{ recipe.created_at|date:"F j, Y" }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Follow and Like Buttons -->
+                    {% if user.is_authenticated and user != recipe.user %}
+                        <div class="d-flex gap-2">
+                            <!-- Follow Button -->
+                            <form action="{% url 'toggle_follow' recipe.user.username %}" method="post" class="follow-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm {% if is_following %}btn-success{% else %}btn-outline-success{% endif %} follow-btn">
+                                    <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}"></i>
+                                    {% if is_following %}Following{% else %}Follow{% endif %}
+                                </button>
+                            </form>
+                            
+                            <!-- Like Button -->
+                            <form action="{% url 'toggle_like' recipe.slug %}" method="post" class="like-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} like-btn">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="like-count">{{ recipe.like_count }}</span>
+                                </button>
+                            </form>
+                        </div>
+                    {% elif user.is_authenticated %}
+                        <!-- Just Like Button for Own Recipe -->
+                        <div class="d-flex gap-2">
+                            <span class="btn btn-sm btn-outline-secondary disabled">
+                                <i class="fas fa-heart"></i>
+                                <span class="like-count">{{ recipe.like_count }}</span>
+                            </span>
+                        </div>
+                    {% else %}
+                        <!-- For Anonymous Users -->
+                        <div class="d-flex gap-2">
+                            <span class="btn btn-sm btn-outline-secondary disabled">
+                                <i class="fas fa-heart"></i>
+                                <span class="like-count">{{ recipe.like_count }}</span>
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <p class="lead text-muted mb-3">{{ recipe.description }}</p>
                 
                 <!-- Recipe Meta & Rating -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
@@ -89,7 +146,7 @@
             </div>
 
             <!-- Recipe Image -->
-            <div class="mb-5">
+            <div class="mb-4">
                 {% if recipe.get_image_url %}
                     <img src="{{ recipe.get_image_url }}" class="recipe-header-image" alt="{{ recipe.title }}">
                 {% else %}
@@ -97,6 +154,64 @@
                         <i class="fas fa-utensils fa-4x text-muted"></i>
                     </div>
                 {% endif %}
+            </div>
+
+            <!-- Servings Scaler (moved here) -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="mb-2">Adjust Servings:</h6>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="input-group" style="width: 150px;">
+                                    <button class="btn btn-outline-secondary" type="button" id="decrease-servings">-</button>
+                                    <input type="number" class="form-control text-center" id="servings-scaler" 
+                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
+                                    <button class="btn btn-outline-secondary" type="button" id="increase-servings">+</button>
+                                </div>
+                                <span class="text-muted">servings</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="mb-2">Units:</h6>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="unit-system-toggle">
+                                <label class="form-check-label" for="unit-system-toggle" id="unit-system-label">
+                                    Metric
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredients Section -->
+            <div class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-shopping-list me-2"></i>Ingredients
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% for ingredient in recipe.ingredients.all %}
+                            <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
+                                <span>{{ ingredient.ingredient.name }}</span>
+                                <strong class="ingredient-amount" 
+                                        data-original-quantity="{{ ingredient.quantity }}"
+                                        data-unit="{{ ingredient.unit.abbreviation }}"
+                                        data-unit-name="{{ ingredient.unit.name }}">
+                                    {{ ingredient.smart_display }}
+                                </strong>
+                            </div>
+                            {% if ingredient.notes %}
+                                <small class="text-muted d-block">{{ ingredient.notes }}</small>
+                            {% endif %}
+                        {% empty %}
+                            <p class="text-muted mb-0">No ingredients listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <!-- Nutritional Information -->
@@ -134,63 +249,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ingredients Section for Mobile -->
-            <div class="d-lg-none mb-5">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-shopping-list me-2"></i>Ingredients
-                        </h5>
-                    </div>
-                    
-                    <!-- Recipe Controls for Mobile -->
-                    <div class="card-body border-bottom">
-                        <div class="row g-3 mb-3">
-                            <!-- Servings Scaler -->
-                            <div class="col-6">
-                                <label for="servings-scaler-mobile" class="form-label small">Servings:</label>
-                                <div class="input-group input-group-sm">
-                                    <button class="btn btn-outline-secondary" type="button" id="decrease-servings-mobile">-</button>
-                                    <input type="number" class="form-control text-center" id="servings-scaler-mobile" 
-                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
-                                    <button class="btn btn-outline-secondary" type="button" id="increase-servings-mobile">+</button>
-                                </div>
-                            </div>
-                            
-                            <!-- Unit System Toggle -->
-                            <div class="col-6">
-                                <label class="form-label small">Units:</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="unit-system-toggle-mobile">
-                                    <label class="form-check-label small" for="unit-system-toggle-mobile" id="unit-system-label-mobile">
-                                        Metric
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-body">
-                        {% for ingredient in recipe.ingredients.all %}
-                            <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
-                                <span>{{ ingredient.ingredient.name }}</span>
-                                <strong class="ingredient-amount" 
-                                        data-original-quantity="{{ ingredient.quantity }}"
-                                        data-unit="{{ ingredient.unit.abbreviation }}"
-                                        data-unit-name="{{ ingredient.unit.name }}">
-                                    {{ ingredient.smart_display }}
-                                </strong>
-                            </div>
-                            {% if ingredient.notes %}
-                                <small class="text-muted d-block">{{ ingredient.notes }}</small>
-                            {% endif %}
-                        {% empty %}
-                            <p class="text-muted mb-0">No ingredients listed.</p>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -333,89 +391,6 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Ingredients (Desktop) -->
-            <div class="card mb-4 d-none d-lg-block">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-shopping-list me-2"></i>Ingredients
-                    </h5>
-                </div>
-                
-                <!-- Recipe Controls -->
-                <div class="card-body border-bottom">
-                    <div class="row g-3 mb-3">
-                        <!-- Servings Scaler -->
-                        <div class="col-6">
-                            <label for="servings-scaler" class="form-label small">Servings:</label>
-                            <div class="input-group input-group-sm">
-                                <button class="btn btn-outline-secondary" type="button" id="decrease-servings">-</button>
-                                <input type="number" class="form-control text-center" id="servings-scaler" 
-                                       value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
-                                <button class="btn btn-outline-secondary" type="button" id="increase-servings">+</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Unit System Toggle -->
-                        <div class="col-6">
-                            <label class="form-label small">Units:</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="unit-system-toggle">
-                                <label class="form-check-label small" for="unit-system-toggle" id="unit-system-label">
-                                    Metric
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card-body">
-                    {% for ingredient in recipe.ingredients.all %}
-                        <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
-                            <span>{{ ingredient.ingredient.name }}</span>
-                            <strong class="ingredient-amount" 
-                                    data-original-quantity="{{ ingredient.quantity }}"
-                                    data-unit="{{ ingredient.unit.abbreviation }}"
-                                    data-unit-name="{{ ingredient.unit.name }}">
-                                {{ ingredient.smart_display }}
-                            </strong>
-                        </div>
-                        {% if ingredient.notes %}
-                            <small class="text-muted d-block">{{ ingredient.notes }}</small>
-                        {% endif %}
-                    {% empty %}
-                        <p class="text-muted mb-0">No ingredients listed.</p>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Recipe Info -->
-            <div class="card mb-4">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Recipe Info
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 border-end">
-                            <div class="h4 text-primary mb-1">{{ recipe.total_time }}</div>
-                            <small class="text-muted">Total Time (min)</small>
-                        </div>
-                        <div class="col-6">
-                            <div class="h4 text-primary mb-1">{{ recipe.servings }}</div>
-                            <small class="text-muted">Servings</small>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="text-center">
-                        <small class="text-muted">
-                            Added by <strong>{{ recipe.user.username }}</strong><br>
-                            {{ recipe.created_at|date:"F j, Y" }}
-                        </small>
-                    </div>
-                </div>
-            </div>
-
             <!-- Recipe Actions -->
             <div class="card mb-4">
                 <div class="card-body text-center">

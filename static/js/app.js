@@ -18,6 +18,7 @@ function initializeApp() {
     initializeDynamicForms();
     initializeTagSelection();
     initializeRecipeControls();
+    initializeLikeButtons();
 }
 
 /**
@@ -303,7 +304,7 @@ function removeRow(button) {
 }
 
 function addIngredientRow() {
-    const container = document.querySelector(".ingredient-container");
+    const container = document.querySelector("#ingredient-formset");
     if (!container) return;
 
     const lastRow = container.querySelector(".ingredient-row:last-child");
@@ -320,14 +321,22 @@ function addIngredientRow() {
         });
 
         // Update form indices if needed
-        updateFormIndices(newRow, container.children.length);
+        updateFormIndices(newRow, container.children.length - 1); // -1 for management form
 
         container.appendChild(newRow);
+
+        // Setup autocomplete for the new ingredient input
+        const newIngredientInput = newRow.querySelector(
+            ".ingredient-autocomplete"
+        );
+        if (newIngredientInput && window.ingredientsData) {
+            setupAutocomplete(newIngredientInput, window.ingredientsData);
+        }
     }
 }
 
 function addStepRow() {
-    const container = document.querySelector(".step-container");
+    const container = document.querySelector("#step-formset");
     if (!container) return;
 
     const lastRow = container.querySelector(".step-row:last-child");
@@ -344,7 +353,7 @@ function addStepRow() {
         });
 
         // Update form indices if needed
-        updateFormIndices(newRow, container.children.length);
+        updateFormIndices(newRow, container.children.length - 1); // -1 for management form
 
         container.appendChild(newRow);
     }
@@ -651,3 +660,71 @@ function initializeRecipeControls() {
         return `${formattedQuantity} ${unitName}`; // Keep original casing
     }
 }
+
+/**
+ * Like Button Functionality
+ */
+function initializeLikeButtons() {
+    const likeForms = document.querySelectorAll(".like-form");
+
+    likeForms.forEach((form) => {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const button = this.querySelector(".like-btn");
+            const icon = button.querySelector("i");
+            const countSpan = button.querySelector(".like-count");
+
+            // Add loading state
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            button.disabled = true;
+
+            fetch(this.action, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": this.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value,
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Update button state
+                    if (data.liked) {
+                        button.classList.remove("btn-outline-light");
+                        button.classList.add("btn-danger");
+                    } else {
+                        button.classList.remove("btn-danger");
+                        button.classList.add("btn-outline-light");
+                    }
+
+                    // Update count
+                    if (countSpan) {
+                        countSpan.textContent = data.like_count;
+                    }
+
+                    // Restore button content
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+
+                    // Add a subtle animation
+                    button.style.transform = "scale(1.1)";
+                    setTimeout(() => {
+                        button.style.transform = "";
+                    }, 150);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                });
+        });
+    });
+}
+
+// Initialize like buttons when DOM is ready
+document.addEventListener("DOMContentLoaded", function () {
+    initializeLikeButtons();
+});
