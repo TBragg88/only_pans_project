@@ -24,6 +24,7 @@ class Command(BaseCommand):
             ('Romaine Lettuce', 'produce', 'heads', [], 17, 1.2, 3.3, 0.3, 2.1, 1.2, 8, 0.02),
             ('Chives', 'herbs', 'tablespoons', [], 30, 0.9, 0.7, 0.1, 0.5, 0.1, 3, 0.01),
             ('Parsley', 'herbs', 'grams', [], 36, 3, 6, 0.8, 3.3, 0.9, 56, 0.1),
+            ('Ripe Bananas', 'produce', 'grams', [], 89, 1.1, 23, 0.3, 2.6,12, 1, 0.1),
             ('Avocado', 'produce', 'grams', [], 160, 2, 9, 15, 7, 0.7, 7, 2.1),
             ('Sweet Potato', 'produce', 'grams', [], 86, 1.6, 20, 0.1, 3, 4.2, 55, 0.02),
             ('Zucchini', 'produce', 'grams', [], 17, 1.2, 3.1, 0.3, 1, 2.5, 8, 0.1),
@@ -62,11 +63,16 @@ class Command(BaseCommand):
             ('Snap Peas', 'produce', 'grams', [], 42, 2.8, 7.6, 0.2, 2.6, 4, 4, 0.04),
             ('Cherry Tomatoes', 'produce', 'grams', [], 18, 0.9, 3.9, 0.2, 1.2, 2.6, 5, 0.03),
             ('Kalamata Olives', 'produce', 'grams', [], 115, 0.8, 6, 11, 3, 1, 735, 1.4),
+            ('Black Beans', 'canned', 'can', [], 91, 6, 16, 0.3, 7, 0.3, 2, 0.1),
+            
 
             # Meat & Protein
             ('Chicken Breast', 'meat', 'grams', [], 165, 31, 0, 3.6, 0, 0, 74, 1.0),
             ('Ground Beef', 'meat', 'grams', [], 250, 26, 0, 15, 0, 0, 78, 6.1),
+            ('Beef Sirloin', 'meat', 'grams', [], 175, 26, 0, 7, 0, 0, 60, 2.8),
+            ('Pancetta', 'meat', 'grams', [], 563, 21, 0, 50, 0, 0, 2132, 18),
             ('Salmon', 'fish', 'grams', [], 208, 22, 0, 12, 0, 0, 48, 1.9),
+            ('Salmon Fillets', 'fish', 'grams', [], 208, 22, 0, 12, 0, 0, 48, 1.9),
             ('Eggs', 'protein', 'pieces', [], 155, 13, 1.1, 11, 0, 0.7, 124, 3.1),
             ('Bacon', 'meat', 'grams', [], 541, 37, 1.4, 42, 0, 0, 1717, 13.5),
             ('Anchovies', 'fish', 'fillets', [], 210, 29, 0, 10, 0, 0, 3660, 2.3),
@@ -82,10 +88,13 @@ class Command(BaseCommand):
             ('Edamame', 'protein', 'grams', ['soy'], 121, 11, 10, 5, 5.2, 2.2, 6, 0.6),
             ('Plant-Based Ground Meat', 'protein', 'grams', [], 250, 18, 9, 15, 3, 1, 400, 6),
             ('Plant-Based Sausage', 'protein', 'grams', [], 270, 20, 8, 18, 2, 1, 500, 7),
+            ('Pancetta', 'meat', 'grams', [], 563, 21, 0, 50, 0, 0, 2132, 18),
+            ('Salmon Fillets', 'fish', 'grams', [], 208, 22, 0, 12, 0, 0, 48, 1.9),
             
             # Dairy
             ('Milk', 'dairy', 'ml', ['dairy'], 64, 3.2, 4.8, 3.6, 0, 5.1, 44, 2.3),
             ('Butter', 'dairy', 'grams', ['dairy'], 717, 0.9, 0.1, 81, 0, 0.1, 11, 51),
+            ('Shredded Cheese', 'dairy', 'grams', ['dairy'], 400, 25, 1, 33, 0, 0.5, 650, 21),
             ('Cheddar Cheese', 'dairy', 'grams', ['dairy'], 403, 25, 1.3, 33, 0, 0.5, 653, 21),
             ('Parmesan Cheese', 'dairy', 'grams', ['dairy'], 431, 38, 4, 29, 0, 0, 1529, 19),
             ('Yogurt', 'dairy', 'grams', ['dairy'], 61, 3.5, 4.7, 3.3, 0, 4.7, 36, 2.1),
@@ -162,8 +171,10 @@ class Command(BaseCommand):
             ('Dill', 'herbs', 'grams', [], 43, 3.5, 7, 1.1, 2.1, 0.1, 61, 0.06),
             ('Rosemary', 'herbs', 'grams', [], 131, 3.3, 21, 5.9, 14, 0.5, 50, 2.8),
             ('Sage', 'herbs', 'grams', [], 315, 11, 61, 13, 40, 1.7, 7, 7),
+            ('Cilantro', 'herbs', 'grams', [], 23, 2.1, 3.7, 0.5, 2.8, 0.9, 46, 0.01),
 
             # Spices
+            ('Ginger', 'spices', 'grams', [], 80, 1.8, 18, 0.8, 2, 1.7, 13, 0.2),
             ('Red Pepper Flakes', 'spices', 'teaspoons', [], 6, 0.3, 1.1, 0.3, 0.5, 0.5, 1, 0.02),
             ('Paprika', 'spices', 'grams', [], 282, 14, 54, 13, 37, 10, 68, 2.1),
             ('Cumin', 'spices', 'grams', [], 375, 18, 44, 22, 11, 2.2, 168, 1.5),
@@ -225,6 +236,7 @@ class Command(BaseCommand):
             ('Baking Powder', 'baking', 'teaspoons', [], 53, 0, 28, 0, 0, 0, 488, 0),
             ('Cornstarch', 'baking', 'tablespoons', [], 30, 0, 7, 0, 0, 0, 1, 0),
             ('Yeast', 'baking', 'grams', [], 325, 40, 41, 8, 26, 0, 40, 0.5),
+            ('All-Purpose Flour', 'baking', 'grams', ['gluten'], 364, 10, 76, 1.0, 2.7, 0.3, 2, 0.2),
 
             # Sweeteners
             ('Stevia', 'sweeteners', 'grams', [], 0, 0, 0, 0, 0, 0, 0, 0),
