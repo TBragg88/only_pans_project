@@ -6,12 +6,13 @@
         "cook_time": 15,
         "servings": 4,
         "difficulty": "medium",
+        "image_url": "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "ingredients": [
-            { "name": "spaghetti", "quantity": 400, "unit": "g" },
-            { "name": "pancetta", "quantity": 150, "unit": "g" },
-            { "name": "eggs", "quantity": 3, "unit": "pieces" },
-            { "name": "parmesan cheese", "quantity": 100, "unit": "g" },
-            { "name": "black pepper", "quantity": 1, "unit": "tsp" }
+            { "name": "Spaghetti", "quantity": 400, "unit": "g" },
+            { "name": "Pancetta", "quantity": 150, "unit": "g" },
+            { "name": "Eggs", "quantity": 3, "unit": "pieces" },
+            { "name": "Parmesan Cheese", "quantity": 100, "unit": "g" },
+            { "name": "Black Pepper", "quantity": 1, "unit": "tsp" }
         ],
         "instructions": [
             "Bring a large pot of salted water to boil and cook spaghetti according to package directions",
@@ -31,16 +32,17 @@
         "cook_time": 25,
         "servings": 4,
         "difficulty": "medium",
+        "image_url": "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "ingredients": [
-            { "name": "fettuccine pasta", "quantity": 340, "unit": "g" },
-            { "name": "chicken breast", "quantity": 450, "unit": "g" },
-            { "name": "butter", "quantity": 4, "unit": "tbsp" },
-            { "name": "heavy cream", "quantity": 240, "unit": "ml" },
-            { "name": "parmesan cheese", "quantity": 100, "unit": "g" },
-            { "name": "garlic", "quantity": 3, "unit": "clove" },
-            { "name": "salt", "quantity": 1, "unit": "tsp" },
-            { "name": "black pepper", "quantity": 0.5, "unit": "tsp" },
-            { "name": "olive oil", "quantity": 2, "unit": "tbsp" }
+            { "name": "Fettuccine Pasta", "quantity": 340, "unit": "g" },
+            { "name": "Chicken Breast", "quantity": 450, "unit": "g" },
+            { "name": "Butter", "quantity": 4, "unit": "tbsp" },
+            { "name": "Heavy Cream", "quantity": 240, "unit": "ml" },
+            { "name": "Parmesan Cheese", "quantity": 100, "unit": "g" },
+            { "name": "Garlic", "quantity": 3, "unit": "clove" },
+            { "name": "Salt", "quantity": 1, "unit": "tsp" },
+            { "name": "Black Pepper", "quantity": 0.5, "unit": "tsp" },
+            { "name": "Olive Oil", "quantity": 2, "unit": "tbsp" }
         ],
         "instructions": [
             "Cook fettuccine according to package directions, drain and set aside.",
@@ -63,17 +65,18 @@
         "cook_time": 15,
         "servings": 4,
         "difficulty": "easy",
+        "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "ingredients": [
-            { "name": "black beans", "quantity": 2, "unit": "can" },
-            { "name": "corn tortillas", "quantity": 8, "unit": "each" },
-            { "name": "onion", "quantity": 1, "unit": "each" },
-            { "name": "bell pepper", "quantity": 1, "unit": "each" },
-            { "name": "cumin", "quantity": 1, "unit": "tsp" },
-            { "name": "chili powder", "quantity": 1, "unit": "tsp" },
-            { "name": "avocado", "quantity": 1, "unit": "each" },
-            { "name": "lime", "quantity": 1, "unit": "each" },
-            { "name": "cilantro", "quantity": 60, "unit": "ml" },
-            { "name": "shredded cheese", "quantity": 100, "unit": "g" }
+            { "name": "Black Beans", "quantity": 2, "unit": "can" },
+            { "name": "Corn Tortillas", "quantity": 8, "unit": "each" },
+            { "name": "Onions", "quantity": 1, "unit": "each" },
+            { "name": "Bell Peppers", "quantity": 1, "unit": "each" },
+            { "name": "Cumin", "quantity": 1, "unit": "tsp" },
+            { "name": "Chili Powder", "quantity": 1, "unit": "tsp" },
+            { "name": "Avocado", "quantity": 1, "unit": "each" },
+            { "name": "Lime", "quantity": 1, "unit": "each" },
+            { "name": "Cilantro", "quantity": 60, "unit": "ml" },
+            { "name": "Shredded Cheese", "quantity": 100, "unit": "g" }
         ],
         "instructions": [
             "Drain and rinse black beans.",
@@ -96,15 +99,16 @@
         "cook_time": 15,
         "servings": 4,
         "difficulty": "easy",
+        "image_url": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "ingredients": [
-            { "name": "salmon fillets", "quantity": 4, "unit": "each" },
-            { "name": "honey", "quantity": 60, "unit": "ml" },
-            { "name": "soy sauce", "quantity": 45, "unit": "ml" },
-            { "name": "garlic", "quantity": 4, "unit": "clove" },
-            { "name": "ginger", "quantity": 1, "unit": "tsp" },
-            { "name": "olive oil", "quantity": 2, "unit": "tbsp" },
-            { "name": "lemon juice", "quantity": 1, "unit": "tbsp" },
-            { "name": "green onions", "quantity": 2, "unit": "each" }
+            { "name": "Salmon Fillets", "quantity": 4, "unit": "each" },
+            { "name": "Honey", "quantity": 60, "unit": "ml" },
+            { "name": "Soy Sauce", "quantity": 45, "unit": "ml" },
+            { "name": "Garlic", "quantity": 4, "unit": "clove" },
+            { "name": "Ginger", "quantity": 1, "unit": "tsp" },
+            { "name": "Olive Oil", "quantity": 2, "unit": "tbsp" },
+            { "name": "Lemon Juice", "quantity": 1, "unit": "tbsp" },
+            { "name": "Green Onions", "quantity": 2, "unit": "each" }
         ],
         "instructions": [
             "Preheat oven to 400°F (200°C).",
@@ -126,17 +130,18 @@
         "cook_time": 10,
         "servings": 4,
         "difficulty": "medium",
+        "image_url": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "ingredients": [
-            { "name": "beef sirloin", "quantity": 450, "unit": "g" },
-            { "name": "broccoli", "quantity": 300, "unit": "g" },
-            { "name": "bell peppers", "quantity": 2, "unit": "each" },
-            { "name": "snap peas", "quantity": 150, "unit": "g" },
-            { "name": "soy sauce", "quantity": 60, "unit": "ml" },
-            { "name": "oyster sauce", "quantity": 2, "unit": "tbsp" },
-            { "name": "cornstarch", "quantity": 1, "unit": "tbsp" },
-            { "name": "vegetable oil", "quantity": 3, "unit": "tbsp" },
-            { "name": "garlic", "quantity": 3, "unit": "clove" },
-            { "name": "ginger", "quantity": 1, "unit": "tbsp" }
+            { "name": "Beef Sirloin", "quantity": 450, "unit": "g" },
+            { "name": "Broccoli", "quantity": 300, "unit": "g" },
+            { "name": "Bell Peppers", "quantity": 2, "unit": "each" },
+            { "name": "Snap Peas", "quantity": 150, "unit": "g" },
+            { "name": "Soy Sauce", "quantity": 60, "unit": "ml" },
+            { "name": "Oyster Sauce", "quantity": 2, "unit": "tbsp" },
+            { "name": "Cornstarch", "quantity": 1, "unit": "tbsp" },
+            { "name": "Vegetable Oil", "quantity": 3, "unit": "tbsp" },
+            { "name": "Garlic", "quantity": 3, "unit": "clove" },
+            { "name": "Ginger", "quantity": 1, "unit": "tbsp" }
         ],
         "instructions": [
             "Slice beef thinly against the grain.",
@@ -159,15 +164,16 @@
         "cook_time": 60,
         "servings": 10,
         "difficulty": "easy",
+        "image_url": "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "ingredients": [
-            { "name": "ripe bananas", "quantity": 3, "unit": "each" },
-            { "name": "all-purpose flour", "quantity": 220, "unit": "g" },
-            { "name": "sugar", "quantity": 150, "unit": "g" },
-            { "name": "butter", "quantity": 75, "unit": "g" },
-            { "name": "egg", "quantity": 1, "unit": "each" },
-            { "name": "vanilla extract", "quantity": 1, "unit": "tsp" },
-            { "name": "baking soda", "quantity": 1, "unit": "tsp" },
-            { "name": "salt", "quantity": 0.5, "unit": "tsp" }
+            { "name": "Ripe Bananas", "quantity": 3, "unit": "each" },
+            { "name": "All-Purpose Flour", "quantity": 220, "unit": "g" },
+            { "name": "Sugar", "quantity": 150, "unit": "g" },
+            { "name": "Butter", "quantity": 75, "unit": "g" },
+            { "name": "Eggs", "quantity": 1, "unit": "each" },
+            { "name": "Vanilla Extract", "quantity": 1, "unit": "tsp" },
+            { "name": "Baking Soda", "quantity": 1, "unit": "tsp" },
+            { "name": "Salt", "quantity": 0.5, "unit": "tsp" }
         ],
         "instructions": [
             "Preheat oven to 350°F (175°C) and grease a 9x5 inch loaf pan.",

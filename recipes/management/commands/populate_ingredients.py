@@ -258,8 +258,6 @@ class Command(BaseCommand):
             ('Hemp Seeds', 'protein', 'grams', [], 553, 32, 8.7, 48, 4, 1.5, 5, 4.6),
             ('Chia Seeds', 'protein', 'grams', [], 486, 17, 42, 31, 34, 0, 16, 3.3),
             ('Flax Seeds', 'protein', 'grams', [], 534, 18, 29, 42, 27, 1.6, 30, 3.7),
-
-            # Additional Ingredients
         ]
 
         print("Starting ingredient population...")
