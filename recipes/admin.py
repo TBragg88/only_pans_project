@@ -53,10 +53,11 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'recipe', 'content_preview', 'created_at', 'is_reply']
-    list_filter = ['created_at', 'recipe']
+    list_display = ['user', 'recipe', 'content_preview', 'is_approved', 'created_at', 'is_reply']
+    list_filter = ['is_approved', 'created_at', 'recipe']
     search_fields = ['content', 'user__username', 'recipe__title']
     readonly_fields = ['created_at', 'updated_at']
+    actions = ['approve_comments', 'reject_comments']
     
     def content_preview(self, obj):
         """Show a preview of the comment content."""
@@ -69,9 +70,21 @@ class CommentAdmin(admin.ModelAdmin):
     is_reply.boolean = True
     is_reply.short_description = 'Is Reply'
     
+    def approve_comments(self, request, queryset):
+        """Bulk approve selected comments."""
+        updated = queryset.update(is_approved=True)
+        self.message_user(request, f'{updated} comments were approved.')
+    approve_comments.short_description = 'Approve selected comments'
+    
+    def reject_comments(self, request, queryset):
+        """Bulk reject (unapprove) selected comments."""
+        updated = queryset.update(is_approved=False)
+        self.message_user(request, f'{updated} comments were rejected.')
+    reject_comments.short_description = 'Reject selected comments'
+    
     fieldsets = (
         ('Comment Details', {
-            'fields': ('user', 'recipe', 'content', 'parent_comment')
+            'fields': ('user', 'recipe', 'content', 'is_approved', 'parent_comment')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

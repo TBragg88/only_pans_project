@@ -116,10 +116,11 @@ def recipe_detail(request, slug):
     recipe.view_count += 1
     recipe.save()
     
-    # Get comments for this recipe (only top-level comments)
+    # Get comments for this recipe (only top-level, approved comments)
     comments = Comment.objects.filter(
         recipe=recipe,
-        parent_comment=None
+        parent_comment=None,
+        is_approved=True
     ).order_by('-created_at')
     
     # Get user's existing rating if logged in
