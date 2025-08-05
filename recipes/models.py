@@ -463,7 +463,7 @@ class RecipeStep(models.Model):
         elif self.image_url:
             return self.image_url
         return None
- 
+
     class Meta:
         ordering = ['step_number']
         unique_together = ('recipe', 'step_number')
@@ -478,7 +478,7 @@ class Rating(models.Model):
         (4, '4 Stars'),
         (5, '5 Stars'),
     ]
-    
+
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
