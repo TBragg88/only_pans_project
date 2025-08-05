@@ -1,0 +1,185 @@
+[
+    {
+        "title": "Spaghetti Carbonara",
+        "description": "Classic Italian pasta dish with eggs, cheese, and pancetta",
+        "prep_time": 10,
+        "cook_time": 15,
+        "servings": 4,
+        "difficulty": "medium",
+        "ingredients": [
+            { "name": "spaghetti", "quantity": 400, "unit": "g" },
+            { "name": "pancetta", "quantity": 150, "unit": "g" },
+            { "name": "eggs", "quantity": 3, "unit": "pieces" },
+            { "name": "parmesan cheese", "quantity": 100, "unit": "g" },
+            { "name": "black pepper", "quantity": 1, "unit": "tsp" }
+        ],
+        "instructions": [
+            "Bring a large pot of salted water to boil and cook spaghetti according to package directions",
+            "While pasta cooks, dice pancetta and cook in a large pan until crispy",
+            "In a bowl, whisk together eggs, grated parmesan, and black pepper",
+            "Drain pasta, reserving 1 cup of pasta water",
+            "Add hot pasta to the pan with pancetta",
+            "Remove from heat and quickly stir in egg mixture, adding pasta water as needed",
+            "Serve immediately with extra parmesan and black pepper"
+        ],
+        "tags": ["italian", "pasta", "dinner", "quick"]
+    },
+    {
+        "title": "Creamy Chicken Alfredo Pasta",
+        "description": "Rich and creamy pasta dish with tender chicken in a classic alfredo sauce.",
+        "prep_time": 15,
+        "cook_time": 25,
+        "servings": 4,
+        "difficulty": "medium",
+        "ingredients": [
+            { "name": "fettuccine pasta", "quantity": 340, "unit": "g" },
+            { "name": "chicken breast", "quantity": 450, "unit": "g" },
+            { "name": "butter", "quantity": 4, "unit": "tbsp" },
+            { "name": "heavy cream", "quantity": 240, "unit": "ml" },
+            { "name": "parmesan cheese", "quantity": 100, "unit": "g" },
+            { "name": "garlic", "quantity": 3, "unit": "clove" },
+            { "name": "salt", "quantity": 1, "unit": "tsp" },
+            { "name": "black pepper", "quantity": 0.5, "unit": "tsp" },
+            { "name": "olive oil", "quantity": 2, "unit": "tbsp" }
+        ],
+        "instructions": [
+            "Cook fettuccine according to package directions, drain and set aside.",
+            "Season chicken with salt and pepper, then cut into bite-sized pieces.",
+            "Heat olive oil in a large skillet over medium-high heat.",
+            "Cook chicken pieces until golden and cooked through, about 6-8 minutes.",
+            "Remove chicken and set aside.",
+            "In the same skillet, melt butter and sauté minced garlic for 1 minute.",
+            "Pour in heavy cream and bring to a gentle simmer.",
+            "Gradually whisk in parmesan cheese until smooth.",
+            "Return chicken to the skillet and add cooked pasta.",
+            "Toss everything together and serve immediately."
+        ],
+        "tags": ["pasta", "chicken", "italian", "creamy", "dinner"]
+    },
+    {
+        "title": "Vegetarian Black Bean Tacos",
+        "description": "Flavorful and filling tacos packed with seasoned black beans and fresh toppings.",
+        "prep_time": 10,
+        "cook_time": 15,
+        "servings": 4,
+        "difficulty": "easy",
+        "ingredients": [
+            { "name": "black beans", "quantity": 2, "unit": "can" },
+            { "name": "corn tortillas", "quantity": 8, "unit": "each" },
+            { "name": "onion", "quantity": 1, "unit": "each" },
+            { "name": "bell pepper", "quantity": 1, "unit": "each" },
+            { "name": "cumin", "quantity": 1, "unit": "tsp" },
+            { "name": "chili powder", "quantity": 1, "unit": "tsp" },
+            { "name": "avocado", "quantity": 1, "unit": "each" },
+            { "name": "lime", "quantity": 1, "unit": "each" },
+            { "name": "cilantro", "quantity": 60, "unit": "ml" },
+            { "name": "shredded cheese", "quantity": 100, "unit": "g" }
+        ],
+        "instructions": [
+            "Drain and rinse black beans.",
+            "Dice onion and bell pepper.",
+            "Heat oil in a large pan over medium heat.",
+            "Sauté onion and bell pepper until softened, about 5 minutes.",
+            "Add black beans, cumin, and chili powder.",
+            "Cook for 5-7 minutes, mashing some beans slightly.",
+            "Warm tortillas in a dry skillet or microwave.",
+            "Slice avocado and chop cilantro.",
+            "Fill tortillas with bean mixture.",
+            "Top with avocado, cheese, cilantro, and lime juice."
+        ],
+        "tags": ["vegetarian", "mexican", "beans", "tacos", "quick"]
+    },
+    {
+        "title": "Honey Garlic Salmon",
+        "description": "Tender salmon fillets glazed with a sweet and savory honey garlic sauce.",
+        "prep_time": 10,
+        "cook_time": 15,
+        "servings": 4,
+        "difficulty": "easy",
+        "ingredients": [
+            { "name": "salmon fillets", "quantity": 4, "unit": "each" },
+            { "name": "honey", "quantity": 60, "unit": "ml" },
+            { "name": "soy sauce", "quantity": 45, "unit": "ml" },
+            { "name": "garlic", "quantity": 4, "unit": "clove" },
+            { "name": "ginger", "quantity": 1, "unit": "tsp" },
+            { "name": "olive oil", "quantity": 2, "unit": "tbsp" },
+            { "name": "lemon juice", "quantity": 1, "unit": "tbsp" },
+            { "name": "green onions", "quantity": 2, "unit": "each" }
+        ],
+        "instructions": [
+            "Preheat oven to 400°F (200°C).",
+            "Place salmon fillets on a lined baking sheet.",
+            "In a small bowl, whisk together honey, soy sauce, minced garlic, and ginger.",
+            "Heat olive oil in a small pan over medium heat.",
+            "Pour honey mixture into the pan and simmer for 2-3 minutes.",
+            "Brush half of the glaze over salmon fillets.",
+            "Bake for 12-15 minutes until salmon flakes easily.",
+            "Brush with remaining glaze and sprinkle with lemon juice.",
+            "Garnish with chopped green onions before serving."
+        ],
+        "tags": ["salmon", "fish", "healthy", "asian-inspired", "quick"]
+    },
+    {
+        "title": "Classic Beef Stir Fry",
+        "description": "Quick and colorful stir fry with tender beef and crisp vegetables in a savory sauce.",
+        "prep_time": 20,
+        "cook_time": 10,
+        "servings": 4,
+        "difficulty": "medium",
+        "ingredients": [
+            { "name": "beef sirloin", "quantity": 450, "unit": "g" },
+            { "name": "broccoli", "quantity": 300, "unit": "g" },
+            { "name": "bell peppers", "quantity": 2, "unit": "each" },
+            { "name": "snap peas", "quantity": 150, "unit": "g" },
+            { "name": "soy sauce", "quantity": 60, "unit": "ml" },
+            { "name": "oyster sauce", "quantity": 2, "unit": "tbsp" },
+            { "name": "cornstarch", "quantity": 1, "unit": "tbsp" },
+            { "name": "vegetable oil", "quantity": 3, "unit": "tbsp" },
+            { "name": "garlic", "quantity": 3, "unit": "clove" },
+            { "name": "ginger", "quantity": 1, "unit": "tbsp" }
+        ],
+        "instructions": [
+            "Slice beef thinly against the grain.",
+            "Cut all vegetables into bite-sized pieces.",
+            "Mix soy sauce, oyster sauce, and cornstarch in a small bowl.",
+            "Heat 1 tbsp oil in a wok or large skillet over high heat.",
+            "Stir-fry beef until browned, about 3-4 minutes. Remove and set aside.",
+            "Add remaining oil to the pan.",
+            "Stir-fry garlic and ginger for 30 seconds.",
+            "Add vegetables and stir-fry for 3-4 minutes until crisp-tender.",
+            "Return beef to pan and add sauce mixture.",
+            "Stir everything together for 1-2 minutes until sauce thickens."
+        ],
+        "tags": ["beef", "stir-fry", "asian", "vegetables", "quick"]
+    },
+    {
+        "title": "Banana Bread",
+        "description": "Moist and flavorful banana bread perfect for breakfast or as a snack.",
+        "prep_time": 15,
+        "cook_time": 60,
+        "servings": 10,
+        "difficulty": "easy",
+        "ingredients": [
+            { "name": "ripe bananas", "quantity": 3, "unit": "each" },
+            { "name": "all-purpose flour", "quantity": 220, "unit": "g" },
+            { "name": "sugar", "quantity": 150, "unit": "g" },
+            { "name": "butter", "quantity": 75, "unit": "g" },
+            { "name": "egg", "quantity": 1, "unit": "each" },
+            { "name": "vanilla extract", "quantity": 1, "unit": "tsp" },
+            { "name": "baking soda", "quantity": 1, "unit": "tsp" },
+            { "name": "salt", "quantity": 0.5, "unit": "tsp" }
+        ],
+        "instructions": [
+            "Preheat oven to 350°F (175°C) and grease a 9x5 inch loaf pan.",
+            "Mash bananas in a large bowl until smooth.",
+            "Melt butter and let cool slightly.",
+            "Mix mashed bananas, melted butter, sugar, egg, and vanilla.",
+            "In a separate bowl, whisk together flour, baking soda, and salt.",
+            "Add dry ingredients to wet ingredients and mix until just combined.",
+            "Pour batter into prepared loaf pan.",
+            "Bake for 55-60 minutes until a toothpick comes out clean.",
+            "Cool in pan for 10 minutes, then turn out onto wire rack."
+        ],
+        "tags": ["bread", "banana", "breakfast", "dessert", "baking"]
+    }
+]

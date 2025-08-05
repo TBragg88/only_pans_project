@@ -59,7 +59,10 @@ class Command(BaseCommand):
             ('Bok Choy', 'produce', 'grams', [], 13, 1.5, 2.2, 0.2, 1, 1.2, 65, 0.1),
             ('Daikon', 'produce', 'grams', [], 18, 0.6, 4.1, 0.1, 1.6, 2.5, 21, 0.1),
             ('Jicama', 'produce', 'grams', [], 38, 0.7, 9, 0.1, 4.9, 1.8, 4, 0.1),
-            
+            ('Snap Peas', 'produce', 'grams', [], 42, 2.8, 7.6, 0.2, 2.6, 4, 4, 0.04),
+            ('Cherry Tomatoes', 'produce', 'grams', [], 18, 0.9, 3.9, 0.2, 1.2, 2.6, 5, 0.03),
+            ('Kalamata Olives', 'produce', 'grams', [], 115, 0.8, 6, 11, 3, 1, 735, 1.4),
+
             # Meat & Protein
             ('Chicken Breast', 'meat', 'grams', [], 165, 31, 0, 3.6, 0, 0, 74, 1.0),
             ('Ground Beef', 'meat', 'grams', [], 250, 26, 0, 15, 0, 0, 78, 6.1),
@@ -135,7 +138,9 @@ class Command(BaseCommand):
             ('Pita', 'grains', 'pieces', ['gluten'], 275, 9, 55, 1, 2.4, 0, 536, 0.2),
             ('Lavash', 'grains', 'pieces', ['gluten'], 250, 8, 50, 2, 2, 0, 400, 1.5),
             ('Injera', 'grains', 'pieces', [], 166, 5, 35, 0.5, 2, 0.5, 10, 0.1),
-            
+            ('Fettuccine Pasta', 'grains', 'grams', ['gluten'], 371, 13, 74, 1.5, 3.2, 2.7, 6, 0.3),
+            ('Corn Tortillas', 'grains', 'pieces', [], 218, 6, 35, 5, 2, 1, 467, 1.2),
+        
             # Pantry Staples
             ('Olive Oil', 'oils', 'ml', [], 884, 0, 0, 100, 0, 0, 2, 14),
             ('Brown Sugar', 'baking', 'grams', [], 380, 0, 98, 0, 0, 97, 28, 0),
@@ -203,6 +208,7 @@ class Command(BaseCommand):
             ('Hummus', 'condiments', 'grams', [], 166, 8, 14, 10, 6, 0.3, 240, 1.5),
             ('Relish', 'condiments', 'grams', [], 97, 0.6, 24, 0.1, 1.2, 20, 710, 0),
             ('Pickled Ginger', 'condiments', 'grams', [], 60, 0.3, 15, 0.1, 1, 12, 500, 0.1),
+            ('Oyster Sauce', 'condiments', 'ml', [], 51, 1.4, 12, 0, 0, 9, 492, 0),
 
             # Baking
             ('Vanilla Extract', 'baking', 'teaspoons', [], 12, 0, 0.6, 0, 0, 0.6, 0, 0),
@@ -284,3 +290,8 @@ class Command(BaseCommand):
 
         print(f"\nDone! Created {created_count} new ingredients, {existing_count} already existed.")
         print("Your ingredient database is now ready for recipes!")
+
+
+
+
+
