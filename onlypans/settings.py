@@ -97,14 +97,17 @@ WSGI_APPLICATION = 'onlypans.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+USE_LOCAL_DB = os.environ.get("USE_LOCAL_DB", "False").lower() == "true"
 
-if DATABASE_URL:
+if DATABASE_URL and not USE_LOCAL_DB:
     # Production database (PostgreSQL via DATABASE_URL)
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL)
     }
+    print("Using PostgreSQL database")
 else:
     # Local development database (SQLite)
+    print("Using SQLite for local development")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

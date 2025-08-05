@@ -398,7 +398,8 @@ body {
 
 /* ===== 5. RECIPE COMPONENTS ===== */
 .recipe-card {
-    background: white;
+    background: var(--warm-cream);
+    border: 1px solid rgba(139, 69, 19, 0.1);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
     transition: var(--transition);
@@ -408,7 +409,8 @@ body {
 
 .recipe-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.25);
+    border-color: var(--primary-color);
 }
 
 .recipe-card-image {
@@ -668,22 +670,7 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
-/* Enhanced Recipe Cards */
-.recipe-card {
-    background: var(--warm-cream);
-    border: 1px solid rgba(139, 69, 19, 0.1);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    overflow: hidden;
-}
-
-.recipe-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.25);
-    border-color: var(--primary-color);
-}
-
+/* Enhanced Recipe Cards - Consolidated */
 .recipe-card .card-img-top {
     height: 220px;
     object-fit: cover;
@@ -772,14 +759,14 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     color: white;
-    background-color: var(--primary-color);
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    transition: var(--transition-fast);
+    background: var(--warm-orange);
+    margin: 0.125rem;
+    transition: var(--transition);
 }
 
 .tag:hover {
-    transform: scale(1.05);
+    background: var(--primary-hover);
+    transform: translateY(-1px);
 }
 
 .tag-small {
@@ -1426,28 +1413,14 @@ body {
     border-radius: var(--border-radius-xl);
 }
 
-/* Form enhancements */
-.form-control:focus {
+/* Form enhancements - Consolidated */
+.form-control:focus,
+.form-select:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.2rem rgba(210, 105, 30, 0.25);
 }
 
-/* Tag styling */
-.tag {
-    background: var(--warm-orange);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--border-radius-lg);
-    font-weight: 500;
-    display: inline-block;
-    margin: 0.125rem;
-    transition: var(--transition);
-}
-
-.tag:hover {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-}
+/* Remove duplicate tag styling at end */
 
 /* Like button animation */
 .like-form button {
