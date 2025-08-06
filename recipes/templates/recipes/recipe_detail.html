@@ -355,9 +355,9 @@
                                 {% endif %}
                                 
                                 <!-- Show Replies -->
-                                {% if comment.get_approved_replies %}
+                                {% if comment.replies.exists %}
                                     <div class="replies mt-3 ms-4">
-                                        {% for reply in comment.get_approved_replies %}
+                                        {% for reply in comment.replies.all %}
                                             <div class="card mb-2">
                                                 <div class="card-body py-2">
                                                     <div class="d-flex align-items-start">

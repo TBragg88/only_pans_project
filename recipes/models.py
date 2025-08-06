@@ -463,7 +463,7 @@ class RecipeStep(models.Model):
         elif self.image_url:
             return self.image_url
         return None
-
+ 
     class Meta:
         ordering = ['step_number']
         unique_together = ('recipe', 'step_number')
@@ -478,7 +478,7 @@ class Rating(models.Model):
         (4, '4 Stars'),
         (5, '5 Stars'),
     ]
-
+    
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -515,10 +515,6 @@ class Comment(models.Model):
     content = models.TextField(
         help_text='Share your experience with this recipe'
     )
-    is_approved = models.BooleanField(
-        default=False,
-        help_text='Comments must be approved by admin before appearing on site'
-    )
     parent_comment = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -529,10 +525,6 @@ class Comment(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def get_approved_replies(self):
-        """Return only approved replies to this comment."""
-        return self.replies.filter(is_approved=True)
 
     def __str__(self):
         title = (self.recipe.title[:20] + "..."

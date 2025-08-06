@@ -14,7 +14,6 @@ build/
 *.log
 staticfiles/
 media/
-db.sqlite3
 
 # VS Code
 .vscode/

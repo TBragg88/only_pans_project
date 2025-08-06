@@ -1,7 +1,5 @@
 from django.contrib import admin
-from .models import (
-    Tag, Ingredient, Unit, Recipe, RecipeIngredient, RecipeStep, Comment
-)
+from .models import Tag, Ingredient, Unit, Recipe, RecipeIngredient, RecipeStep
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -47,47 +45,5 @@ class RecipeAdmin(admin.ModelAdmin):
         }),
         ('Categorization', {
             'fields': ('tags',)
-        }),
-    )
-
-
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'recipe', 'content_preview', 'is_approved', 'created_at', 'is_reply']
-    list_filter = ['is_approved', 'created_at', 'recipe']
-    search_fields = ['content', 'user__username', 'recipe__title']
-    readonly_fields = ['created_at', 'updated_at']
-    actions = ['approve_comments', 'reject_comments']
-    
-    def content_preview(self, obj):
-        """Show a preview of the comment content."""
-        return obj.content[:50] + "..." if len(obj.content) > 50 else obj.content
-    content_preview.short_description = 'Content Preview'
-    
-    def is_reply(self, obj):
-        """Show if this is a reply to another comment."""
-        return bool(obj.parent_comment)
-    is_reply.boolean = True
-    is_reply.short_description = 'Is Reply'
-    
-    def approve_comments(self, request, queryset):
-        """Bulk approve selected comments."""
-        updated = queryset.update(is_approved=True)
-        self.message_user(request, f'{updated} comments were approved.')
-    approve_comments.short_description = 'Approve selected comments'
-    
-    def reject_comments(self, request, queryset):
-        """Bulk reject (unapprove) selected comments."""
-        updated = queryset.update(is_approved=False)
-        self.message_user(request, f'{updated} comments were rejected.')
-    reject_comments.short_description = 'Reject selected comments'
-    
-    fieldsets = (
-        ('Comment Details', {
-            'fields': ('user', 'recipe', 'content', 'is_approved', 'parent_comment')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
         }),
     )
