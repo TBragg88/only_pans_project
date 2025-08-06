@@ -959,54 +959,287 @@ a:hover .card-title {
 }
 
 /* ===== 9. TAGS & BADGES ===== */
+/* 
+=== UNIFIED TAG SYSTEM ===
+All tags get colors from CSS - NO database colors, NO bootstrap overrides
+This system works for ALL tags: display tags, form tags, buttons with tag classes
+*/
+
+/* Base tag styling - applies to ALL tags */
 .tag {
     display: inline-block;
     padding: 0.375rem 0.75rem;
     border-radius: var(--border-radius-xl);
     font-size: 0.875rem;
     font-weight: 500;
-    color: white;
-    background: var(--warm-orange);
+    color: white !important;
     margin: 0.125rem;
     transition: var(--transition);
+    border: 2px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    /* Let database colors work via inline styles */
 }
 
 .tag:hover {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
+    transform: scale(1.05);
+    color: white !important;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* Small tags for compact areas */
 .tag-small {
     display: inline-block;
     padding: 0.25rem 0.5rem;
     border-radius: var(--border-radius);
     font-size: 0.75rem;
     font-weight: 500;
-    color: white;
-    background-color: var(--primary-color);
+    color: white !important;
     margin-right: 0.25rem;
     margin-bottom: 0.25rem;
+    border: 2px solid transparent;
+    transition: var(--transition);
+    /* Let database colors work via inline styles */
 }
 
-.tag-dietary {
-    background-color: var(--success-color);
+.tag-small:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.tag-cuisine {
-    background-color: var(--info-color);
+/* === FORM TAG SELECTIONS === */
+.tag-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.tag-difficulty {
-    background-color: var(--warning-color);
-    color: var(--dark-color);
+/* Form selectable tags - use database colors via inline styles */
+.tag-selectable {
+    cursor: pointer;
+    transition: var(--transition);
+    user-select: none;
+    color: white !important;
+    font-weight: 500;
+    border: 2px solid transparent;
+    /* Database colors will be applied via inline styles */
 }
 
-.tag-meal-type {
-    background-color: var(--secondary-color);
+.tag-selectable:hover {
+    transform: scale(1.05);
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.tag-cooking-method {
-    background-color: #6f42c1;
+.tag-checkbox {
+    display: none;
+}
+
+/* Selected state for form tags */
+.tag-checkbox:checked + .tag-selectable,
+.tag-selectable.tag-selected {
+    transform: scale(1.05);
+    border: 2px solid #fff !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* === OVERRIDE ANY BOOTSTRAP BUTTON CLASSES === */
+.btn.tag,
+.btn-primary.tag,
+.btn-secondary.tag,
+.btn-success.tag,
+.btn-info.tag,
+.btn-warning.tag,
+.btn-danger.tag {
+    /* Let the tag type colors above take precedence */
+    border: 2px solid transparent !important;
+    font-weight: 500;
+}
+
+/* === CATEGORY-BASED TAG COLORS === */
+/* Override database colors with consistent category themes */
+
+/* Dietary tags - Green theme */
+.tag[title*="Dietary"] {
+    background-color: #28a745 !important; /* Bootstrap green */
+}
+
+/* Cuisine tags - Blue theme */
+.tag[title*="Cuisine"] {
+    background-color: #007bff !important; /* Bootstrap blue */
+}
+
+/* Meal Type tags - Orange theme */
+.tag[title*="Meal Type"] {
+    background-color: #fd7e14 !important; /* Bootstrap orange */
+}
+
+/* Cooking Method tags - Purple theme */
+.tag[title*="Cooking Method"] {
+    background-color: #6610f2 !important; /* Bootstrap purple */
+}
+
+/* Difficulty tags - Red to yellow gradient based on difficulty */
+.tag[title*="Beginner"] {
+    background-color: #28a745 !important; /* Green for easy */
+}
+
+.tag[title*="Easy"] {
+    background-color: #20c997 !important; /* Teal */
+}
+
+.tag[title*="Intermediate"] {
+    background-color: #ffc107 !important; /* Yellow */
+}
+
+.tag[title*="Advanced"] {
+    background-color: #fd7e14 !important; /* Orange */
+}
+
+.tag[title*="Expert"] {
+    background-color: #dc3545 !important; /* Red for hard */
+}
+
+/* Recipe Detail Improvements */
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Ingredient Checkboxes */
+.ingredient-checkbox {
+    transform: scale(1.2);
+    accent-color: var(--primary-color);
+}
+
+.ingredient-checkbox:checked + label {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.ingredient-name {
+    margin-left: 0.5rem;
+}
+
+/* Nutrition Stats Enhanced */
+.nutrition-stat {
+    transition: var(--transition);
+    cursor: default;
+}
+
+.nutrition-stat:hover {
+    transform: translateY(-2px);
+}
+
+/* Recipe Step Numbers Enhanced */
+.recipe-step-number {
+    box-shadow: var(--shadow-sm);
+    font-size: 1rem;
+}
+
+/* Enhanced Recipe Header Image */
+.recipe-header-image {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.recipe-placeholder-image {
+    background: var(--light-color);
+    border: 2px dashed #dee2e6;
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+/* === RECIPE IMAGE SIZE CONSTRAINTS === */
+/* Fix for "massively overblown" images - ensure all recipe images have reasonable max sizes */
+
+/* Main recipe detail image */
+.recipe-detail img.img-fluid {
+    max-width: 600px !important;
+    max-height: 400px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Recipe card images in lists */
+.recipe-card .card-img-top,
+.recipe-image {
+    width: 100% !important;
+    height: 200px !important;
+    max-width: none !important; /* Let container control width */
+    object-fit: cover !important;
+}
+
+/* Carousel recipe images */
+.carousel-recipe-card .card-img-top {
+    width: 100% !important;
+    height: 180px !important;
+    max-width: none !important; /* Let container control width */
+    object-fit: cover !important;
+}
+
+/* Profile page recipe images */
+.profile-recipe-image {
+    width: 100% !important;
+    height: 200px !important;
+    max-width: none !important;
+    object-fit: cover !important;
+}
+
+/* Liked recipes page images */
+.liked-recipes .card-img-top {
+    width: 100% !important;
+    height: 200px !important;
+    max-width: none !important;
+    object-fit: cover !important;
+}
+
+/* Related recipe thumbnails */
+.related-recipe-thumbnail {
+    width: 100% !important;
+    height: 60px !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Recipe step images */
+.recipe-steps img,
+.step-image {
+    max-width: 300px !important;
+    max-height: 200px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+}
+
+/* Ensure container constraints are respected */
+.container img,
+.card img,
+.row img {
+    max-width: 100% !important; /* Never exceed container width */
+    height: auto;
 }
 
 /* ===== 10. INTERACTIVE ELEMENTS (RATINGS, BUTTONS, MODALS) ===== */

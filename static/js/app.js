@@ -19,6 +19,7 @@ function initializeApp() {
     initializeTagSelection();
     initializeRecipeControls();
     initializeLikeButtons();
+    initializeIngredientCheckboxes(); // Add this new function
 }
 
 /**
@@ -722,6 +723,45 @@ function initializeLikeButtons() {
                 });
         });
     });
+}
+
+/**
+ * Ingredient Checkboxes Functionality
+ */
+function initializeIngredientCheckboxes() {
+    const ingredientCheckboxes = document.querySelectorAll(
+        ".ingredient-checkbox"
+    );
+
+    ingredientCheckboxes.forEach((checkbox) => {
+        // Load saved state from localStorage
+        const savedState = localStorage.getItem(`ingredient-${checkbox.id}`);
+        if (savedState === "true") {
+            checkbox.checked = true;
+        }
+
+        // Save state on change
+        checkbox.addEventListener("change", function () {
+            localStorage.setItem(`ingredient-${this.id}`, this.checked);
+
+            // Optional: Add a subtle animation or feedback
+            const label = this.parentElement.querySelector("label");
+            if (this.checked) {
+                label.style.transition = "all 0.3s ease";
+            }
+        });
+    });
+
+    // Clear all checkboxes button (optional)
+    const clearAllBtn = document.querySelector("#clear-all-ingredients");
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener("click", function () {
+            ingredientCheckboxes.forEach((checkbox) => {
+                checkbox.checked = false;
+                localStorage.removeItem(`ingredient-${checkbox.id}`);
+            });
+        });
+    }
 }
 
 // Initialize like buttons when DOM is ready

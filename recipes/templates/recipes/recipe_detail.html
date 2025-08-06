@@ -12,266 +12,219 @@
         </ol>
     </nav>
 
-    <div class="row">
-        <!-- Main Content -->
-        <div class="col-lg-8">
-            <!-- Recipe Header -->
-            <div class="mb-4">
-                <h1 class="display-5 fw-bold mb-3">{{ recipe.title }}</h1>
-                
-                <!-- Author Info Section -->
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div class="d-flex align-items-center">
-                        <div class="author-avatar me-3">
-                            <strong>{{ recipe.user.username|slice:":1"|upper }}</strong>
-                        </div>
-                        <div>
-                            <p class="mb-0">Added by 
-                                <a href="{% url 'accounts:profile_detail' recipe.user.username %}" class="text-decoration-none fw-bold">
-                                    {{ recipe.user.username }}
-                                </a>
-                            </p>
-                            <small class="text-muted">{{ recipe.created_at|date:"F j, Y" }}</small>
-                        </div>
+    <div class="row justify-content-center">
+        <!-- Main Content - Centered Single Column -->
+        <div class="col-lg-10 col-xl-8">
+            <!-- 1. TITLE -->
+            <div class="text-center mb-4">
+                <h1 class="display-4 fw-bold text-primary">{{ recipe.title }}</h1>
+            </div>
+            
+            <!-- 2. MADE BY USER + FAV BUTTON + RATING STARS -->
+            <div class="d-flex align-items-center justify-content-between mb-4 p-3 bg-light rounded">
+                <div class="d-flex align-items-center">
+                    <div class="author-avatar me-3">
+                        <strong>{{ recipe.user.username|slice:":1"|upper }}</strong>
                     </div>
+                    <div>
+                        <p class="mb-0 fw-bold">Made by 
+                            <a href="{% url 'accounts:profile_detail' recipe.user.username %}" class="text-decoration-none text-primary">
+                                {{ recipe.user.username }}
+                            </a>
+                        </p>
+                        <small class="text-muted">{{ recipe.created_at|date:"F j, Y" }}</small>
+                    </div>
+                </div>
+                
+                <!-- Follow and Rating Section -->
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Print and Share Buttons -->
+                    <button class="btn btn-outline-primary btn-sm" onclick="window.print()" aria-label="Print this recipe" title="Print Recipe">
+                        <i class="fas fa-print" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ recipe.title }}', url: window.location.href})" aria-label="Share this recipe" title="Share Recipe">
+                        <i class="fas fa-share" aria-hidden="true"></i>
+                    </button>
                     
-                    <!-- Follow and Like Buttons -->
+                    <!-- Follow Button -->
                     {% if user.is_authenticated and user != recipe.user %}
-                        <div class="d-flex gap-2">
-                            <!-- Follow Button -->
-                            <form action="{% url 'toggle_follow' recipe.user.username %}" method="post" class="follow-form">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm {% if is_following %}btn-success{% else %}btn-outline-success{% endif %} follow-btn" aria-label="{% if is_following %}Unfollow {{ recipe.user.username }}{% else %}Follow {{ recipe.user.username }}{% endif %}">
-                                    <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}" aria-hidden="true"></i>
-                                    {% if is_following %}Following{% else %}Follow{% endif %}
-                                </button>
-                            </form>
-                            
-                            <!-- Like Button -->
-                            <form action="{% url 'toggle_like' recipe.slug %}" method="post" class="like-form">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} like-btn" aria-label="{% if is_liked %}Unlike this recipe{% else %}Like this recipe{% endif %}">
-                                    <i class="fas fa-heart" aria-hidden="true"></i>
-                                    <span class="like-count">{{ recipe.like_count }}</span>
-                                </button>
-                            </form>
-                        </div>
-                    {% elif user.is_authenticated %}
-                        <!-- Just Like Button for Own Recipe -->
-                        <div class="d-flex gap-2">
-                            <span class="btn btn-sm btn-outline-secondary disabled">
-                                <i class="fas fa-heart"></i>
-                                <span class="like-count">{{ recipe.like_count }}</span>
-                            </span>
-                        </div>
-                    {% else %}
-                        <!-- For Anonymous Users -->
-                        <div class="d-flex gap-2">
-                            <span class="btn btn-sm btn-outline-secondary disabled">
-                                <i class="fas fa-heart"></i>
-                                <span class="like-count">{{ recipe.like_count }}</span>
-                            </span>
-                        </div>
+                        <form action="{% url 'toggle_follow' recipe.user.username %}" method="post" class="follow-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm {% if is_following %}btn-success{% else %}btn-outline-success{% endif %} follow-btn">
+                                <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}"></i>
+                                {% if is_following %}Following{% else %}Follow{% endif %}
+                            </button>
+                        </form>
                     {% endif %}
-                </div>
-                
-                <p class="lead text-muted mb-3">{{ recipe.description }}</p>
-                
-                <!-- Recipe Meta & Rating -->
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                    <div class="d-flex flex-wrap gap-4">
-                        <div>
-                            <i class="fas fa-clock text-primary me-1"></i>
-                            <strong>Prep:</strong> {{ recipe.prep_time }} min
-                        </div>
-                        <div>
-                            <i class="fas fa-fire text-primary me-1"></i>
-                            <strong>Cook:</strong> {{ recipe.cook_time }} min
-                        </div>
-                        <div>
-                            <i class="fas fa-users text-primary me-1"></i>
-                            <strong>Serves:</strong> {{ recipe.servings }}
-                        </div>
-                        <div>
-                            <i class="fas fa-eye text-primary me-1"></i>
-                            <strong>Views:</strong> {{ recipe.view_count }}
-                        </div>
-                    </div>
                     
-                    <!-- Rating Display & Interactive Form -->
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="rating-container">
-                            <!-- Total Rating Display (background) -->
-                            <div class="rating-display">
-                                <div class="stars total-stars">
-                                    {% for i in "12345" %}
-                                        {% if forloop.counter <= recipe.average_rating %}
-                                            <i class="fas fa-star text-warning"></i>
-                                        {% else %}
-                                            <i class="far fa-star text-muted"></i>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <small class="text-muted">({{ recipe.rating_count }} rating{{ recipe.rating_count|pluralize }})</small>
+                    <!-- Rating Stars -->
+                    <div class="rating-container">
+                        <div class="rating-display d-flex align-items-center">
+                            <div class="stars total-stars me-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= recipe.average_rating %}
+                                        <i class="fas fa-star text-warning fs-5"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-muted fs-5"></i>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                            
-                            <!-- Interactive User Rating (overlay) -->
-                            {% if user.is_authenticated %}
-                                <form method="post" id="rating-form" class="rating-form-hidden">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="rating" id="rating-value" value="{% if user_rating %}{{ user_rating.rating }}{% endif %}">
-                                    <input type="hidden" name="rating_submit" value="1">
-                                </form>
-                                
-                                <div class="user-rating-overlay" data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
-                                    {% for i in "12345" %}
-                                        <i class="star-interactive far fa-star" data-rating="{{ forloop.counter }}" 
-                                           title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
-                                           {% if user_rating and forloop.counter <= user_rating.rating %}class="rating-star-active"{% endif %}></i>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                            <small class="text-muted">({{ recipe.rating_count }})</small>
                         </div>
+                        
+                        <!-- Interactive User Rating -->
+                        {% if user.is_authenticated %}
+                            <form method="post" id="rating-form" class="rating-form-hidden">
+                                {% csrf_token %}
+                                <input type="hidden" name="rating" id="rating-value" value="{% if user_rating %}{{ user_rating.rating }}{% endif %}">
+                                <input type="hidden" name="rating_submit" value="1">
+                            </form>
+                            
+                            <div class="user-rating-overlay" data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
+                                {% for i in "12345" %}
+                                    <i class="star-interactive far fa-star fs-5" data-rating="{{ forloop.counter }}" 
+                                       title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
+                                       {% if user_rating and forloop.counter <= user_rating.rating %}class="rating-star-active"{% endif %}></i>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
-
-                <!-- Tags -->
-                <div class="mb-4">
-                    {% for tag in recipe.tags.all %}
-                        <a href="?tag={{ tag.name }}" class="text-decoration-none">
-                            <span class="tag" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
-                        </a>
-                    {% endfor %}
                 </div>
             </div>
-
-            <!-- Recipe Image -->
+            
+            <!-- 3. DESCRIPTION/BLURB -->
             <div class="mb-4">
+                <p class="lead text-center" style="font-size: 1.1rem; line-height: 1.6;">{{ recipe.description }}</p>
+            </div>
+            
+            <!-- Recipe Meta Info -->
+            <div class="row text-center mb-4">
+                <div class="col-3">
+                    <div class="p-2 bg-primary bg-opacity-10 rounded">
+                        <i class="fas fa-clock text-primary fs-4 d-block mb-1"></i>
+                        <small class="text-muted d-block">Prep</small>
+                        <strong>{{ recipe.prep_time }}m</strong>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="p-2 bg-danger bg-opacity-10 rounded">
+                        <i class="fas fa-fire text-danger fs-4 d-block mb-1"></i>
+                        <small class="text-muted d-block">Cook</small>
+                        <strong>{{ recipe.cook_time }}m</strong>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="p-2 bg-success bg-opacity-10 rounded">
+                        <i class="fas fa-users text-success fs-4 d-block mb-1"></i>
+                        <small class="text-muted d-block">Serves</small>
+                        <strong>{{ recipe.servings }}</strong>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="p-2 bg-info bg-opacity-10 rounded">
+                        <i class="fas fa-eye text-info fs-4 d-block mb-1"></i>
+                        <small class="text-muted d-block">Views</small>
+                        <strong>{{ recipe.view_count }}</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4. MAIN PICTURE -->
+            <div class="mb-4 text-center">
                 {% if recipe.get_image_url %}
-                    <img src="{{ recipe.get_image_url }}" class="recipe-header-image" alt="{{ recipe.title }}">
+                    <img src="{{ recipe.get_image_url }}" class="img-fluid rounded shadow-lg" style="max-height: 400px; max-width: 600px; width: auto; height: auto;" alt="{{ recipe.title }}">
                 {% else %}
-                    <div class="recipe-placeholder-image">
+                    <div class="recipe-placeholder-image bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px; max-width: 600px; margin: 0 auto;">
                         <i class="fas fa-utensils fa-4x text-muted"></i>
                     </div>
                 {% endif %}
             </div>
-
-            <!-- Servings Scaler (moved here) -->
-            <div class="card mb-4">
+            
+            <!-- 5. TAGS UNDER PICTURE -->
+            <div class="text-center mb-5">
+                {% for tag in recipe.tags.all %}
+                    <span class="tag me-2 mb-2" style="background-color: {{ tag.color }};" title="{{ tag.name }} - {{ tag.get_tag_type_display }}">
+                        {{ tag.name }}
+                    </span>
+                {% endfor %}
+            </div>
+                    
+            <!-- 6. INGREDIENTS WITH SERVINGS & UNITS -->
+            <div class="card mb-5 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-shopping-basket me-2"></i>Ingredients
+                        </h4>
+                        <!-- Servings & Units Controls -->
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- Servings Scaler -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="text-white-50 small mb-0">Servings:</label>
+                                <div class="input-group input-group-sm" style="width: 120px;">
+                                    <button class="btn btn-outline-light btn-sm" type="button" id="decrease-servings">-</button>
+                                    <input type="number" class="form-control form-control-sm text-center" id="servings-scaler" 
+                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
+                                    <button class="btn btn-outline-light btn-sm" type="button" id="increase-servings">+</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Unit System Toggle -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="text-white-50 small mb-0">Units:</label>
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" id="unit-system-toggle">
+                                    <label class="form-check-label text-white small" for="unit-system-toggle" id="unit-system-label">
+                                        Metric
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h6 class="mb-2">Adjust Servings:</h6>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="input-group" style="width: 150px;">
-                                    <button class="btn btn-outline-secondary" type="button" id="decrease-servings" aria-label="Decrease servings">-</button>
-                                    <input type="number" class="form-control text-center" id="servings-scaler" 
-                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}" aria-label="Number of servings">
-                                    <button class="btn btn-outline-secondary" type="button" id="increase-servings" aria-label="Increase servings">+</button>
-                                </div>
-                                <span class="text-muted">servings</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="mb-2">Units:</h6>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="unit-system-toggle">
-                                <label class="form-check-label" for="unit-system-toggle" id="unit-system-label">
-                                    Metric
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ingredients Section -->
-            <div class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-shopping-list me-2"></i>Ingredients
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {% for ingredient in recipe.ingredients.all %}
-                            <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
-                                <span>{{ ingredient.ingredient.name }}</span>
-                                <strong class="ingredient-amount" 
-                                        data-original-quantity="{{ ingredient.quantity }}"
-                                        data-unit="{{ ingredient.unit.abbreviation }}"
-                                        data-unit-name="{{ ingredient.unit.name }}">
+                    <!-- Ingredient Checkboxes -->
+                    {% for ingredient in recipe.ingredients.all %}
+                        <div class="form-check d-flex align-items-start py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
+                            <input class="form-check-input me-3 mt-1 ingredient-checkbox" type="checkbox" id="ingredient-{{ ingredient.id }}">
+                            <label class="form-check-label flex-grow-1" for="ingredient-{{ ingredient.id }}">
+                                <span class="ingredient-amount fw-bold text-primary" 
+                                      data-original-quantity="{{ ingredient.quantity }}"
+                                      data-unit="{{ ingredient.unit.abbreviation }}"
+                                      data-unit-name="{{ ingredient.unit.name }}">
                                     {{ ingredient.smart_display }}
-                                </strong>
-                            </div>
-                            {% if ingredient.notes %}
-                                <small class="text-muted d-block">{{ ingredient.notes }}</small>
-                            {% endif %}
-                        {% empty %}
-                            <p class="text-muted mb-0">No ingredients listed.</p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nutritional Information -->
-            <div class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-chart-pie me-2"></i>Nutrition Per Serving
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-6 col-md-3 mb-3">
-                                <div class="nutrition-stat">
-                                    <h4 class="text-primary mb-1">{{ recipe.nutrition_per_serving.calories }}</h4>
-                                    <small class="text-muted">Calories</small>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3 mb-3">
-                                <div class="nutrition-stat">
-                                    <h4 class="text-success mb-1">{{ recipe.nutrition_per_serving.protein }}g</h4>
-                                    <small class="text-muted">Protein</small>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3 mb-3">
-                                <div class="nutrition-stat">
-                                    <h4 class="text-warning mb-1">{{ recipe.nutrition_per_serving.carbs }}g</h4>
-                                    <small class="text-muted">Carbs</small>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3 mb-3">
-                                <div class="nutrition-stat">
-                                    <h4 class="text-info mb-1">{{ recipe.nutrition_per_serving.fat }}g</h4>
-                                    <small class="text-muted">Fat</small>
-                                </div>
-                            </div>
+                                </span>
+                                <span class="ingredient-name">{{ ingredient.ingredient.name }}</span>
+                                {% if ingredient.notes %}
+                                    <small class="text-muted d-block mt-1">{{ ingredient.notes }}</small>
+                                {% endif %}
+                            </label>
                         </div>
-                    </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">No ingredients listed.</p>
+                    {% endfor %}
                 </div>
             </div>
 
-            <!-- Instructions -->
+            <!-- 7. INSTRUCTIONS -->
             <div class="mb-5">
-                <h3 class="mb-4">
-                    <i class="fas fa-list-ol text-primary me-2"></i>Instructions
+                <h3 class="text-primary mb-4">
+                    <i class="fas fa-list-ol me-2"></i>Instructions
                 </h3>
                 
                 {% for step in recipe.steps.all %}
-                    <div class="card mb-3">
+                    <div class="card mb-3 shadow-sm">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="recipe-step-number">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <div class="recipe-step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
                                         <strong>{{ step.step_number }}</strong>
                                     </div>
                                 </div>
-                                <div class="col-md-10">
-                                    <p class="mb-0">{{ step.instruction }}</p>
+                                <div class="flex-grow-1">
+                                    <p class="mb-2" style="line-height: 1.6;">{{ step.instruction }}</p>
                                     {% if step.get_image_url %}
-                                        <img src="{{ step.get_image_url }}" class="recipe-step-image" alt="Step {{ step.step_number }}">
+                                        <img src="{{ step.get_image_url }}" class="img-fluid rounded mt-2" style="max-height: 200px; max-width: 300px; width: auto;" alt="Step {{ step.step_number }}">
                                     {% endif %}
                                 </div>
                             </div>
@@ -280,6 +233,47 @@
                 {% empty %}
                     <p class="text-muted">No instructions available.</p>
                 {% endfor %}
+            </div>
+
+            <!-- 8. NUTRITION -->
+            <div class="card mb-5 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Nutrition Per Serving
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="nutrition-stat p-3 bg-primary bg-opacity-10 rounded">
+                                <i class="fas fa-fire text-primary fs-4 d-block mb-2"></i>
+                                <h3 class="text-primary mb-1">{{ recipe.nutrition_per_serving.calories }}</h3>
+                                <small class="text-muted fw-bold">Calories</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="nutrition-stat p-3 bg-success bg-opacity-10 rounded">
+                                <i class="fas fa-dumbbell text-success fs-4 d-block mb-2"></i>
+                                <h3 class="text-success mb-1">{{ recipe.nutrition_per_serving.protein }}g</h3>
+                                <small class="text-muted fw-bold">Protein</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="nutrition-stat p-3 bg-warning bg-opacity-10 rounded">
+                                <i class="fas fa-bread-slice text-warning fs-4 d-block mb-2"></i>
+                                <h3 class="text-warning mb-1">{{ recipe.nutrition_per_serving.carbs }}g</h3>
+                                <small class="text-muted fw-bold">Carbs</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <div class="nutrition-stat p-3 bg-info bg-opacity-10 rounded">
+                                <i class="fas fa-tint text-info fs-4 d-block mb-2"></i>
+                                <h3 class="text-info mb-1">{{ recipe.nutrition_per_serving.fat }}g</h3>
+                                <small class="text-muted fw-bold">Fat</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Comments Section -->
@@ -387,54 +381,41 @@
                     </div>
                 {% endif %}
             </div>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Recipe Actions -->
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    <button class="btn btn-outline-primary btn-sm me-2" onclick="window.print()" aria-label="Print this recipe">
-                        <i class="fas fa-print me-1" aria-hidden="true"></i>Print Recipe
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ recipe.title }}', url: window.location.href})" aria-label="Share this recipe">
-                        <i class="fas fa-share me-1" aria-hidden="true"></i>Share
-                    </button>
-                </div>
-            </div>
-
-            <!-- Related Recipes -->
+            
+            <!-- Related Recipes - Moved to main content -->
             {% if related_recipes %}
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
+                        <h4 class="mb-0">
                             <i class="fas fa-heart me-2"></i>You Might Also Like
-                        </h5>
+                        </h4>
                     </div>
-                    <div class="card-body p-0">
-                        {% for related in related_recipes %}
-                            <div class="{% if not forloop.last %}border-bottom{% endif %} p-3">
-                                <div class="row align-items-center">
-                                    <div class="col-4">
-                                        {% if related.get_image_url %}
-                                            <img src="{{ related.get_image_url }}" class="related-recipe-thumbnail" alt="{{ related.title }}">
-                                        {% else %}
-                                            <div class="related-recipe-placeholder">
-                                                <i class="fas fa-utensils text-muted"></i>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-8">
-                                        <a href="{{ related.get_absolute_url }}" class="text-decoration-none">
-                                            <h6 class="mb-1">{{ related.title }}</h6>
-                                            <small class="text-muted">
-                                                <i class="fas fa-clock me-1"></i>{{ related.total_time }} min
-                                            </small>
-                                        </a>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for related in related_recipes %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center p-2 border rounded">
+                                        <div class="me-3">
+                                            {% if related.get_image_url %}
+                                                <img src="{{ related.get_image_url }}" class="related-recipe-thumbnail" alt="{{ related.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                            {% else %}
+                                                <div class="bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                                                    <i class="fas fa-utensils text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <a href="{{ related.get_absolute_url }}" class="text-decoration-none">
+                                                <h6 class="mb-1">{{ related.title }}</h6>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>{{ related.total_time }} min
+                                                </small>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             {% endif %}
