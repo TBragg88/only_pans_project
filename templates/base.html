@@ -17,8 +17,10 @@
         />
         <!-- Font Awesome for icons -->
         <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
             rel="stylesheet"
+            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+            crossorigin="anonymous"
         />
         <!-- Custom CSS -->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
@@ -26,89 +28,98 @@
         {% block extra_css %}{% endblock %}
     </head>
     <body>
-        <!-- Navigation -->
-        <nav class="navbar navbar-dark bg-dark">
+        <!-- Clean Navigation Header -->
+        <nav class="navbar navbar-dark bg-dark py-2">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'recipe_list' %}">
-                    <i class="fas fa-utensils me-2"></i>OnlyPans
-                </a>
-
-                <div class="d-flex align-items-center">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <!-- Left side: Welcome message -->
                     {% if user.is_authenticated %}
-                    <span class="text-light me-3">
-                        Welcome, {% if user.first_name %} {{ user.first_name }}
-                        {% else %} {{ user.username }} {% endif %}!
-                    </span>
-                    
-                    <!-- Profile & Actions -->
-                    <a class="btn btn-outline-light me-2" href="{% url 'accounts:profile' %}">
-                        <i class="fas fa-user me-1"></i>Profile
-                    </a>
-                    
-                    <!-- Liked Recipes -->
-                    <a class="btn btn-outline-light me-2" href="{% url 'liked_recipes' %}">
-                        <i class="fas fa-heart me-1"></i>Liked Recipes
-                    </a>
-                    
-                    <!-- Create Recipe -->
-                    <a class="btn btn-success me-2" href="{% url 'recipe_create' %}">
-                        <i class="fas fa-plus me-1"></i>Create Recipe
-                    </a>
-                    
-                    <!-- Logout -->
-                    <a class="btn btn-outline-danger" href="#" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt me-1"></i>Logout
-                    </a>
-                    
+                    <small class="text-light">
+                        Welcome, {% if user.first_name %}{{ user.first_name|title }}{% else %}{{ user.username|title }}{% endif %}
+                    </small>
                     {% else %}
-                    <button
-                        class="btn btn-outline-light me-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#loginModal"
-                    >
-                        Sign In
-                    </button>
-                    <button
-                        class="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#registerModal"
-                    >
-                        Register
-                    </button>
+                    <div></div> <!-- Empty div for spacing when not authenticated -->
                     {% endif %}
+                    
+                    <!-- Right side: Button group -->
+                    <div class="d-flex align-items-center">
+                        {% if user.is_authenticated %}
+                        <!-- Icon-only buttons with proper accessibility -->
+                        <a class="btn btn-sm me-2" 
+                           href="{% url 'accounts:profile' %}" 
+                           aria-label="View Profile"
+                           title="Profile">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                        </a>
+                        
+                        <a class="btn btn-sm me-2" 
+                           href="{% url 'liked_recipes' %}" 
+                           aria-label="View Liked Recipes"
+                           title="Liked Recipes">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                        </a>
+                        
+                        <a class="btn btn-sm me-2" 
+                           href="{% url 'recipe_create' %}" 
+                           aria-label="Create New Recipe"
+                           title="Create Recipe">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                        </a>
+                        
+                        <a class="btn btn-sm" 
+                           href="#" 
+                           id="logoutBtn" 
+                           aria-label="Sign Out"
+                           title="Logout">
+                            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                        </a>
+                        
+                        {% else %}
+                        <button class="btn btn-sm me-2" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#loginModal"
+                                aria-label="Sign In">
+                            <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#registerModal"
+                                aria-label="Register Account">
+                            <i class="fas fa-user-plus" aria-hidden="true"></i>
+                        </button>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Header Section -->
-        <header class="bg-light py-5 mb-4">
+        <!-- OnlyPans Hero Section -->
+        <section class="onlypans-hero">
             <div class="container text-center">
-                <h1 class="display-3 fw-bold mb-3">OnlyPans</h1>
-                <form
-                    class="row justify-content-center"
-                    method="GET"
-                    action="{% url 'recipe_list' %}"
-                >
-                    <div class="col-md-8">
-                        <input
-                            class="form-control form-control-lg"
-                            type="search"
-                            name="search"
-                            placeholder="Search recipes..."
-                            value="{{ search_query }}"
-                        />
-                    </div>
-                    <div class="col-md-2 mt-2 mt-md-0">
-                        <button
-                            class="btn btn-primary btn-lg w-100"
-                            type="submit"
-                        >
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </div>
-                </form>
+                <h1 class="hero-brand">
+                    <a href="{% url 'recipe_list' %}" class="text-decoration-none">
+                        <span class="brand-highlight">OnlyPans</span>
+                    </a>
+                </h1>
+                <div class="hero-search">
+                    <form method="GET" action="{% url 'recipe_list' %}" class="search-form">
+                        <div class="search-container">
+                            <input type="text" 
+                                   name="search" 
+                                   class="form-control search-input" 
+                                   placeholder="Search recipes..." 
+                                   value="{{ request.GET.search }}"
+                                   aria-label="Search recipes">
+                            <button type="submit" 
+                                    class="btn search-btn"
+                                    aria-label="Search">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </header>
+        </section>
 
         <!-- Main Content: Recipe Grid -->
         <main class="container mb-5">{% block content %}{% endblock %}</main>
@@ -121,17 +132,17 @@
                         <h5><i class="fas fa-utensils me-2"></i>OnlyPans</h5>
                     </div>
                     <div class="col-md-6 text-end">
-                        <a href="#" class="text-light me-3"
-                            ><i class="fab fa-facebook fa-lg"></i
+                        <a href="#" class="text-light me-3" aria-label="Follow us on Facebook"
+                            ><i class="fab fa-facebook fa-lg" aria-hidden="true"></i
                         ></a>
-                        <a href="#" class="text-light me-3"
-                            ><i class="fab fa-twitter fa-lg"></i
+                        <a href="#" class="text-light me-3" aria-label="Follow us on Twitter"
+                            ><i class="fab fa-twitter fa-lg" aria-hidden="true"></i
                         ></a>
-                        <a href="#" class="text-light me-3"
-                            ><i class="fab fa-instagram fa-lg"></i
+                        <a href="#" class="text-light me-3" aria-label="Follow us on Instagram"
+                            ><i class="fab fa-instagram fa-lg" aria-hidden="true"></i
                         ></a>
-                        <a href="#" class="text-light"
-                            ><i class="fab fa-youtube fa-lg"></i
+                        <a href="#" class="text-light" aria-label="Subscribe to our YouTube channel"
+                            ><i class="fab fa-youtube fa-lg" aria-hidden="true"></i
                         ></a>
                     </div>
                 </div>

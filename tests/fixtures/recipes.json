@@ -1,0 +1,56 @@
+[
+    {
+        "model": "recipes.recipe",
+        "pk": 1,
+        "fields": {
+            "title": "Classic Pancakes",
+            "slug": "classic-pancakes",
+            "description": "Fluffy, golden pancakes perfect for breakfast",
+            "instructions": "Mix dry ingredients in one bowl, wet in another. Combine gently, cook on griddle until bubbles form.",
+            "author": 1,
+            "prep_time": 10,
+            "cook_time": 15,
+            "servings": 4,
+            "difficulty": "easy",
+            "created_at": "2024-01-01T08:00:00Z",
+            "updated_at": "2024-01-01T08:00:00Z",
+            "tags": [7, 11]
+        }
+    },
+    {
+        "model": "recipes.recipe",
+        "pk": 2,
+        "fields": {
+            "title": "Spaghetti Carbonara",
+            "slug": "spaghetti-carbonara",
+            "description": "Traditional Italian pasta with eggs, cheese, and pancetta",
+            "instructions": "Cook pasta al dente. Mix eggs and cheese. Combine with hot pasta and crispy pancetta.",
+            "author": 2,
+            "prep_time": 15,
+            "cook_time": 20,
+            "servings": 4,
+            "difficulty": "medium",
+            "created_at": "2024-01-01T12:00:00Z",
+            "updated_at": "2024-01-01T12:00:00Z",
+            "tags": [1, 9]
+        }
+    },
+    {
+        "model": "recipes.recipe",
+        "pk": 3,
+        "fields": {
+            "title": "Chocolate Chip Cookies",
+            "slug": "chocolate-chip-cookies",
+            "description": "Crispy on the outside, chewy on the inside chocolate chip cookies",
+            "instructions": "Cream butter and sugars, add eggs and vanilla. Mix in flour mixture. Fold in chocolate chips and bake.",
+            "author": 1,
+            "prep_time": 20,
+            "cook_time": 12,
+            "servings": 24,
+            "difficulty": "easy",
+            "created_at": "2024-01-01T16:00:00Z",
+            "updated_at": "2024-01-01T16:00:00Z",
+            "tags": [10, 11]
+        }
+    }
+]

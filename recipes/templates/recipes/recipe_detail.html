@@ -41,8 +41,8 @@
                             <!-- Follow Button -->
                             <form action="{% url 'toggle_follow' recipe.user.username %}" method="post" class="follow-form">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm {% if is_following %}btn-success{% else %}btn-outline-success{% endif %} follow-btn">
-                                    <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}"></i>
+                                <button type="submit" class="btn btn-sm {% if is_following %}btn-success{% else %}btn-outline-success{% endif %} follow-btn" aria-label="{% if is_following %}Unfollow {{ recipe.user.username }}{% else %}Follow {{ recipe.user.username }}{% endif %}">
+                                    <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}" aria-hidden="true"></i>
                                     {% if is_following %}Following{% else %}Follow{% endif %}
                                 </button>
                             </form>
@@ -50,8 +50,8 @@
                             <!-- Like Button -->
                             <form action="{% url 'toggle_like' recipe.slug %}" method="post" class="like-form">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} like-btn">
-                                    <i class="fas fa-heart"></i>
+                                <button type="submit" class="btn btn-sm {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %} like-btn" aria-label="{% if is_liked %}Unlike this recipe{% else %}Like this recipe{% endif %}">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
                                     <span class="like-count">{{ recipe.like_count }}</span>
                                 </button>
                             </form>
@@ -164,10 +164,10 @@
                             <h6 class="mb-2">Adjust Servings:</h6>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="input-group" style="width: 150px;">
-                                    <button class="btn btn-outline-secondary" type="button" id="decrease-servings">-</button>
+                                    <button class="btn btn-outline-secondary" type="button" id="decrease-servings" aria-label="Decrease servings">-</button>
                                     <input type="number" class="form-control text-center" id="servings-scaler" 
-                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
-                                    <button class="btn btn-outline-secondary" type="button" id="increase-servings">+</button>
+                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}" aria-label="Number of servings">
+                                    <button class="btn btn-outline-secondary" type="button" id="increase-servings" aria-label="Increase servings">+</button>
                                 </div>
                                 <span class="text-muted">servings</span>
                             </div>
@@ -299,8 +299,8 @@
                                 {{ comment_form.content }}
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <small class="text-muted">Maximum 500 characters</small>
-                                    <button type="submit" name="comment_submit" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane me-1"></i>Post Comment
+                                    <button type="submit" name="comment_submit" class="btn btn-primary" aria-label="Post your comment">
+                                        <i class="fas fa-paper-plane me-1" aria-hidden="true"></i>Post Comment
                                     </button>
                                 </div>
                             </form>
@@ -328,8 +328,8 @@
                                         </div>
                                     </div>
                                     {% if user.is_authenticated %}
-                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}">
-                                            <i class="fas fa-reply me-1"></i>Reply
+                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}" aria-label="Reply to {{ comment.user.username }}'s comment">
+                                            <i class="fas fa-reply me-1" aria-hidden="true"></i>Reply
                                         </button>
                                     {% endif %}
                                 </div>
@@ -345,9 +345,9 @@
                                                 <textarea name="content" class="form-control" rows="2" placeholder="Write a reply..." required maxlength="500"></textarea>
                                             </div>
                                             <div class="d-flex justify-content-end gap-2">
-                                                <button type="button" class="btn btn-sm btn-secondary cancel-reply">Cancel</button>
-                                                <button type="submit" name="comment_submit" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-paper-plane me-1"></i>Reply
+                                                <button type="button" class="btn btn-sm btn-secondary cancel-reply" aria-label="Cancel reply">Cancel</button>
+                                                <button type="submit" name="comment_submit" class="btn btn-sm btn-primary" aria-label="Submit reply">
+                                                    <i class="fas fa-paper-plane me-1" aria-hidden="true"></i>Reply
                                                 </button>
                                             </div>
                                         </form>
@@ -394,11 +394,11 @@
             <!-- Recipe Actions -->
             <div class="card mb-4">
                 <div class="card-body text-center">
-                    <button class="btn btn-outline-primary btn-sm me-2" onclick="window.print()">
-                        <i class="fas fa-print me-1"></i>Print Recipe
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="window.print()" aria-label="Print this recipe">
+                        <i class="fas fa-print me-1" aria-hidden="true"></i>Print Recipe
                     </button>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ recipe.title }}', url: window.location.href})">
-                        <i class="fas fa-share me-1"></i>Share
+                    <button class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ recipe.title }}', url: window.location.href})" aria-label="Share this recipe">
+                        <i class="fas fa-share me-1" aria-hidden="true"></i>Share
                     </button>
                 </div>
             </div>

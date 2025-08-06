@@ -89,11 +89,25 @@ def recipe_list(request):
     # Get all tags for filtering
     all_tags = Tag.objects.all()
     dietary_tags = Tag.objects.filter(tag_type='dietary')
+    
+    # Get cuisine tags for carousel (use any tags as cuisines)
+    cuisine_tags = Tag.objects.filter(
+        recipe__isnull=False
+    ).distinct()[:5]  # Get 5 tags that have recipes
+    carousel_data = []
+    for cuisine in cuisine_tags:
+        cuisine_recipes = Recipe.objects.filter(tags=cuisine)[:6]
+        if cuisine_recipes.exists():
+            carousel_data.append({
+                'cuisine': cuisine,
+                'recipes': cuisine_recipes
+            })
 
     context = {
         'page_obj': page_obj,
         'all_tags': all_tags,
         'dietary_tags': dietary_tags,
+        'carousel_data': carousel_data,
         'current_tag': tag_filter,
         'current_dietary': dietary_filter,
         'search_query': search_query,

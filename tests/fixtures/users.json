@@ -1,0 +1,30 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "username": "testuser1",
+            "first_name": "Test",
+            "last_name": "User",
+            "email": "test1@example.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-01-01T00:00:00Z",
+            "password": "pbkdf2_sha256$600000$test$hash"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "username": "testuser2",
+            "first_name": "Another",
+            "last_name": "User",
+            "email": "test2@example.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-01-01T00:00:00Z",
+            "password": "pbkdf2_sha256$600000$test$hash"
+        }
+    }
+]

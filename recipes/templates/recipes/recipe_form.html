@@ -226,8 +226,8 @@
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-label">&nbsp;</label>
-                                    <button type="button" class="btn delete-row" onclick="removeRow(this)">
-                                        <i class="fas fa-trash"></i>
+                                    <button type="button" class="btn delete-row" onclick="removeRow(this)" aria-label="Remove this ingredient">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
@@ -239,8 +239,8 @@
                     {% endfor %}
                 </div>
                 
-                <button type="button" class="btn add-row mt-2" onclick="addIngredientRow()">
-                    <i class="fas fa-plus me-2"></i>Add Ingredient
+                <button type="button" class="btn add-row mt-2" onclick="addIngredientRow()" aria-label="Add a new ingredient">
+                    <i class="fas fa-plus me-2" aria-hidden="true"></i>Add Ingredient
                 </button>
             </div>
 
@@ -276,8 +276,8 @@
                                 </div>
                                 <div class="col-md-1">
                                     <label class="form-label">&nbsp;</label>
-                                    <button type="button" class="btn delete-row" onclick="removeRow(this)">
-                                        <i class="fas fa-trash"></i>
+                                    <button type="button" class="btn delete-row" onclick="removeRow(this)" aria-label="Remove this step">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
@@ -288,18 +288,18 @@
                     {% endfor %}
                 </div>
                 
-                <button type="button" class="btn add-row mt-2" onclick="addStepRow()">
-                    <i class="fas fa-plus me-2"></i>Add Step
+                <button type="button" class="btn add-row mt-2" onclick="addStepRow()" aria-label="Add a new step">
+                    <i class="fas fa-plus me-2" aria-hidden="true"></i>Add Step
                 </button>
             </div>
 
             <!-- Submit Buttons -->
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-lg me-3">
-                    <i class="fas fa-save me-2"></i>Save Recipe
+                <button type="submit" class="btn btn-primary btn-lg me-3" aria-label="Save recipe">
+                    <i class="fas fa-save me-2" aria-hidden="true"></i>Save Recipe
                 </button>
                 <a href="{% url 'recipe_list' %}" class="btn btn-secondary btn-lg">
-                    <i class="fas fa-times me-2"></i>Cancel
+                    <i class="fas fa-times me-2" aria-hidden="true"></i>Cancel
                 </a>
             </div>
         </form>

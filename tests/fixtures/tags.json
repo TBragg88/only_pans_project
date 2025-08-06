@@ -1,0 +1,98 @@
+[
+    {
+        "model": "recipes.tag",
+        "pk": 1,
+        "fields": {
+            "name": "Italian",
+            "category": "cuisine"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 2,
+        "fields": {
+            "name": "Mexican",
+            "category": "cuisine"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 3,
+        "fields": {
+            "name": "Asian",
+            "category": "cuisine"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 4,
+        "fields": {
+            "name": "Vegetarian",
+            "category": "dietary"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 5,
+        "fields": {
+            "name": "Vegan",
+            "category": "dietary"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 6,
+        "fields": {
+            "name": "Gluten-Free",
+            "category": "dietary"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 7,
+        "fields": {
+            "name": "Breakfast",
+            "category": "course"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 8,
+        "fields": {
+            "name": "Lunch",
+            "category": "course"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 9,
+        "fields": {
+            "name": "Dinner",
+            "category": "course"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 10,
+        "fields": {
+            "name": "Dessert",
+            "category": "course"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 11,
+        "fields": {
+            "name": "Quick & Easy",
+            "category": "time"
+        }
+    },
+    {
+        "model": "recipes.tag",
+        "pk": 12,
+        "fields": {
+            "name": "Make-Ahead",
+            "category": "time"
+        }
+    }
+]
