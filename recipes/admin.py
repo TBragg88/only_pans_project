@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Tag, Ingredient, Unit, Recipe, RecipeIngredient, RecipeStep
+from django.utils.html import format_html
+from .models import (
+    Tag, Ingredient, Unit, Recipe, RecipeIngredient, 
+    RecipeStep, Comment, Rating
+)
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -47,3 +52,53 @@ class RecipeAdmin(admin.ModelAdmin):
             'fields': ('tags',)
         }),
     )
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = [
+        'user', 'recipe_title', 'content_preview', 
+        'is_approved', 'created_at'
+    ]
+    list_filter = ['is_approved', 'created_at', 'recipe']
+    search_fields = ['user__username', 'recipe__title', 'content']
+    actions = ['approve_comments', 'unapprove_comments']
+    ordering = ['-created_at']
+    
+    def recipe_title(self, obj):
+        """Display recipe title with link"""
+        return format_html(
+            '<a href="/admin/recipes/recipe/{}/change/">{}</a>',
+            obj.recipe.pk, obj.recipe.title
+        )
+    recipe_title.short_description = 'Recipe'
+    
+    def content_preview(self, obj):
+        """Show first 50 characters of content"""
+        return (obj.content[:50] + "...") if len(obj.content) > 50 else obj.content
+    content_preview.short_description = 'Content Preview'
+    
+    def approve_comments(self, request, queryset):
+        """Bulk approve selected comments"""
+        updated = queryset.update(is_approved=True)
+        self.message_user(
+            request, 
+            f'{updated} comment{"s" if updated != 1 else ""} approved successfully.'
+        )
+    approve_comments.short_description = "Approve selected comments"
+    
+    def unapprove_comments(self, request, queryset):
+        """Bulk unapprove selected comments"""
+        updated = queryset.update(is_approved=False)
+        self.message_user(
+            request, 
+            f'{updated} comment{"s" if updated != 1 else ""} unapproved.'
+        )
+    unapprove_comments.short_description = "Unapprove selected comments"
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ['user', 'recipe', 'rating', 'created_at']
+    list_filter = ['rating', 'created_at']
+    search_fields = ['user__username', 'recipe__title']

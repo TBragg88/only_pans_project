@@ -523,23 +523,35 @@ class Comment(models.Model):
         related_name='replies',
         help_text='Reply to another comment'
     )
+    is_approved = models.BooleanField(
+        default=False,
+        help_text='Admin approval required before comment is visible to public'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
 
     def __str__(self):
         title = (self.recipe.title[:20] + "..."
                  if len(self.recipe.title) > 20
                  else self.recipe.title)
         comment_type = "replied to" if self.parent_comment else "commented on"
-        return f"{self.user.username} {comment_type} {title}"
+        approval_status = " (pending)" if not self.is_approved else ""
+        return f"{self.user.username} {comment_type} {title}{approval_status}"
 
     @property
     def is_reply(self):
         """Check if this is a reply to another comment"""
         return self.parent_comment is not None
 
-    class Meta:
-        ordering = ['-created_at']
+    @property
+    def status_display(self):
+        """Display status for admin"""
+        return "Approved" if self.is_approved else "Pending Approval"
 
 
 class Follow(models.Model):

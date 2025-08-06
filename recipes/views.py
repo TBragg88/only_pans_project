@@ -130,10 +130,11 @@ def recipe_detail(request, slug):
     recipe.view_count += 1
     recipe.save()
     
-    # Get comments for this recipe (only top-level comments)
+    # Get comments for this recipe (only approved top-level comments)
     comments = Comment.objects.filter(
         recipe=recipe,
-        parent_comment=None
+        parent_comment=None,
+        is_approved=True
     ).order_by('-created_at')
     
     # Get user's existing rating if logged in
@@ -172,12 +173,12 @@ def recipe_detail(request, slug):
                             recipe=recipe
                         )
                         comment.parent_comment = parent_comment
-                        messages.success(request, "Reply added successfully!")
+                        messages.info(request, "Reply submitted! It will appear after admin approval.")
                     except Comment.DoesNotExist:
                         messages.error(request, "Invalid comment to reply to.")
                         return redirect('recipe_detail', slug=recipe.slug)
                 else:
-                    messages.success(request, "Comment added successfully!")
+                    messages.info(request, "Comment submitted! It will appear after admin approval.")
                 
                 comment.save()
                 return redirect('recipe_detail', slug=recipe.slug)

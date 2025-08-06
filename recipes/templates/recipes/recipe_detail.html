@@ -348,10 +348,10 @@
                                     </div>
                                 {% endif %}
                                 
-                                <!-- Show Replies -->
-                                {% if comment.replies.exists %}
-                                    <div class="replies mt-3 ms-4">
-                                        {% for reply in comment.replies.all %}
+                                <!-- Show Replies (only approved ones) -->
+                                {% for reply in comment.replies.all %}
+                                    {% if reply.is_approved %}
+                                        <div class="replies mt-3 ms-4">
                                             <div class="card mb-2">
                                                 <div class="card-body py-2">
                                                     <div class="d-flex align-items-start">
@@ -368,9 +368,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     {% endfor %}
