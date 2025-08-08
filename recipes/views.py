@@ -249,7 +249,10 @@ def recipe_detail(request, slug):
                         )
                     except Comment.DoesNotExist:
                         messages.error(request, "Invalid comment to reply to.")
-                        return redirect('recipe_detail', slug=recipe.slug)
+                        return redirect(
+                            'recipes:recipe_detail',
+                            slug=recipe.slug,
+                        )
                 else:
                     messages.info(
                         request,
@@ -266,7 +269,7 @@ def recipe_detail(request, slug):
                 if comment.user != recipe.user:
                     send_comment_notification(comment, recipe.user)
                 
-                return redirect('recipe_detail', slug=recipe.slug)
+                return redirect('recipes:recipe_detail', slug=recipe.slug)
         else:
             messages.error(request, "Please log in to comment.")
     
@@ -289,7 +292,7 @@ def recipe_detail(request, slug):
                         send_rating_notification(rating, recipe.user)
                 else:
                     messages.success(request, "Rating updated successfully!")
-                return redirect('recipe_detail', slug=recipe.slug)
+                return redirect('recipes:recipe_detail', slug=recipe.slug)
         else:
             messages.error(request, "Please log in to rate.")
     
@@ -357,7 +360,7 @@ def recipe_create(request):
                 request,
                 'Recipe created successfully!'
             )
-            return redirect('recipe_detail', slug=recipe.slug)
+            return redirect('recipes:recipe_detail', slug=recipe.slug)
         else:
             # Form validation failed - errors will be displayed in template
             pass
@@ -420,7 +423,7 @@ def recipe_edit(request, slug):
                 request,
                 'Recipe updated successfully! Your changes have been saved.'
             )
-            return redirect('recipe_detail', slug=recipe.slug)
+            return redirect('recipes:recipe_detail', slug=recipe.slug)
     else:
         form = RecipeForm(instance=recipe)
         ingredient_formset = RecipeIngredientFormSet(
@@ -448,7 +451,7 @@ def recipe_delete(request, slug):
         messages.success(
             request, 'Recipe deleted successfully!'
         )
-        return redirect('recipe_list')
+    return redirect('recipes:recipe_list')
 
     return render(
         request, 'recipes/recipe_confirm_delete.html', {'recipe': recipe}
@@ -502,7 +505,7 @@ def toggle_like(request, slug):
                 'like_count': recipe.like_count
             })
     
-    return redirect('recipe_detail', slug=slug)
+    return redirect('recipes:recipe_detail', slug=slug)
 
 
 @login_required

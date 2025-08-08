@@ -202,7 +202,7 @@ class Recipe(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('recipe_detail', kwargs={'slug': self.slug})
+        return reverse('recipes:recipe_detail', kwargs={'slug': self.slug})
 
     def get_image_url(self):
         """Get image URL - prioritize Cloudinary, fallback to URL field"""

@@ -33,7 +33,7 @@ def login_view(request):
                 })
             
             messages.success(request, 'Login successful! Welcome back.')
-            return redirect('recipe_list')
+            return redirect('recipes:recipe_list')
         else:
             # Handle AJAX requests
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -71,7 +71,7 @@ def register_view(request):
                 request,
                 'Registration successful! Welcome to OnlyPans.'
             )
-            return redirect('recipe_list')
+            return redirect('recipes:recipe_list')
         else:
             # Handle AJAX requests
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -126,7 +126,7 @@ def logout_view(request):
                 'message': 'You have been logged out.'
             })
     
-    return redirect('recipe_list')
+    return redirect('recipes:recipe_list')
 
 
 @login_required
