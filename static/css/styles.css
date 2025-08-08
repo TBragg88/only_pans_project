@@ -1768,7 +1768,9 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
     }
 
     /* Ensure proper spacing */
-    h2, h3, h4 {
+    h2,
+    h3,
+    h4 {
         margin-top: 14pt !important;
         margin-bottom: 8pt !important;
         page-break-after: avoid !important;
@@ -1781,7 +1783,8 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
     }
 
     /* Lists */
-    ul, ol {
+    ul,
+    ol {
         margin-bottom: 8pt !important;
     }
 
@@ -1799,7 +1802,7 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
     .print-only {
         display: block !important;
     }
-    
+
     .no-print {
         display: none !important;
     }
@@ -1819,7 +1822,11 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
 }
 
 .bg-gradient-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-color) 100%);
+    background: linear-gradient(
+        135deg,
+        var(--primary-color) 0%,
+        var(--info-color) 100%
+    );
 }
 
 /* Enhanced filter button styling */
@@ -1875,12 +1882,12 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
     .d-flex.flex-wrap.gap-2 {
         justify-content: center !important;
     }
-    
+
     .btn-sm {
         font-size: 0.75rem;
         padding: 0.25rem 0.5rem;
     }
-    
+
     #mainSearchForm .btn {
         padding: 0.5rem 1rem;
     }
