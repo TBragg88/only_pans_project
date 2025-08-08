@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - OnlyPans{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-3">
+                    <i class="fas fa-utensils me-3"></i>About OnlyPans
+                </h1>
+                <p class="lead text-muted">Where culinary passion meets community</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="card shadow-sm border-0 mb-5">
+                <div class="card-body p-5">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-8">
+                            <h2 class="h3 text-primary mb-3">We Love Cooking, And You Should Too!</h2>
+                            <p class="text-muted mb-4">
+                                Welcome to OnlyPans, where every recipe tells a story and every meal brings people together. 
+                                Our passion for cooking drives us to create a platform where food enthusiasts from all walks 
+                                of life can share their culinary adventures.
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <i class="fas fa-heart text-danger" style="font-size: 4rem;"></i>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <i class="fas fa-users text-primary fs-3"></i>
+                                </div>
+                                <div>
+                                    <h4 class="h5 mb-2">Community First</h4>
+                                    <p class="text-muted small mb-0">
+                                        We believe cooking is better when shared. Connect with fellow food lovers, 
+                                        share your favorite recipes, and discover new flavors from around the world.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <i class="fas fa-star text-warning fs-3"></i>
+                                </div>
+                                <div>
+                                    <h4 class="h5 mb-2">Quality Recipes</h4>
+                                    <p class="text-muted small mb-0">
+                                        From quick weeknight dinners to elaborate weekend feasts, find recipes 
+                                        that fit your lifestyle and skill level.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <i class="fas fa-lightbulb text-info fs-3"></i>
+                                </div>
+                                <div>
+                                    <h4 class="h5 mb-2">Learn & Grow</h4>
+                                    <p class="text-muted small mb-0">
+                                        Whether you're a beginner or a seasoned chef, there's always something 
+                                        new to learn in the kitchen.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <i class="fas fa-globe text-success fs-3"></i>
+                                </div>
+                                <div>
+                                    <h4 class="h5 mb-2">Global Flavors</h4>
+                                    <p class="text-muted small mb-0">
+                                        Explore cuisines from every corner of the world and bring international 
+                                        flavors to your kitchen.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mission Section -->
+            <div class="bg-light rounded p-4 mb-5">
+                <h3 class="text-center text-primary mb-4">Our Mission</h3>
+                <p class="text-center text-muted mb-0">
+                    To inspire home cooks everywhere by providing a platform where recipes are more than just 
+                    ingredients and instructions—they're shared experiences, family traditions, and creative expressions. 
+                    We're here to make cooking accessible, enjoyable, and social for everyone.
+                </p>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center">
+                <h3 class="text-primary mb-3">Ready to Start Cooking?</h3>
+                <p class="text-muted mb-4">Join our community of passionate home cooks today!</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'recipe_list' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-search me-2"></i>Browse Recipes
+                    </a>
+                    <a href="{% url 'recipe_create' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>Share Your Recipe
+                    </a>
+                {% else %}
+                    <button class="btn btn-primary btn-lg me-3" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#registerModal">
+                        <i class="fas fa-user-plus me-2"></i>Join OnlyPans
+                    </button>
+                    <a href="{% url 'recipe_list' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-search me-2"></i>Browse Recipes
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
