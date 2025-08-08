@@ -2,6 +2,54 @@
 
 {% block title %}{{ recipe.title }} - OnlyPans{% endblock %}
 
+{% block extra_css %}
+<!-- Open Graph Meta Tags for Social Sharing -->
+<meta property="og:title" content="{{ recipe.title }} - OnlyPans">
+<meta property="og:description" content="{{ recipe.description|truncatewords:20 }}">
+<meta property="og:image" content="{{ recipe.image.url|default:'https://only-pans-d09011088446.herokuapp.com/static/images/default-recipe.jpg' }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="OnlyPans">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ recipe.title }} - OnlyPans">
+<meta name="twitter:description" content="{{ recipe.description|truncatewords:20 }}">
+<meta name="twitter:image" content="{{ recipe.image.url|default:'https://only-pans-d09011088446.herokuapp.com/static/images/default-recipe.jpg' }}">
+
+<!-- Recipe Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Recipe",
+  "name": "{{ recipe.title }}",
+  "image": [
+    "{{ recipe.image.url|default:'https://only-pans-d09011088446.herokuapp.com/static/images/default-recipe.jpg' }}"
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "{{ recipe.user.get_full_name|default:recipe.user.username }}"
+  },
+  "datePublished": "{{ recipe.created_at|date:'c' }}",
+  "description": "{{ recipe.description }}",
+  "prepTime": "PT{{ recipe.prep_time }}M",
+  "cookTime": "PT{{ recipe.cook_time }}M",
+  "totalTime": "PT{{ recipe.total_time }}M",
+  "recipeYield": "{{ recipe.servings }} servings",
+  "recipeCategory": "{{ recipe.tags.first.name|default:'Main Course' }}",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ recipe.average_rating|default:0 }}",
+    "reviewCount": "{{ recipe.rating_count|default:0 }}"
+  },
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "calories": "Varies"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <!-- Print Header (only visible when printing) -->
 <div class="print-only print-header">
@@ -47,9 +95,34 @@
                     <button class="btn btn-outline-primary btn-sm" onclick="window.print()" aria-label="Print this recipe" title="Print Recipe">
                         <i class="fas fa-print" aria-hidden="true"></i>
                     </button>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="navigator.share({title: '{{ recipe.title }}', url: window.location.href})" aria-label="Share this recipe" title="Share Recipe">
-                        <i class="fas fa-share" aria-hidden="true"></i>
-                    </button>
+                    
+                    <!-- Smart Share Button with Fallback -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share this recipe" title="Share Recipe">
+                            <i class="fas fa-share" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="shareDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="shareRecipe()" id="nativeShare">
+                                <i class="fas fa-share me-2"></i>Share Recipe
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-facebook me-2"></i>Facebook
+                            </a></li>
+                            <li><a class="dropdown-item" href="https://twitter.com/intent/tweet?text={{ recipe.title|urlencode }}%20-%20{{ recipe.description|truncatewords:10|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-twitter me-2"></i>Twitter
+                            </a></li>
+                            <li><a class="dropdown-item" href="https://www.pinterest.com/pin/create/button/?url={{ request.build_absolute_uri|urlencode }}&media={{ recipe.image.url|urlencode }}&description={{ recipe.title|urlencode }}%20-%20{{ recipe.description|truncatewords:15|urlencode }}" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-pinterest me-2"></i>Pinterest
+                            </a></li>
+                            <li><a class="dropdown-item" href="mailto:?subject={{ recipe.title|urlencode }}&body=Check out this recipe: {{ request.build_absolute_uri|urlencode }}">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="copyToClipboard()">
+                                <i class="fas fa-copy me-2"></i>Copy Link
+                            </a></li>
+                        </ul>
+                    </div>
                     
                     <!-- Follow Button -->
                     {% if user.is_authenticated and user != recipe.user %}
@@ -460,4 +533,112 @@
     Recipe from OnlyPans.com | Created by {{ recipe.user.username }} | {{ recipe.created_at|date:"F j, Y" }}
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smart sharing functionality
+function shareRecipe() {
+    const shareData = {
+        title: '{{ recipe.title|escapejs }}',
+        text: '{{ recipe.description|truncatewords:20|escapejs }}',
+        url: window.location.href
+    };
+
+    // Check if Web Share API is supported
+    if (navigator.share) {
+        navigator.share(shareData)
+            .then(() => console.log('Recipe shared successfully'))
+            .catch((err) => console.log('Error sharing:', err));
+    } else {
+        // Fallback: copy to clipboard
+        copyToClipboard();
+    }
+}
+
+// Copy link to clipboard
+function copyToClipboard() {
+    const url = window.location.href;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+            // Show success message
+            showToast('Link copied to clipboard!', 'success');
+        }).catch(() => {
+            // Fallback for older browsers
+            fallbackCopyToClipboard(url);
+        });
+    } else {
+        fallbackCopyToClipboard(url);
+    }
+}
+
+// Fallback copy function for older browsers
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showToast('Link copied to clipboard!', 'success');
+    } catch (err) {
+        showToast('Could not copy link. Please copy manually.', 'error');
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+// Show toast notification
+function showToast(message, type) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    toast.style.position = 'fixed';
+    toast.style.top = '20px';
+    toast.style.right = '20px';
+    toast.style.zIndex = '9999';
+    
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Initialize and show toast
+    const bsToast = new bootstrap.Toast(toast, { autohide: true, delay: 3000 });
+    bsToast.show();
+    
+    // Remove from DOM after hiding
+    toast.addEventListener('hidden.bs.toast', () => {
+        document.body.removeChild(toast);
+    });
+}
+
+// Hide native share option if Web Share API is not supported
+document.addEventListener('DOMContentLoaded', function() {
+    if (!navigator.share) {
+        const nativeShareItem = document.getElementById('nativeShare');
+        if (nativeShareItem) {
+            nativeShareItem.style.display = 'none';
+            // Also hide the divider if it's the only native option
+            const divider = nativeShareItem.parentElement.nextElementSibling;
+            if (divider && divider.classList.contains('dropdown-divider')) {
+                divider.style.display = 'none';
+            }
+        }
+    }
+});
+</script>
 {% endblock %}

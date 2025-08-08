@@ -3,119 +3,6 @@
 {% block title %}OnlyPans - Discover Amazing Recipes{% endblock %}
 
 {% block content %}
-<!-- Advanced Search Section -->
-<div class="container mb-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-light">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-filter me-2"></i>Advanced Filters
-                </h5>
-                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" 
-                        data-bs-target="#advancedSearch" aria-expanded="false" aria-controls="advancedSearch">
-                    <i class="fas fa-cog me-1"></i>More Options
-                </button>
-            </div>
-        </div>
-        
-        <div class="collapse" id="advancedSearch">
-            <div class="card-body">
-                <form method="GET" action="{% url 'recipe_list' %}" id="searchForm">
-                    <!-- Preserve current search query -->
-                    {% if request.GET.search %}
-                        <input type="hidden" name="search" value="{{ request.GET.search }}">
-                    {% endif %}
-                    
-                    <div class="row">
-                            <h6 class="text-primary">Time Limits</h6>
-                            <div class="mb-2">
-                                {{ search_form.max_prep_time.label_tag }}
-                                {{ search_form.max_prep_time }}
-                            </div>
-                            <div class="mb-2">
-                                {{ search_form.max_cook_time.label_tag }}
-                                {{ search_form.max_cook_time }}
-                            </div>
-                            <div class="mb-2">
-                                {{ search_form.max_total_time.label_tag }}
-                                {{ search_form.max_total_time }}
-                            </div>
-                        </div>
-                        
-                        <!-- Servings & Difficulty -->
-                        <div class="col-md-4 mb-3">
-                            <h6 class="text-primary">Servings & Difficulty</h6>
-                            <div class="mb-2">
-                                {{ search_form.min_servings.label_tag }}
-                                {{ search_form.min_servings }}
-                            </div>
-                            <div class="mb-2">
-                                {{ search_form.max_servings.label_tag }}
-                                {{ search_form.max_servings }}
-                            </div>
-                            <div class="mb-2">
-                                {{ search_form.difficulty.label_tag }}
-                                {{ search_form.difficulty }}
-                            </div>
-                        </div>
-                        
-                        <!-- Sorting -->
-                        <div class="col-md-4 mb-3">
-                            <h6 class="text-primary">Sort Results</h6>
-                            <div class="mb-2">
-                                {{ search_form.sort_by.label_tag }}
-                                {{ search_form.sort_by }}
-                            </div>
-                        </div>
-                        
-                        <!-- Cuisine Types -->
-                        {% if search_form.cuisine.field.queryset %}
-                        <div class="col-md-6 mb-3">
-                            <h6 class="text-primary">Cuisine Types</h6>
-                            <div class="max-height-150 overflow-auto border rounded p-2">
-                                {% for choice in search_form.cuisine %}
-                                    <div class="form-check">
-                                        {{ choice.tag }}
-                                        {{ choice.choice_label }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        <!-- Dietary Restrictions -->
-                        {% if search_form.dietary.field.queryset %}
-                        <div class="col-md-6 mb-3">
-                            <h6 class="text-primary">Dietary Restrictions</h6>
-                            <div class="max-height-150 overflow-auto border rounded p-2">
-                                {% for choice in search_form.dietary %}
-                                    <div class="form-check">
-                                        {{ choice.tag }}
-                                        {{ choice.choice_label }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        <!-- Action Buttons -->
-                        <div class="col-12">
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search me-1"></i>Search Recipes
-                                </button>
-                                <a href="{% url 'recipe_list' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-times me-1"></i>Clear Filters
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Cuisine Carousel Section -->
 {% if carousel_data %}
 <div class="cuisine-carousel-section mb-5">
@@ -149,12 +36,11 @@
                                             </div>
                                         {% endif %}
                                         
-                                        <div class="card-body d-flex flex-column text-center">
-                                            <h6 class="card-title text-center mb-2">{{ recipe.title }}</h6>
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title mb-2">{{ recipe.title }}</h5>
                                             
-                                            <!-- Rating Stars Under Title -->
                                             {% if recipe.average_rating > 0 %}
-                                                <div class="text-center mb-2">
+                                                <div class="mb-2">
                                                     <div class="text-warning">
                                                         {% for i in "12345" %}
                                                             {% if forloop.counter <= recipe.average_rating %}
@@ -166,94 +52,55 @@
                                                         <span class="ms-1 text-muted small">{{ recipe.average_rating|floatformat:1 }}</span>
                                                     </div>
                                                 </div>
-                                            {% else %}
-                                                <div class="text-center mb-2">
-                                                    <div class="text-muted">
-                                                        {% for i in "12345" %}
-                                                            <i class="far fa-star"></i>
-                                                        {% endfor %}
-                                                        <span class="ms-1 text-muted small">No ratings</span>
-                                                    </div>
-                                                </div>
                                             {% endif %}
                                             
-                                            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                                <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ recipe.total_time }}min</small>
-                                                <small class="text-muted"><i class="fas fa-users me-1"></i>{{ recipe.servings }}</small>
+                                            <div class="recipe-meta-simple">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>{{ recipe.total_time }}min
+                                                    <span class="mx-1">•</span>
+                                                    <i class="fas fa-users me-1"></i>{{ recipe.servings }}
+                                                </small>
                                             </div>
                                         </div>
                                     </div>
                                 </a>
                             </div>
+                            {% empty %}
+                                <div class="col-12 text-center">
+                                    <div class="card h-100 recipe-card carousel-recipe-card">
+                                        <div class="card-body d-flex align-items-center justify-content-center">
+                                            <div>
+                                                <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+                                                <h5 class="text-muted">No {{ item.cuisine.name }} recipes yet</h5>
+                                                <p class="text-muted">Be the first to share a {{ item.cuisine.name }} recipe!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                             
-                            <!-- Fill empty slots if less than 3 recipes -->
-                            {% if item.recipes|length == 1 %}
-                                <!-- Add 2 placeholder cards -->
+                            {% if item.recipes.count > 3 %}
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <div class="card h-100 recipe-card carousel-recipe-card">
-                                        <div class="card-img-top recipe-image bg-light d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-utensils fa-3x text-muted"></i>
-                                        </div>
-                                        <div class="card-body d-flex flex-column text-center">
-                                            <h6 class="card-title text-center mb-2">Coming Soon</h6>
-                                            <div class="text-center mb-2">
-                                                <div class="text-muted">
-                                                    {% for j in "12345" %}
-                                                        <i class="far fa-star"></i>
-                                                    {% endfor %}
-                                                    <span class="ms-1 text-muted small">No ratings</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                                <small class="text-muted"><i class="fas fa-clock me-1"></i>--min</small>
-                                                <small class="text-muted"><i class="fas fa-users me-1"></i>--</small>
+                                        <div class="card-body d-flex align-items-center justify-content-center">
+                                            <div class="text-center">
+                                                <i class="fas fa-plus-circle fa-4x text-primary mb-3"></i>
+                                                <h5 class="text-primary">+{{ item.recipes.count|add:"-3" }} more</h5>
+                                                <p class="text-muted">{{ item.cuisine.name }} recipes</p>
+                                                <a href="?tag={{ item.cuisine.name }}" class="btn btn-primary btn-sm">View All</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            {% else %}
                                 <div class="col-lg-4 col-md-6 mb-3">
                                     <div class="card h-100 recipe-card carousel-recipe-card">
-                                        <div class="card-img-top recipe-image bg-light d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-utensils fa-3x text-muted"></i>
-                                        </div>
-                                        <div class="card-body d-flex flex-column text-center">
-                                            <h6 class="card-title text-center mb-2">Coming Soon</h6>
-                                            <div class="text-center mb-2">
-                                                <div class="text-muted">
-                                                    {% for j in "12345" %}
-                                                        <i class="far fa-star"></i>
-                                                    {% endfor %}
-                                                    <span class="ms-1 text-muted small">No ratings</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                                <small class="text-muted"><i class="fas fa-clock me-1"></i>--min</small>
-                                                <small class="text-muted"><i class="fas fa-users me-1"></i>--</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% elif item.recipes|length == 2 %}
-                                <!-- Add 1 placeholder card -->
-                                <div class="col-lg-4 col-md-6 mb-3">
-                                    <div class="card h-100 recipe-card carousel-recipe-card">
-                                        <div class="card-img-top recipe-image bg-light d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-utensils fa-3x text-muted"></i>
-                                        </div>
-                                        <div class="card-body d-flex flex-column text-center">
-                                            <h6 class="card-title text-center mb-2">Coming Soon</h6>
-                                            <div class="text-center mb-2">
-                                                <div class="text-muted">
-                                                    {% for j in "12345" %}
-                                                        <i class="far fa-star"></i>
-                                                    {% endfor %}
-                                                    <span class="ms-1 text-muted small">No ratings</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                                <small class="text-muted"><i class="fas fa-clock me-1"></i>--min</small>
-                                                <small class="text-muted"><i class="fas fa-users me-1"></i>--</small>
+                                        <div class="card-body d-flex align-items-center justify-content-center">
+                                            <div class="text-center">
+                                                <i class="fas fa-heart fa-4x text-danger mb-3"></i>
+                                                <h5 class="text-danger">Love {{ item.cuisine.name }}?</h5>
+                                                <p class="text-muted">Share your favorite recipe!</p>
+                                                <a href="{% url 'recipe_create' %}" class="btn btn-danger btn-sm">Add Recipe</a>
                                             </div>
                                         </div>
                                     </div>
@@ -276,119 +123,167 @@
 </div>
 {% endif %}
 
-<!-- Quick Search Bar -->
-<div class="container mb-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-3">
-                    <form method="GET" action="{% url 'recipe_list' %}" class="d-flex">
-                        <div class="input-group">
-                            <span class="input-group-text bg-primary text-white border-primary">
-                                <i class="fas fa-search"></i>
+<!-- Comprehensive Search & Filter Section -->
+<div class="container mb-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h4 class="mb-0">
+                        <i class="fas fa-search me-2"></i>Find Your Perfect Recipe
+                    </h4>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-light btn-sm" type="button" data-bs-toggle="collapse" 
+                            data-bs-target="#filterSection" aria-expanded="false" aria-controls="filterSection">
+                        <i class="fas fa-sliders-h me-1"></i>Advanced Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-4">
+            <!-- Main Search Bar -->
+            <form method="GET" action="{% url 'recipe_list' %}" id="mainSearchForm">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-search text-primary"></i>
                             </span>
                             <input type="text" 
                                    name="search" 
-                                   class="form-control border-primary" 
-                                   placeholder="Search recipes, ingredients, or descriptions..." 
+                                   class="form-control" 
+                                   placeholder="Search recipes, ingredients, cuisines..." 
                                    value="{{ request.GET.search }}"
                                    aria-label="Search recipes">
-                            <button type="submit" class="btn btn-primary">
-                                Search
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-search me-1"></i>Search
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+                
+                <!-- Quick Filter Buttons -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            <a href="?for_you=1" class="btn btn-outline-primary btn-sm {% if for_you %}active{% endif %}">
+                                <i class="fas fa-heart me-1"></i>For You
+                            </a>
+                            
+                            <!-- Popular Cuisine Quick Filters -->
+                            {% for tag in cuisine_tags|slice:":6" %}
+                                <a href="?tag={{ tag.name }}" class="btn btn-outline-secondary btn-sm">
+                                    <span class="tag-color-dot me-1" style="background-color: {{ tag.color }};"></span>
+                                    {{ tag.name }}
+                                </a>
+                            {% endfor %}
+                            
+                            <!-- Popular Dietary Quick Filters -->
+                            {% for tag in dietary_tags|slice:":4" %}
+                                <a href="?tag={{ tag.name }}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-leaf me-1"></i>{{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Filters (Collapsible) -->
+                <div class="collapse" id="filterSection">
+                    <hr class="my-4">
+                    <div class="row">
+                        <!-- Time Filters -->
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-clock me-1"></i>Time Limits
+                            </h6>
+                            <div class="mb-2">
+                                <label class="form-label small">Max Prep Time (min)</label>
+                                {{ search_form.max_prep_time }}
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Max Cook Time (min)</label>
+                                {{ search_form.max_cook_time }}
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Max Total Time (min)</label>
+                                {{ search_form.max_total_time }}
+                            </div>
+                        </div>
+                        
+                        <!-- Servings & Difficulty -->
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-users me-1"></i>Servings & Difficulty
+                            </h6>
+                            <div class="mb-2">
+                                <label class="form-label small">Min Servings</label>
+                                {{ search_form.min_servings }}
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Max Servings</label>
+                                {{ search_form.max_servings }}
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Difficulty</label>
+                                {{ search_form.difficulty }}
+                            </div>
+                        </div>
+                        
+                        <!-- Sort Options -->
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-sort me-1"></i>Sort Results
+                            </h6>
+                            <div class="mb-2">
+                                {{ search_form.sort_by }}
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-primary mb-3">Actions</h6>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-1"></i>Apply Filters
+                                </button>
+                                <a href="{% url 'recipe_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-undo me-1"></i>Clear All
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<!-- Recipe Filters and Content -->
+<!-- Results Section -->
 <div class="container my-4">
-    <!-- Filters moved to right side -->
+    <!-- Results Header -->
     <div class="row mb-4">
-        <div class="col-md-8">
-            <div class="filters-header">
-                <h3 class="filters-title">
-                    {% if for_you %}
-                        <i class="fas fa-heart text-danger me-2"></i>Recommended for You
-                    {% elif current_tag %}
-                        Recipes tagged: <span class="tag">{{ current_tag }}</span>
-                    {% elif dietary_filter %}
-                        Dietary preference: <span class="tag tag-dietary">{{ dietary_filter }}</span>
-                    {% elif search_query %}
-                        Search results for: "{{ search_query }}"
-                    {% else %}
-                        All Recipes
-                    {% endif %}
-                </h3>
-                <small class="recipe-count">{{ page_obj.paginator.count }} recipe{{ page_obj.paginator.count|pluralize }} found</small>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="filters-container">
-                <div class="filters-actions justify-content-end">
-                    <!-- For You Button -->
-                    {% if user_has_preferences %}
-                        <a href="?for_you=1" class="btn filter-btn {% if for_you %}active{% endif %}">
-                            <i class="fas fa-heart me-1"></i>For You
-                        </a>
-                    {% endif %}
-                    
-                    <!-- Tag Filter Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-label="Filter recipes by tag" aria-expanded="false">
-                            <i class="fas fa-tags me-1" aria-hidden="true"></i>Filter by Tag
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-lg">
-                            <li><a class="dropdown-item" href="{% url 'recipe_list' %}"><strong>All Recipes</strong></a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            
-                            {% regroup all_tags by tag_type as tags_by_type %}
-                            {% for tag_type in tags_by_type %}
-                                <li>
-                                    <h6 class="dropdown-header">
-                                        <i class="fas fa-{% if tag_type.grouper == 'dietary' %}leaf{% elif tag_type.grouper == 'cuisine' %}globe{% elif tag_type.grouper == 'meal_type' %}clock{% elif tag_type.grouper == 'cooking_method' %}fire{% else %}star{% endif %} me-2"></i>
-                                        {{ tag_type.list.0.get_tag_type_display }}
-                                    </h6>
-                                </li>
-                                {% for tag in tag_type.list %}
-                                    <li>
-                                        <a class="dropdown-item" href="?tag={{ tag.name }}">
-                                            <span class="tag-small" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                                {% if not forloop.last %}<li><hr class="dropdown-divider"></li>{% endif %}
-                            {% empty %}
-                                <li><span class="dropdown-item-text text-muted">No tags available</span></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <!-- Quick Dietary Filter -->
-                    <div class="dropdown">
-                        <button class="btn filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-label="Filter recipes by dietary type" aria-expanded="false">
-                            <i class="fas fa-leaf me-1" aria-hidden="true"></i>Dietary
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'recipe_list' %}"><strong>All Dietary Types</strong></a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            {% for tag in dietary_tags %}
-                                <li>
-                                    <a class="dropdown-item" href="?tag={{ tag.name }}">
-                                        <span class="tag-small" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
-                                    </a>
-                                </li>
-                            {% empty %}
-                                <li><span class="dropdown-item-text text-muted">No dietary tags available</span></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="col">
+            <h3 class="mb-2">
+                {% if for_you %}
+                    <i class="fas fa-heart text-danger me-2"></i>Recommended for You
+                {% elif tag_filter %}
+                    Recipes tagged with: <span class="tag" style="background-color: {{ tag_filter.color }};">{{ tag_filter.name }}</span>
+                {% elif dietary_filter %}
+                    Dietary preference: <span class="tag tag-dietary">{{ dietary_filter }}</span>
+                {% elif request.GET.search %}
+                    Search results for: <em>"{{ request.GET.search }}"</em>
+                {% else %}
+                    <i class="fas fa-utensils me-2"></i>All Recipes
+                {% endif %}
+            </h3>
+            {% if page_obj %}
+                <p class="text-muted mb-0">
+                    Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} recipe{{ page_obj.paginator.count|pluralize }}
+                </p>
+            {% endif %}
         </div>
     </div>
 
@@ -461,14 +356,9 @@
             <div class="col-12">
                 <div class="text-center py-5">
                     <i class="fas fa-search fa-4x text-muted mb-3"></i>
-                    <h3 class="text-muted">No recipes found</h3>
-                    <p class="text-muted">
-                        {% if search_query %}
-                            Try adjusting your search terms or <a href="{% url 'recipe_list' %}">browse all recipes</a>.
-                        {% else %}
-                            Be the first to add a recipe! <a href="/admin/">Add a recipe</a>.
-                        {% endif %}
-                    </p>
+                    <h4 class="text-muted">No recipes found</h4>
+                    <p class="text-muted">Try adjusting your search criteria or browse all recipes.</p>
+                    <a href="{% url 'recipe_list' %}" class="btn btn-primary">View All Recipes</a>
                 </div>
             </div>
         {% endfor %}
@@ -476,32 +366,47 @@
 
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-        <nav aria-label="Recipe pagination">
+        <nav aria-label="Recipe pagination" class="mt-5">
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+                        <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}{% if request.GET.for_you %}&for_you=1{% endif %}" aria-label="First page">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}{% if request.GET.for_you %}&for_you=1{% endif %}" aria-label="Previous page">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
                     </li>
                 {% endif %}
 
-                <li class="page-item active">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </li>
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}{% if request.GET.for_you %}&for_you=1{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
 
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}{% if request.GET.for_you %}&for_you=1{% endif %}" aria-label="Next page">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_tag %}&tag={{ current_tag }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}{% if request.GET.for_you %}&for_you=1{% endif %}" aria-label="Last page">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
                     </li>
                 {% endif %}
             </ul>
         </nav>
     {% endif %}
 </div>
-
 {% endblock %}

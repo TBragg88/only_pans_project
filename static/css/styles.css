@@ -1805,6 +1805,87 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
     }
 }
 
+/* ===== SEARCH & FILTER STYLING ===== */
+.tag-color-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.max-height-200 {
+    max-height: 200px;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-color) 100%);
+}
+
+/* Enhanced filter button styling */
+.btn-outline-primary.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-success:hover {
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* Search form enhancements */
+#mainSearchForm .input-group-lg .form-control {
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+#mainSearchForm .input-group-lg .btn {
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* Filter section animations */
+#filterSection {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Tag styling improvements */
+.tag-small {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0.125rem;
+}
+
+/* Results header styling */
+.text-center.py-5 i {
+    opacity: 0.3;
+}
+
+/* Form control improvements */
+.form-control.form-control-sm {
+    font-size: 0.875rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .d-flex.flex-wrap.gap-2 {
+        justify-content: center !important;
+    }
+    
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    #mainSearchForm .btn {
+        padding: 0.5rem 1rem;
+    }
+}
+
 /* ===== ADVANCED SEARCH STYLES ===== */
 .max-height-150 {
     max-height: 150px;
