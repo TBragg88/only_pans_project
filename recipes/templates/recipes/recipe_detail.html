@@ -229,7 +229,7 @@
             <!-- 4. MAIN PICTURE -->
             <div class="mb-4 text-center">
                 {% if recipe.get_image_url %}
-                    <img src="{{ recipe.get_image_url }}" class="img-fluid rounded shadow-lg" style="max-height: 400px; max-width: 600px; width: auto; height: auto;" alt="{{ recipe.title }}">
+                    <img src="{{ recipe.get_image_url }}" class="img-fluid rounded shadow-lg" style="max-height: 400px; max-width: 600px; width: auto; height: auto;" alt="{{ recipe.title }}" loading="lazy">
                 {% else %}
                     <div class="recipe-placeholder-image bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px; max-width: 600px; margin: 0 auto;">
                         <i class="fas fa-utensils fa-4x text-muted"></i>
@@ -329,7 +329,7 @@
                                 <div class="flex-grow-1">
                                     <p class="mb-2" style="line-height: 1.6;">{{ step.instruction }}</p>
                                     {% if step.get_image_url %}
-                                        <img src="{{ step.get_image_url }}" class="img-fluid rounded mt-2" style="max-height: 200px; max-width: 300px; width: auto;" alt="Step {{ step.step_number }}">
+                                        <img src="{{ step.get_image_url }}" class="img-fluid rounded mt-2" style="max-height: 200px; max-width: 300px; width: auto;" alt="Step {{ step.step_number }}" loading="lazy">
                                     {% endif %}
                                 </div>
                             </div>
@@ -502,7 +502,7 @@
                                     <div class="d-flex align-items-center p-2 border rounded">
                                         <div class="me-3">
                                             {% if related.get_image_url %}
-                                                <img src="{{ related.get_image_url }}" class="related-recipe-thumbnail" alt="{{ related.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                <img src="{{ related.get_image_url }}" class="related-recipe-thumbnail" alt="{{ related.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" loading="lazy">
                                             {% else %}
                                                 <div class="bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
                                                     <i class="fas fa-utensils text-muted"></i>

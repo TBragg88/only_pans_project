@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 
 def about_view(request):
@@ -14,3 +15,12 @@ def privacy_view(request):
 def terms_view(request):
     """Terms of Service page view"""
     return render(request, 'terms.html')
+
+
+def robots_txt(request):
+    """Minimal robots.txt allowing crawl."""
+    content = "\n".join([
+        "User-agent: *",
+        "Allow: /",
+    ])
+    return HttpResponse(content, content_type="text/plain")

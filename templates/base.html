@@ -8,6 +8,21 @@
             {% block title %}OnlyPans - Recipe Collection{% endblock %}
         </title>
 
+    <!-- Favicon & PWA basics -->
+    <link rel="icon" href="{% static 'images/favicons/favicon.svg' %}" type="image/svg+xml">
+    <link rel="manifest" href="{% static 'images/favicons/site.webmanifest' %}">
+    <meta name="theme-color" content="#0051a8">
+
+    <!-- Default Social Sharing (can be overridden per page) -->
+    <meta property="og:site_name" content="OnlyPans">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OnlyPans — Discover and share recipes">
+    <meta property="og:description" content="Create, discover, and discuss great recipes with a friendly community.">
+    <meta property="og:image" content="{% static 'images/favicons/favicon.svg' %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OnlyPans — Discover and share recipes">
+    <meta name="twitter:description" content="Create, discover, and discuss great recipes with a friendly community.">
+
         <!-- Bootstrap CSS -->
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"

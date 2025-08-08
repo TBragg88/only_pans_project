@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0051a8"/>
+      <stop offset="100%" stop-color="#003d82"/>
+    </linearGradient>
+  </defs>
+  <rect rx="48" ry="48" x="0" y="0" width="256" height="256" fill="url(#g)"/>
+  <!-- Pan handle -->
+  <rect x="164" y="88" width="56" height="20" rx="10" fill="#f7d794"/>
+  <!-- Pan body -->
+  <circle cx="112" cy="128" r="64" fill="#fefefe"/>
+  <circle cx="112" cy="128" r="46" fill="#fff9e6" stroke="#a8dadc" stroke-width="6"/>
+  <!-- OP monogram -->
+  <g fill="#0051a8">
+    <path d="M88 128a24 24 0 1 1 48 0a24 24 0 1 1 -48 0z" fill="#6c5ce7"/>
+    <path d="M142 104h20a24 24 0 1 1 0 48h-20v-16h20a8 8 0 0 0 0-16h-20z" fill="#fd79a8"/>
+  </g>
+</svg>

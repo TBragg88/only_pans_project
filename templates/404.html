@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Page Not Found — OnlyPans{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h1 class="display-5 fw-bold text-primary mb-3">This page is off the menu 🍳</h1>
+  <p class="text-muted mb-4">We couldn’t find what you were looking for. Try browsing recipes or searching instead.</p>
+  <a href="{% url 'recipe_list' %}" class="btn btn-primary me-2"><i class="fas fa-home me-2"></i>Back to Home</a>
+  <a href="{% url 'recipe_list' %}#search" class="btn btn-outline-secondary"><i class="fas fa-search me-2"></i>Search Recipes</a>
+</div>
+{% endblock %}
