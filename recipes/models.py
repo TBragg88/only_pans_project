@@ -134,19 +134,31 @@ class Recipe(models.Model):
     """Main recipe model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='recipes')
-    title = models.CharField(max_length=255)
+    title = models.CharField(
+        max_length=200,  # Reasonable recipe title length
+        help_text='Recipe title (max 200 characters)'
+    )
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    description = models.TextField(blank=True,
-                                   help_text='Tell us about this recipe!')
+    description = models.TextField(
+        max_length=1000,  # Prevent extremely long descriptions
+        blank=True,
+        help_text='Tell us about this recipe! (max 1000 characters)'
+    )
 
-    # Timing
+    # Timing (reasonable limits to prevent abuse)
     prep_time = models.PositiveIntegerField(
-        help_text='Preparation time in minutes'
+        help_text='Preparation time in minutes (max 1440 = 24 hours)',
+        validators=[MinValueValidator(1), MaxValueValidator(1440)]
     )
     cook_time = models.PositiveIntegerField(
-        help_text='Cooking time in minutes'
+        help_text='Cooking time in minutes (max 1440 = 24 hours)',
+        validators=[MinValueValidator(1), MaxValueValidator(1440)]
     )
-    servings = models.PositiveIntegerField(default=4)
+    servings = models.PositiveIntegerField(
+        default=4,
+        help_text='Number of servings (max 100)',
+        validators=[MinValueValidator(1), MaxValueValidator(100)]
+    )
 
     # Media - Cloudinary integration
     image = CloudinaryField(
@@ -433,7 +445,10 @@ class RecipeStep(models.Model):
                                on_delete=models.CASCADE,
                                related_name='steps')
     step_number = models.PositiveIntegerField()
-    instruction = models.TextField()
+    instruction = models.TextField(
+        max_length=2000,  # Reasonable step instruction length
+        help_text='Step instruction (max 2000 characters)'
+    )
 
     # Cloudinary field for step images
     image = CloudinaryField(
@@ -513,7 +528,8 @@ class Comment(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(
-        help_text='Share your experience with this recipe'
+        max_length=1500,  # Reasonable comment length
+        help_text='Share your experience with this recipe (max 1500 characters)'
     )
     parent_comment = models.ForeignKey(
         'self',
