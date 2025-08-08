@@ -36,7 +36,7 @@ class RecipeWorkflowTest(TestCase):
         recipe_data = {
             'title': 'Integration Test Recipe',
             'description': 'A recipe created during integration testing',
-            'instructions': 'Mix, cook, and enjoy!',
+            # Instructions captured via step formset
             'prep_time': 15,
             'cook_time': 30,
             'servings': 4,
@@ -60,8 +60,8 @@ class RecipeWorkflowTest(TestCase):
         self.assertEqual(create_response.status_code, 302)
 
         # Verify recipe was created
-        recipe = Recipe.objects.get(title='Integration Test Recipe')
-        self.assertEqual(recipe.author, self.user)
+    recipe = Recipe.objects.get(title='Integration Test Recipe')
+    self.assertEqual(recipe.user, self.user)
         self.assertEqual(recipe.prep_time, 15)
 
         # Step 3: View the recipe
@@ -121,9 +121,13 @@ class UserInteractionTest(TestCase):
         self.recipe = Recipe.objects.create(
             title='Test Recipe for Interaction',
             description='A recipe to test interactions',
-            instructions='Cook it well',
-            author=self.author
+            user=self.author,
+            prep_time=5,
+            cook_time=10,
+            servings=2,
         )
+        from recipes.models import RecipeStep
+        RecipeStep.objects.create(recipe=self.recipe, step_number=1, instruction='Cook it well')
 
     def test_rating_and_comment_workflow(self):
         """Test user rating and commenting on recipes"""
@@ -132,10 +136,10 @@ class UserInteractionTest(TestCase):
 
         # Add a rating
         rating_response = self.client.post(
-            reverse('recipes:add_rating', args=[self.recipe.slug]),
+            reverse('recipes:recipe_detail', args=[self.recipe.slug]),
             {
                 'rating': 5,
-                'review': 'Excellent recipe!'
+                'rating_submit': '1'
             }
         )
         
@@ -150,9 +154,10 @@ class UserInteractionTest(TestCase):
 
         # Add a comment
         comment_response = self.client.post(
-            reverse('recipes:add_comment', args=[self.recipe.slug]),
+            reverse('recipes:recipe_detail', args=[self.recipe.slug]),
             {
-                'content': 'This recipe is amazing! Thanks for sharing.'
+                'content': 'This recipe is amazing! Thanks for sharing.',
+                'comment_submit': '1'
             }
         )
 
@@ -160,7 +165,7 @@ class UserInteractionTest(TestCase):
         self.assertTrue(
             Comment.objects.filter(
                 recipe=self.recipe,
-                author=self.reviewer
+                user=self.reviewer
             ).exists()
         )
 
@@ -178,10 +183,10 @@ class UserInteractionTest(TestCase):
 
         # Try to rate own recipe
         rating_response = self.client.post(
-            reverse('recipes:add_rating', args=[self.recipe.slug]),
+            reverse('recipes:recipe_detail', args=[self.recipe.slug]),
             {
                 'rating': 5,
-                'review': 'Rating my own recipe'
+                'rating_submit': '1'
             }
         )
 
@@ -208,36 +213,45 @@ class SearchIntegrationTest(TestCase):
         self.italian_recipe = Recipe.objects.create(
             title='Classic Italian Pasta',
             description='Traditional Italian pasta with tomato sauce',
-            instructions='Cook pasta, add sauce',
-            author=self.user
+            user=self.user,
+            prep_time=10,
+            cook_time=20,
+            servings=2,
         )
+        RecipeStep.objects.create(recipe=self.italian_recipe, step_number=1, instruction='Cook pasta, add sauce')
 
         self.mexican_recipe = Recipe.objects.create(
             title='Spicy Mexican Tacos',
             description='Authentic Mexican tacos with fresh ingredients',
-            instructions='Prepare fillings, assemble tacos',
-            author=self.user
+            user=self.user,
+            prep_time=10,
+            cook_time=10,
+            servings=2,
         )
+        RecipeStep.objects.create(recipe=self.mexican_recipe, step_number=1, instruction='Prepare fillings, assemble tacos')
 
         self.dessert_recipe = Recipe.objects.create(
             title='Chocolate Cake',
             description='Rich and moist chocolate cake',
-            instructions='Mix ingredients, bake',
-            author=self.user
+            user=self.user,
+            prep_time=10,
+            cook_time=30,
+            servings=8,
         )
+        RecipeStep.objects.create(recipe=self.dessert_recipe, step_number=1, instruction='Mix ingredients, bake')
 
         # Create tags
         self.italian_tag = Tag.objects.create(
             name='Italian',
-            category='cuisine'
+            tag_type='cuisine'
         )
         self.mexican_tag = Tag.objects.create(
             name='Mexican',
-            category='cuisine'
+            tag_type='cuisine'
         )
         self.dessert_tag = Tag.objects.create(
             name='Dessert',
-            category='course'
+            tag_type='course'
         )
 
         # Associate tags with recipes
@@ -303,8 +317,10 @@ class PerformanceTest(TransactionTestCase):
             recipes.append(Recipe(
                 title=f'Recipe {i}',
                 description=f'Description for recipe {i}',
-                instructions=f'Instructions for recipe {i}',
-                author=self.user
+                user=self.user,
+                prep_time=5,
+                cook_time=5,
+                servings=2,
             ))
         
         Recipe.objects.bulk_create(recipes)
@@ -328,8 +344,10 @@ class PerformanceTest(TransactionTestCase):
             recipes.append(Recipe(
                 title=f'Recipe {i} with varied content',
                 description=f'This is recipe number {i} for testing',
-                instructions=f'Step by step instructions for recipe {i}',
-                author=self.user
+                user=self.user,
+                prep_time=5,
+                cook_time=5,
+                servings=2,
             ))
         
         Recipe.objects.bulk_create(recipes)
@@ -361,8 +379,10 @@ class SecurityTest(TestCase):
         
         self.user1_recipe = Recipe.objects.create(
             title='User 1 Recipe',
-            instructions='Private recipe',
-            author=self.user1
+            user=self.user1,
+            prep_time=5,
+            cook_time=5,
+            servings=1,
         )
 
     def test_unauthorized_recipe_edit_attempt(self):

@@ -7,6 +7,14 @@
         <title>
             {% block title %}OnlyPans - Recipe Collection{% endblock %}
         </title>
+        
+    <!-- SEO basics: description + canonical (override per page via blocks) -->
+    {% block meta_description %}
+    <meta name="description" content="Create, discover, and discuss great recipes with a friendly OnlyPans community.">
+    {% endblock %}
+    {% block canonical %}
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    {% endblock %}
 
     <!-- Favicon & PWA basics -->
     <link rel="icon" href="{% static 'images/favicons/favicon.svg' %}" type="image/svg+xml">
@@ -43,6 +51,8 @@
         {% block extra_css %}{% endblock %}
     </head>
     <body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="visually-hidden-focusable position-absolute top-0 start-0 m-2 px-3 py-2 bg-light rounded text-dark" style="z-index: 1050;">Skip to content</a>
         <!-- Clean Navigation Header -->
         <nav class="navbar navbar-dark bg-dark py-2">
             <div class="container">
@@ -67,15 +77,15 @@
                             <i class="fas fa-user" aria-hidden="true"></i>
                         </a>
                         
-                        <a class="btn btn-sm me-2" 
-                           href="{% url 'liked_recipes' %}" 
+                                <a class="btn btn-sm me-2" 
+                                    href="{% url 'recipes:liked_recipes' %}" 
                            aria-label="View Liked Recipes"
                            title="Liked Recipes">
                             <i class="fas fa-heart" aria-hidden="true"></i>
                         </a>
                         
-                        <a class="btn btn-sm me-2" 
-                           href="{% url 'recipe_create' %}" 
+                                <a class="btn btn-sm me-2" 
+                                    href="{% url 'recipes:recipe_create' %}" 
                            aria-label="Create New Recipe"
                            title="Create Recipe">
                             <i class="fas fa-plus" aria-hidden="true"></i>
@@ -112,7 +122,7 @@
         <section class="onlypans-hero">
             <div class="container text-center">
                 <h1 class="hero-brand">
-                    <a href="{% url 'recipe_list' %}" class="text-decoration-none">
+                    <a href="{% url 'recipes:recipe_list' %}" class="text-decoration-none">
                         <span class="brand-highlight">OnlyPans</span>
                     </a>
                 </h1>
@@ -120,7 +130,7 @@
         </section>
 
         <!-- Main Content: Recipe Grid -->
-        <main class="container mb-5">{% block content %}{% endblock %}</main>
+    <main id="main-content" class="container mb-5">{% block content %}{% endblock %}</main>
 
         <!-- Footer -->
         <footer class="bg-dark text-light py-4 mt-auto">
@@ -652,6 +662,11 @@
                 // Handle logout via AJAX
                 const logoutBtn = document.getElementById("logoutBtn");
                 if (logoutBtn) {
+                    function getCookie(name) {
+                        const value = `; ${document.cookie}`;
+                        const parts = value.split(`; ${name}=`);
+                        if (parts.length === 2) return parts.pop().split(';').shift();
+                    }
                     logoutBtn.addEventListener("click", function (e) {
                         e.preventDefault();
 
@@ -659,9 +674,8 @@
                             method: "POST",
                             headers: {
                                 "X-Requested-With": "XMLHttpRequest",
-                                "X-CSRFToken": document.querySelector(
-                                    "[name=csrfmiddlewaretoken]"
-                                ).value,
+                                // Prefer cookie-based CSRF for global availability
+                                "X-CSRFToken": getCookie("csrftoken") || (document.querySelector("[name=csrfmiddlewaretoken]")?.value || ""),
                             },
                         })
                             .then((response) => response.json())
@@ -672,7 +686,7 @@
 
                                     // Redirect to home page after short delay
                                     setTimeout(() => {
-                                        window.location.href = "{% url 'recipe_list' %}";
+                                        window.location.href = "{% url 'recipes:recipe_list' %}";
                                     }, 1500);
                                 }
                             })

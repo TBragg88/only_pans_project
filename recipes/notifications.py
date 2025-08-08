@@ -2,8 +2,7 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
-from django.contrib.auth.models import User
-from .models import Recipe, Comment, Rating
+from .models import Recipe
 
 
 def send_comment_notification(comment, recipe_owner):
@@ -21,8 +20,12 @@ def send_comment_notification(comment, recipe_owner):
     }
     
     # Render email content
-    html_message = render_to_string('emails/comment_notification.html', context)
-    plain_message = render_to_string('emails/comment_notification.txt', context)
+    html_message = render_to_string(
+        'emails/comment_notification.html', context
+    )
+    plain_message = render_to_string(
+        'emails/comment_notification.txt', context
+    )
     
     try:
         send_mail(
@@ -43,7 +46,10 @@ def send_rating_notification(rating, recipe_owner):
     if not recipe_owner.email:
         return
         
-    subject = f"New {rating.rating}-star rating on your recipe: {rating.recipe.title}"
+    subject = (
+        f"New {rating.rating}-star rating on your recipe: "
+        f"{rating.recipe.title}"
+    )
     
     context = {
         'recipe_owner': recipe_owner,

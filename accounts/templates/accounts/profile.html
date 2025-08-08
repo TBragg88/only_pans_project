@@ -134,7 +134,7 @@
                             <!-- Follow Button for other users -->
                             {% if not is_own_profile and user.is_authenticated %}
                             <div class="text-center mt-3">
-                                <form action="{% url 'toggle_follow' profile_user.username %}" method="post" class="follow-form">
+                                <form action="{% url 'recipes:toggle_follow' profile_user.username %}" method="post" class="follow-form">
                                     {% csrf_token %}
                                     <button type="submit" class="btn {% if is_following %}btn-outline-primary{% else %}btn-primary{% endif %}">
                                         <i class="fas {% if is_following %}fa-user-minus{% else %}fa-user-plus{% endif %} me-2"></i>
@@ -147,7 +147,7 @@
                             <!-- Liked Recipes count for own profile -->
                             {% if is_own_profile and liked_count > 0 %}
                             <div class="text-center mt-3">
-                                <a href="{% url 'liked_recipes' %}" class="btn btn-outline-danger">
+                                <a href="{% url 'recipes:liked_recipes' %}" class="btn btn-outline-danger">
                                     <i class="fas fa-heart me-2"></i>{{ liked_count }} Liked Recipe{{ liked_count|pluralize }}
                                 </a>
                             </div>
@@ -227,14 +227,14 @@
                                 </div>
                                 <div class="d-flex gap-2">
                                     <a
-                                        href="{% url 'recipe_detail' recipe.slug %}"
+                                        href="{% url 'recipes:recipe_detail' recipe.slug %}"
                                         class="btn btn-outline-primary btn-sm flex-grow-1"
                                     >
                                         <i class="fas fa-eye me-1"></i>View
                                     </a>
                                     {% if is_own_profile %}
                                     <a
-                                        href="{% url 'recipe_edit' recipe.slug %}"
+                                        href="{% url 'recipes:recipe_edit' recipe.slug %}"
                                         class="btn btn-warning btn-sm"
                                         title="Edit Recipe"
                                     >
@@ -264,7 +264,7 @@
                     Start sharing your delicious recipes with the OnlyPans
                     community!
                 </p>
-                <a href="{% url 'recipe_create' %}" class="btn btn-primary">
+                <a href="{% url 'recipes:recipe_create' %}" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Create Your First Recipe
                 </a>
                 {% else %}
@@ -288,15 +288,15 @@
                             <div class="card h-100 shadow-sm recipe-card">
                                 <div class="position-relative">
                                     {% if recipe.get_image_url %}
-                                    <img src="{{ recipe.get_image_url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                                    <img src="{{ recipe.get_image_url }}" class="card-img-top" alt="{{ recipe.title }}" loading="lazy" style="height: 200px; object-fit: cover;">
                                     {% endif %}
                                     
                                     <!-- Unlike button -->
                                     <div class="position-absolute top-0 end-0 p-2">
-                                        <form action="{% url 'toggle_like' recipe.slug %}" method="post" class="like-form">
+                                        <form action="{% url 'recipes:toggle_like' recipe.slug %}" method="post" class="like-form">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="fas fa-heart"></i>
+                                            <button type="submit" class="btn btn-sm btn-danger" aria-label="Unlike {{ recipe.title }}" title="Unlike">
+                                                <i class="fas fa-heart" aria-hidden="true"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -311,7 +311,7 @@
                                             <small class="text-muted">
                                                 <i class="fas fa-clock me-1"></i>{{ recipe.total_time }} min
                                             </small>
-                                            <small class="text-muted">by {{ recipe.author.username }}</small>
+                                            <small class="text-muted">by {{ recipe.user.username }}</small>
                                         </div>
                                         <a href="{{ recipe.get_absolute_url }}" class="btn btn-primary w-100">
                                             View Recipe
@@ -325,7 +325,7 @@
                     
                     {% if liked_count > 6 %}
                     <div class="text-center mt-4">
-                        <a href="{% url 'liked_recipes' %}" class="btn btn-outline-primary">
+                        <a href="{% url 'recipes:liked_recipes' %}" class="btn btn-outline-primary">
                             View All {{ liked_count }} Liked Recipes
                         </a>
                     </div>
@@ -338,7 +338,7 @@
                         <p class="text-muted mb-4">
                             Start exploring recipes and heart the ones you love!
                         </p>
-                        <a href="{% url 'recipe_list' %}" class="btn btn-primary">
+                        <a href="{% url 'recipes:recipe_list' %}" class="btn btn-primary">
                             <i class="fas fa-search me-2"></i>Browse Recipes
                         </a>
                     </div>

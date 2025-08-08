@@ -60,7 +60,7 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4 no-print">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'recipe_list' %}">Recipes</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'recipes:recipe_list' %}">Recipes</a></li>
             <li class="breadcrumb-item active">{{ recipe.title }}</li>
         </ol>
     </nav>
@@ -126,10 +126,10 @@
                     
                     <!-- Follow Button -->
                     {% if user.is_authenticated and user != recipe.user %}
-                        <form action="{% url 'toggle_follow' recipe.user.username %}" method="post" class="follow-form">
+                        <form action="{% url 'recipes:toggle_follow' recipe.user.username %}" method="post" class="follow-form">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm {% if is_following %}btn-success{% else %}btn-outline-success{% endif %} follow-btn">
-                                <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}"></i>
+                                <i class="fas fa-{% if is_following %}user-check{% else %}user-plus{% endif %}" aria-hidden="true"></i>
                                 {% if is_following %}Following{% else %}Follow{% endif %}
                             </button>
                         </form>

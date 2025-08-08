@@ -1,3 +1,1 @@
-from django.test import TestCase
-
-# Create your tests here.
+"""App-level tests live under the top-level tests/ package."""

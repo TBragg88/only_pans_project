@@ -83,12 +83,14 @@ class RecipeViewTest(TestCase):
         self.recipe = Recipe.objects.create(
             title='Test Recipe',
             description='A test recipe',
-            instructions='Test instructions',
-            author=self.user,
+            user=self.user,
             prep_time=15,
             cook_time=30,
             servings=4
         )
+        # Minimal step so detail page shows instructions
+        from recipes.models import RecipeStep
+        RecipeStep.objects.create(recipe=self.recipe, step_number=1, instruction='Test instructions')
 
     def test_recipe_list_view(self):
         """Test recipe list page"""
@@ -103,7 +105,7 @@ class RecipeViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Recipe')
-        self.assertContains(response, 'Test instructions')
+    self.assertContains(response, 'Test instructions')
 
     def test_recipe_create_view_authenticated(self):
         """Test recipe creation by authenticated user"""
@@ -122,13 +124,13 @@ class RecipeViewTest(TestCase):
         self.client.login(username='testuser', password='testpass123')
         
         # Create test ingredients and tags
-        ingredient = Ingredient.objects.create(name='Test Ingredient')
-        tag = Tag.objects.create(name='Test Tag', category='cuisine')
+    ingredient = Ingredient.objects.create(name='Test Ingredient')
+    tag = Tag.objects.create(name='Test Tag', tag_type='cuisine')
         
         response = self.client.post(reverse('recipes:recipe_create'), {
             'title': 'New Test Recipe',
             'description': 'A new test recipe',
-            'instructions': 'New test instructions',
+            # Steps provided via formset
             'prep_time': 20,
             'cook_time': 40,
             'servings': 6,
@@ -194,16 +196,23 @@ class SearchAndFilterTest(TestCase):
         self.pasta_recipe = Recipe.objects.create(
             title='Italian Pasta',
             description='Delicious pasta dish',
-            instructions='Cook pasta',
-            author=self.user
+            user=self.user,
+            prep_time=5,
+            cook_time=10,
+            servings=2,
         )
+        from recipes.models import RecipeStep
+        RecipeStep.objects.create(recipe=self.pasta_recipe, step_number=1, instruction='Cook pasta')
         
         self.salad_recipe = Recipe.objects.create(
             title='Fresh Salad',
             description='Healthy green salad',
-            instructions='Mix vegetables',
-            author=self.user
+            user=self.user,
+            prep_time=5,
+            cook_time=0,
+            servings=2,
         )
+        RecipeStep.objects.create(recipe=self.salad_recipe, step_number=1, instruction='Mix vegetables')
 
     def test_recipe_search(self):
         """Test recipe search functionality"""
@@ -235,7 +244,7 @@ class ProfileViewTest(TestCase):
             first_name='Test',
             last_name='User'
         )
-        self.profile = self.user.userprofile
+    self.profile = self.user.profile
 
     def test_profile_view(self):
         """Test user profile page"""
