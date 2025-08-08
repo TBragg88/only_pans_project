@@ -87,6 +87,25 @@
                                        {% if user_rating and forloop.counter <= user_rating.rating %}class="rating-star-active"{% endif %}></i>
                                 {% endfor %}
                             </div>
+                        {% else %}
+                            <!-- Login prompt for rating -->
+                            <div class="user-rating-prompt mt-2">
+                                <div class="rating-login-stars">
+                                    {% for i in "12345" %}
+                                        <i class="far fa-star fs-5 text-muted rating-login-star" 
+                                           data-bs-toggle="modal" 
+                                           data-bs-target="#loginModal"
+                                           title="You must sign in to rate this recipe"
+                                           style="cursor: pointer;"></i>
+                                    {% endfor %}
+                                </div>
+                                <small class="text-muted">
+                                    <a href="#" 
+                                       class="text-decoration-none" 
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#loginModal">Sign in</a> to rate this recipe
+                                </small>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

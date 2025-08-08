@@ -1314,6 +1314,32 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
     opacity: 0.3;
 }
 
+/* Login prompt rating stars */
+.rating-login-stars {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.rating-login-star {
+    transition: var(--transition-fast);
+    color: #ddd !important;
+}
+
+.rating-login-star:hover {
+    color: var(--warning-color) !important;
+    transform: scale(1.1);
+}
+
+.user-rating-prompt {
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.user-rating-prompt small {
+    font-size: 0.875rem;
+}
+
 /* Modal styling */
 .modal-content {
     border: 2px solid var(--primary-color);
