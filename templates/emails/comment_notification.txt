@@ -1,0 +1,14 @@
+Hi {{ recipe_owner.first_name|default:recipe_owner.username }},
+
+{{ commenter.username }} left a comment on your recipe "{{ recipe.title }}":
+
+"{{ comment.content }}"
+
+View the full conversation and reply: {{ recipe.get_absolute_url }}
+
+Happy cooking!
+The OnlyPans Team
+
+---
+You received this email because someone commented on your recipe. 
+To manage your notification preferences, visit your profile settings.

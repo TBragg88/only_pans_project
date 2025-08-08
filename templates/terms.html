@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service - OnlyPans{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary mb-3">
+                    <i class="fas fa-file-contract me-3"></i>Terms of Service
+                </h1>
+                <p class="lead text-muted">Please read these terms carefully</p>
+                <small class="text-muted">Last updated: January 8, 2025</small>
+            </div>
+
+            <!-- Content -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Acceptance of Terms</h2>
+                        <p class="mb-4">
+                            By accessing and using OnlyPans ("the Service"), you accept and agree to be bound by 
+                            the terms and provision of this agreement. If you do not agree to abide by the above, 
+                            please do not use this service.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Description of Service</h2>
+                        <p class="mb-3">
+                            OnlyPans is a recipe sharing platform that allows users to:
+                        </p>
+                        <ul class="mb-4">
+                            <li>Create accounts and build personal cooking profiles</li>
+                            <li>Share original recipes with detailed instructions and photos</li>
+                            <li>Discover, rate, and comment on recipes from other users</li>
+                            <li>Save favorite recipes for future reference</li>
+                            <li>Connect with other cooking enthusiasts</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">User Accounts and Responsibilities</h2>
+                        <h5 class="mb-3">Account Creation</h5>
+                        <ul class="mb-4">
+                            <li>You must provide accurate and complete information when creating an account</li>
+                            <li>You are responsible for maintaining the confidentiality of your account credentials</li>
+                            <li>You must be at least 13 years old to create an account</li>
+                            <li>One person may not maintain more than one account</li>
+                        </ul>
+                        
+                        <h5 class="mb-3">User Conduct</h5>
+                        <p class="mb-3">You agree not to:</p>
+                        <ul class="mb-4">
+                            <li>Post false, inaccurate, misleading, or fraudulent content</li>
+                            <li>Upload content that infringes on others' intellectual property rights</li>
+                            <li>Share recipes that could be harmful or dangerous if followed</li>
+                            <li>Harass, abuse, or harm other users</li>
+                            <li>Spam or send unsolicited communications</li>
+                            <li>Attempt to gain unauthorized access to our systems</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Content and Intellectual Property</h2>
+                        <h5 class="mb-3">Your Content</h5>
+                        <ul class="mb-4">
+                            <li>You retain ownership of the recipes and content you post</li>
+                            <li>By posting content, you grant OnlyPans a license to display, distribute, and promote your content on our platform</li>
+                            <li>You represent that you have the right to share all content you upload</li>
+                            <li>You are responsible for ensuring your content doesn't violate any laws or third-party rights</li>
+                        </ul>
+                        
+                        <h5 class="mb-3">Our Content</h5>
+                        <p class="mb-4">
+                            The OnlyPans platform, including its design, features, and functionality, is owned by 
+                            OnlyPans and protected by copyright, trademark, and other intellectual property laws.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Content Moderation</h2>
+                        <p class="mb-3">
+                            We reserve the right to review, moderate, and remove content that:
+                        </p>
+                        <ul class="mb-4">
+                            <li>Violates these Terms of Service</li>
+                            <li>Contains inappropriate, offensive, or harmful material</li>
+                            <li>Infringes on intellectual property rights</li>
+                            <li>Is reported by other users as problematic</li>
+                            <li>We determine is not suitable for our platform</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Privacy and Data</h2>
+                        <p class="mb-4">
+                            Your privacy is important to us. Please review our 
+                            <a href="{% url 'privacy' %}">Privacy Policy</a> to understand how we collect, 
+                            use, and protect your information.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Disclaimers and Limitations</h2>
+                        <h5 class="mb-3">Recipe Safety</h5>
+                        <p class="mb-4">
+                            OnlyPans is not responsible for the safety, accuracy, or results of recipes shared 
+                            on our platform. Users follow recipes at their own risk and should use proper 
+                            food safety practices.
+                        </p>
+                        
+                        <h5 class="mb-3">Service Availability</h5>
+                        <p class="mb-4">
+                            We strive to maintain continuous service but cannot guarantee uninterrupted access. 
+                            We may temporarily suspend service for maintenance, updates, or other reasons.
+                        </p>
+                        
+                        <h5 class="mb-3">Limitation of Liability</h5>
+                        <p class="mb-4">
+                            OnlyPans shall not be liable for any indirect, incidental, special, consequential, 
+                            or punitive damages resulting from your use of the service.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Account Termination</h2>
+                        <p class="mb-3">
+                            We may suspend or terminate your account if you:
+                        </p>
+                        <ul class="mb-4">
+                            <li>Violate these Terms of Service</li>
+                            <li>Engage in harmful or abusive behavior</li>
+                            <li>Post content that violates our community guidelines</li>
+                            <li>Attempt to circumvent our security measures</li>
+                        </ul>
+                        <p class="mb-4">
+                            You may delete your account at any time through your profile settings.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h4 text-primary mb-3">Changes to Terms</h2>
+                        <p class="mb-4">
+                            We reserve the right to modify these Terms of Service at any time. We will notify 
+                            users of significant changes via email or platform notifications. Continued use 
+                            of the service after changes constitutes acceptance of the new terms.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2 class="h4 text-primary mb-3">Contact Information</h2>
+                        <p class="mb-3">
+                            If you have questions about these Terms of Service, please contact us:
+                        </p>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-2"><strong>Email:</strong> legal@onlypans.com</p>
+                            <p class="mb-2"><strong>Phone:</strong> (555) 123-PANS</p>
+                            <p class="mb-0">
+                                <strong>Or use our </strong>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">contact form</a>
+                            </p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="text-center mt-5">
+                <a href="{% url 'recipe_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Recipes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

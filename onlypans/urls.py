@@ -25,6 +25,8 @@ urlpatterns = [
     path('', include('recipes.urls')),
     path('accounts/', include('accounts.urls')),
     path('about/', views.about_view, name='about'),
+    path('privacy/', views.privacy_view, name='privacy'),
+    path('terms/', views.terms_view, name='terms'),
 ]
 
 # Serve static files during development

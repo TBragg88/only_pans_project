@@ -10,8 +10,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import (RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet,
-                    CommentForm, RatingForm)
+                    CommentForm, RatingForm, RecipeSearchForm)
 from .models import Recipe, Tag, Comment, Rating, Ingredient
+from .notifications import send_comment_notification, send_rating_notification
 
 
 def test_view(request):
@@ -20,8 +21,81 @@ def test_view(request):
 
 
 def recipe_list(request):
-    """Display all recipes with pagination and filtering."""
+    """Display all recipes with advanced filtering and pagination."""
+    
+    # Initialize the search form with GET data
+    search_form = RecipeSearchForm(request.GET or None)
+    
+    # Start with all recipes
     recipes = Recipe.objects.all()
+    
+    # Apply filters based on form data
+    if search_form.is_valid():
+        form_data = search_form.cleaned_data
+        
+        # Text search
+        if form_data.get('search'):
+            search_query = form_data['search']
+            recipes = recipes.filter(
+                Q(title__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(tags__name__icontains=search_query) |
+                Q(ingredients__ingredient__name__icontains=search_query)
+            ).distinct()
+        
+        # Tags filter
+        if form_data.get('tags'):
+            recipes = recipes.filter(tags__in=form_data['tags']).distinct()
+            
+        # Cuisine filter
+        if form_data.get('cuisine'):
+            recipes = recipes.filter(tags__in=form_data['cuisine']).distinct()
+            
+        # Dietary filter
+        if form_data.get('dietary'):
+            recipes = recipes.filter(tags__in=form_data['dietary']).distinct()
+        
+        # Time filters
+        if form_data.get('max_prep_time'):
+            recipes = recipes.filter(prep_time__lte=form_data['max_prep_time'])
+            
+        if form_data.get('max_cook_time'):
+            recipes = recipes.filter(cook_time__lte=form_data['max_cook_time'])
+            
+        if form_data.get('max_total_time'):
+            recipes = recipes.filter(
+                total_time__lte=form_data['max_total_time']
+            )
+        
+        # Servings filters
+        if form_data.get('min_servings'):
+            recipes = recipes.filter(servings__gte=form_data['min_servings'])
+            
+        if form_data.get('max_servings'):
+            recipes = recipes.filter(servings__lte=form_data['max_servings'])
+        
+        # Difficulty filter (based on total time)
+        difficulty = form_data.get('difficulty')
+        if difficulty == 'easy':
+            recipes = recipes.filter(total_time__lt=30)
+        elif difficulty == 'medium':
+            recipes = recipes.filter(total_time__gte=30, total_time__lte=60)
+        elif difficulty == 'hard':
+            recipes = recipes.filter(total_time__gt=60)
+        
+        # Sorting
+        sort_by = form_data.get('sort_by', '-created_at')
+        if sort_by == '-average_rating':
+            # Sort by average rating
+            from django.db.models import Avg
+            recipes = recipes.annotate(
+                avg_rating=Avg('ratings__rating')
+            ).order_by('-avg_rating', '-created_at')
+        else:
+            recipes = recipes.order_by(sort_by)
+    else:
+        # Default sorting if no form or invalid form
+        recipes = recipes.order_by('-created_at')
     
     # Check if user wants personalized recommendations
     if request.user.is_authenticated and request.GET.get('for_you') == '1':
@@ -31,33 +105,11 @@ def recipe_list(request):
         if recommended_recipes:
             recipes = recommended_recipes
     
-    # Filter by tag if provided
-    tag_filter = request.GET.get('tag')
-    if tag_filter:
-        recipes = recipes.filter(tags__name=tag_filter)
-    
-    # Filter by dietary preference if provided
-    dietary_filter = request.GET.get('dietary')
-    if dietary_filter:
-        # Find recipes with tags that match the dietary preference
-        recipes = recipes.filter(
-            tags__name__icontains=dietary_filter,
-            tags__tag_type='dietary'
-        )
-    
-    # Search functionality - search in title, description, and dietary tags
-    search_query = request.GET.get('search')
-    if search_query:
-        recipes = recipes.filter(
-            Q(title__icontains=search_query) |
-            Q(description__icontains=search_query) |
-            Q(tags__name__icontains=search_query)
-        ).distinct()
-    
     # Apply dietary restrictions for authenticated users
     if (request.user.is_authenticated and
             request.user.profile.dietary_tags.exists() and
-            not tag_filter and not dietary_filter and not search_query):
+            not request.GET.get('tags') and not request.GET.get('dietary') and
+            not request.GET.get('search')):
         # Filter out recipes that don't match user's dietary restrictions
         compatible_recipes = []
         for recipe in recipes:
@@ -108,9 +160,7 @@ def recipe_list(request):
         'all_tags': all_tags,
         'dietary_tags': dietary_tags,
         'carousel_data': carousel_data,
-        'current_tag': tag_filter,
-        'current_dietary': dietary_filter,
-        'search_query': search_query,
+        'search_form': search_form,
         'for_you': request.GET.get('for_you') == '1',
         'user_has_preferences': (
             request.user.is_authenticated and
@@ -181,6 +231,11 @@ def recipe_detail(request, slug):
                     messages.info(request, "Comment submitted! It will appear after admin approval.")
                 
                 comment.save()
+                
+                # Send notification to recipe owner (if not commenting on own recipe)
+                if comment.user != recipe.user:
+                    send_comment_notification(comment, recipe.user)
+                
                 return redirect('recipe_detail', slug=recipe.slug)
         else:
             messages.error(request, "Please log in to comment.")
@@ -198,6 +253,9 @@ def recipe_detail(request, slug):
                 )
                 if created:
                     messages.success(request, "Rating added successfully!")
+                    # Send notification to recipe owner (if not rating own recipe)
+                    if rating.user != recipe.user:
+                        send_rating_notification(rating, recipe.user)
                 else:
                     messages.success(request, "Rating updated successfully!")
                 return redirect('recipe_detail', slug=recipe.slug)

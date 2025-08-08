@@ -178,3 +178,128 @@ RecipeStepFormSet = inlineformset_factory(
     min_num=1,  # Require at least 1 step
     validate_min=True,
 )
+
+
+class RecipeSearchForm(forms.Form):
+    """Advanced search and filtering form for recipes"""
+    
+    # Search query
+    search = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Search recipes, ingredients, or descriptions...'
+        })
+    )
+    
+    # Tags filter
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input'
+        })
+    )
+    
+    # Cuisine type filter (based on tags with type 'cuisine')
+    cuisine = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.filter(tag_type='cuisine'),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input'
+        })
+    )
+    
+    # Dietary restrictions filter
+    dietary = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.filter(tag_type='dietary'),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input'
+        })
+    )
+    
+    # Time filters
+    max_prep_time = forms.IntegerField(
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Max prep time (minutes)'
+        })
+    )
+    
+    max_cook_time = forms.IntegerField(
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Max cook time (minutes)'
+        })
+    )
+    
+    max_total_time = forms.IntegerField(
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Max total time (minutes)'
+        })
+    )
+    
+    # Servings filter
+    min_servings = forms.IntegerField(
+        required=False,
+        min_value=1,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Min servings'
+        })
+    )
+    
+    max_servings = forms.IntegerField(
+        required=False,
+        min_value=1,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Max servings'
+        })
+    )
+    
+    # Difficulty filter (based on cook time as proxy)
+    DIFFICULTY_CHOICES = [
+        ('', 'Any Difficulty'),
+        ('easy', 'Easy (under 30 min total)'),
+        ('medium', 'Medium (30-60 min total)'),
+        ('hard', 'Hard (over 60 min total)'),
+    ]
+    
+    difficulty = forms.ChoiceField(
+        choices=DIFFICULTY_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        })
+    )
+    
+    # Sorting options
+    SORT_CHOICES = [
+        ('-created_at', 'Newest First'),
+        ('created_at', 'Oldest First'),
+        ('title', 'Title A-Z'),
+        ('-title', 'Title Z-A'),
+        ('-average_rating', 'Highest Rated'),
+        ('total_time', 'Quickest First'),
+        ('-total_time', 'Longest First'),
+        ('servings', 'Fewest Servings'),
+        ('-servings', 'Most Servings'),
+    ]
+    
+    sort_by = forms.ChoiceField(
+        choices=SORT_CHOICES,
+        required=False,
+        initial='-created_at',
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        })
+    )

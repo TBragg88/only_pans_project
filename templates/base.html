@@ -101,23 +101,6 @@
                         <span class="brand-highlight">OnlyPans</span>
                     </a>
                 </h1>
-                <div class="hero-search">
-                    <form method="GET" action="{% url 'recipe_list' %}" class="search-form">
-                        <div class="search-container">
-                            <input type="text" 
-                                   name="search" 
-                                   class="form-control search-input" 
-                                   placeholder="Search recipes..." 
-                                   value="{{ request.GET.search }}"
-                                   aria-label="Search recipes">
-                            <button type="submit" 
-                                    class="btn search-btn"
-                                    aria-label="Search">
-                                <i class="fas fa-search" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </section>
 
@@ -150,7 +133,8 @@
                     <div class="col-md-12 text-center">
                         <a href="{% url 'about' %}" class="text-light me-3">About Us</a>
                         <a href="#" class="text-light me-3" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us</a>
-                        <a href="#" class="text-light me-3">Privacy</a>
+                        <a href="{% url 'privacy' %}" class="text-light me-3">Privacy</a>
+                        <a href="{% url 'terms' %}" class="text-light me-3">Terms</a>
                         <span class="text-muted">&copy; 2025 OnlyPans</span>
                     </div>
                 </div>

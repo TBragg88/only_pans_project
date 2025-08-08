@@ -1,0 +1,14 @@
+Hi {{ recipe_owner.first_name|default:recipe_owner.username }},
+
+{{ rater.username }} gave your recipe "{{ recipe.title }}" a {{ rating.rating }}-star rating!
+
+{% if rating.rating >= 4 %}Great job! Your recipe is getting rave reviews.{% elif rating.rating >= 3 %}Your recipe is getting good feedback!{% else %}Every rating helps improve your recipes.{% endif %}
+
+View your recipe: {{ recipe.get_absolute_url }}
+
+Happy cooking!
+The OnlyPans Team
+
+---
+You received this email because someone rated your recipe. 
+To manage your notification preferences, visit your profile settings.

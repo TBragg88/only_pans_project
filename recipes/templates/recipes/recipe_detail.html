@@ -3,9 +3,14 @@
 {% block title %}{{ recipe.title }} - OnlyPans{% endblock %}
 
 {% block content %}
+<!-- Print Header (only visible when printing) -->
+<div class="print-only print-header">
+    {{ recipe.title }}
+</div>
+
 <div class="container my-5">
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
+    <nav aria-label="breadcrumb" class="mb-4 no-print">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'recipe_list' %}">Recipes</a></li>
             <li class="breadcrumb-item active">{{ recipe.title }}</li>
@@ -17,7 +22,7 @@
         <div class="col-lg-10 col-xl-8">
             <!-- 1. TITLE -->
             <div class="text-center mb-4">
-                <h1 class="display-4 fw-bold text-primary">{{ recipe.title }}</h1>
+                <h1 class="display-4 fw-bold text-primary recipe-title">{{ recipe.title }}</h1>
             </div>
             
             <!-- 2. MADE BY USER + FAV BUTTON + RATING STARS -->
@@ -169,14 +174,14 @@
             </div>
                     
             <!-- 6. INGREDIENTS WITH SERVINGS & UNITS -->
-            <div class="card mb-5 shadow-sm">
+            <div class="card mb-5 shadow-sm ingredients-section">
                 <div class="card-header bg-primary text-white">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">
                             <i class="fas fa-shopping-basket me-2"></i>Ingredients
                         </h4>
                         <!-- Servings & Units Controls -->
-                        <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-3 no-print">
                             <!-- Servings Scaler -->
                             <div class="d-flex align-items-center gap-2">
                                 <label class="text-white-50 small mb-0">Servings:</label>
@@ -202,10 +207,18 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <!-- Print-only servings info -->
+                    <div class="print-only recipe-meta">
+                        <strong>Serves:</strong> {{ recipe.servings }} people | 
+                        <strong>Prep Time:</strong> {{ recipe.prep_time }} min | 
+                        <strong>Cook Time:</strong> {{ recipe.cook_time }} min | 
+                        <strong>Total Time:</strong> {{ recipe.total_time }} min
+                    </div>
+                    
                     <!-- Ingredient Checkboxes -->
                     {% for ingredient in recipe.ingredients.all %}
-                        <div class="form-check d-flex align-items-start py-2 {% if not forloop.last %}border-bottom{% endif %}" data-ingredient-id="{{ ingredient.id }}">
-                            <input class="form-check-input me-3 mt-1 ingredient-checkbox" type="checkbox" id="ingredient-{{ ingredient.id }}">
+                        <div class="form-check d-flex align-items-start py-2 {% if not forloop.last %}border-bottom{% endif %} ingredient-item" data-ingredient-id="{{ ingredient.id }}">
+                            <input class="form-check-input me-3 mt-1 ingredient-checkbox no-print" type="checkbox" id="ingredient-{{ ingredient.id }}">
                             <label class="form-check-label flex-grow-1" for="ingredient-{{ ingredient.id }}">
                                 <span class="ingredient-amount fw-bold text-primary" 
                                       data-original-quantity="{{ ingredient.quantity }}"
@@ -226,7 +239,7 @@
             </div>
 
             <!-- 7. INSTRUCTIONS -->
-            <div class="mb-5">
+            <div class="mb-5 instructions-section">
                 <h3 class="text-primary mb-4">
                     <i class="fas fa-list-ol me-2"></i>Instructions
                 </h3>
@@ -296,7 +309,7 @@
             </div>
 
             <!-- Comments Section -->
-            <div class="mb-5">
+            <div class="mb-5 no-print comment-section">
                 <h3 class="mb-4">
                     <i class="fas fa-comments text-primary me-2"></i>Comments
                     <span class="badge bg-secondary">{{ recipe.comments.count }}</span>
@@ -440,6 +453,11 @@
             {% endif %}
         </div>
     </div>
+</div>
+
+<!-- Print Footer (only visible when printing) -->
+<div class="print-only print-footer">
+    Recipe from OnlyPans.com | Created by {{ recipe.user.username }} | {{ recipe.created_at|date:"F j, Y" }}
 </div>
 
 {% endblock %}

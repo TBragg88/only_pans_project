@@ -1527,3 +1527,340 @@ This system works for ALL tags: display tags, form tags, buttons with tag classe
         font-size: 0.8rem;
     }
 }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    /* Hide non-essential elements */
+    nav,
+    .navbar,
+    .btn,
+    .button,
+    footer,
+    .modal,
+    .toast,
+    .dropdown,
+    .carousel-control-prev,
+    .carousel-control-next,
+    .carousel-indicators,
+    .rating-login-prompt,
+    .comment-form,
+    .comment-section,
+    .social-share,
+    .back-link {
+        display: none !important;
+    }
+
+    /* Reset page styles for print */
+    * {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    body {
+        font-family: Georgia, "Times New Roman", serif !important;
+        font-size: 12pt !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 20pt !important;
+    }
+
+    /* Recipe Title */
+    .recipe-title,
+    h1 {
+        font-size: 18pt !important;
+        font-weight: bold !important;
+        margin-bottom: 12pt !important;
+        page-break-after: avoid !important;
+        border-bottom: 2pt solid black !important;
+        padding-bottom: 6pt !important;
+    }
+
+    /* Recipe Meta Information */
+    .recipe-meta {
+        font-size: 10pt !important;
+        margin-bottom: 12pt !important;
+        border: 1pt solid black !important;
+        padding: 8pt !important;
+    }
+
+    .recipe-meta .row > div {
+        margin-bottom: 4pt !important;
+    }
+
+    /* Ingredients Section */
+    .ingredients-section {
+        page-break-inside: avoid !important;
+        margin-bottom: 18pt !important;
+    }
+
+    .ingredients-section h3 {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        margin-bottom: 8pt !important;
+        border-bottom: 1pt solid black !important;
+        padding-bottom: 3pt !important;
+    }
+
+    .ingredient-item {
+        margin-bottom: 3pt !important;
+        padding-left: 12pt !important;
+        position: relative !important;
+    }
+
+    .ingredient-item:before {
+        content: "•" !important;
+        position: absolute !important;
+        left: 0 !important;
+        font-weight: bold !important;
+    }
+
+    /* Instructions Section */
+    .instructions-section {
+        margin-bottom: 18pt !important;
+    }
+
+    .instructions-section h3 {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        margin-bottom: 8pt !important;
+        border-bottom: 1pt solid black !important;
+        padding-bottom: 3pt !important;
+    }
+
+    .recipe-step {
+        margin-bottom: 12pt !important;
+        page-break-inside: avoid !important;
+        padding-left: 30pt !important;
+        position: relative !important;
+    }
+
+    .recipe-step-number {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 24pt !important;
+        height: 24pt !important;
+        border: 2pt solid black !important;
+        border-radius: 50% !important;
+        text-align: center !important;
+        line-height: 20pt !important;
+        font-weight: bold !important;
+        font-size: 10pt !important;
+        background: white !important;
+    }
+
+    .recipe-step-content {
+        line-height: 1.5 !important;
+        font-size: 11pt !important;
+    }
+
+    /* Recipe Images */
+    .recipe-image,
+    .step-image {
+        max-width: 4in !important;
+        max-height: 3in !important;
+        margin: 6pt auto !important;
+        display: block !important;
+        border: 1pt solid black !important;
+    }
+
+    /* Hide rating stars and interactive elements */
+    .star-rating,
+    .rating-display,
+    .like-button,
+    .comment-count {
+        display: none !important;
+    }
+
+    /* Recipe description */
+    .recipe-description {
+        font-style: italic !important;
+        margin-bottom: 12pt !important;
+        padding: 6pt !important;
+        border-left: 3pt solid black !important;
+        padding-left: 12pt !important;
+    }
+
+    /* Tags */
+    .recipe-tags {
+        margin-bottom: 12pt !important;
+    }
+
+    .recipe-tag,
+    .badge {
+        border: 1pt solid black !important;
+        padding: 2pt 6pt !important;
+        margin-right: 6pt !important;
+        font-size: 9pt !important;
+        background: white !important;
+        color: black !important;
+        display: inline-block !important;
+    }
+
+    /* Force page breaks */
+    .page-break {
+        page-break-before: always !important;
+    }
+
+    /* Prevent page breaks */
+    .no-page-break {
+        page-break-inside: avoid !important;
+    }
+
+    /* Print header */
+    .print-header {
+        display: block !important;
+        text-align: center !important;
+        font-size: 24pt !important;
+        font-weight: bold !important;
+        margin-bottom: 18pt !important;
+        border-bottom: 3pt solid black !important;
+        padding-bottom: 6pt !important;
+    }
+
+    .print-header:before {
+        content: "OnlyPans Recipe" !important;
+        display: block !important;
+        font-size: 12pt !important;
+        font-weight: normal !important;
+        margin-bottom: 6pt !important;
+    }
+
+    /* Print footer */
+    .print-footer {
+        display: block !important;
+        text-align: center !important;
+        font-size: 9pt !important;
+        margin-top: 18pt !important;
+        border-top: 1pt solid black !important;
+        padding-top: 6pt !important;
+    }
+
+    /* Nutrition info for print */
+    .nutrition-info {
+        font-size: 9pt !important;
+        margin-top: 12pt !important;
+        border: 1pt solid black !important;
+        padding: 6pt !important;
+    }
+
+    /* Remove any cards/borders that don't print well */
+    .card,
+    .card-body {
+        border: none !important;
+        box-shadow: none !important;
+        background: white !important;
+    }
+
+    /* Optimize for black and white printing */
+    a {
+        text-decoration: underline !important;
+        color: black !important;
+    }
+
+    /* Ensure proper spacing */
+    h2, h3, h4 {
+        margin-top: 14pt !important;
+        margin-bottom: 8pt !important;
+        page-break-after: avoid !important;
+    }
+
+    p {
+        margin-bottom: 6pt !important;
+        orphans: 3 !important;
+        widows: 3 !important;
+    }
+
+    /* Lists */
+    ul, ol {
+        margin-bottom: 8pt !important;
+    }
+
+    li {
+        margin-bottom: 2pt !important;
+    }
+}
+
+/* Print-specific utilities */
+.print-only {
+    display: none;
+}
+
+@media print {
+    .print-only {
+        display: block !important;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* ===== ADVANCED SEARCH STYLES ===== */
+.max-height-150 {
+    max-height: 150px;
+}
+
+#advancedSearch .form-check {
+    padding: 0.25rem 0;
+}
+
+#advancedSearch .form-check-input {
+    margin-top: 0.375rem;
+}
+
+#advancedSearch .form-check-label {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.search-result-count {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.filter-active {
+    background-color: var(--soft-blue) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.filter-summary {
+    background-color: var(--soft-yellow);
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.filter-tag {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+    display: inline-block;
+}
+
+.filter-tag .remove-filter {
+    color: white;
+    text-decoration: none;
+    margin-left: 0.25rem;
+    font-weight: bold;
+}
+
+.filter-tag .remove-filter:hover {
+    color: var(--secondary-color);
+}
