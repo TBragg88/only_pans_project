@@ -191,6 +191,7 @@ def recipe_detail(request, slug):
     user_rating = None
     is_liked = False
     is_following = False
+    my_pending_comments = None
     
     if request.user.is_authenticated:
         try:
@@ -200,10 +201,26 @@ def recipe_detail(request, slug):
         
         # Check if user has liked this recipe
         from .models import RecipeLike, Follow
-        is_liked = RecipeLike.objects.filter(user=request.user, recipe=recipe).exists()
+        is_liked = (
+            RecipeLike.objects
+            .filter(user=request.user, recipe=recipe)
+            .exists()
+        )
         
         # Check if user is following the recipe author
-        is_following = Follow.objects.filter(follower=request.user, followed=recipe.user).exists()
+        is_following = (
+            Follow.objects
+            .filter(follower=request.user, followed=recipe.user)
+            .exists()
+        )
+        
+    # Show user's own pending comments (not visible publicly until
+    # approved)
+        my_pending_comments = Comment.objects.filter(
+            recipe=recipe,
+            user=request.user,
+            is_approved=False
+        ).order_by('-created_at')
     
     # Handle comment form submission
     if request.method == 'POST' and 'comment_submit' in request.POST:
@@ -223,16 +240,29 @@ def recipe_detail(request, slug):
                             recipe=recipe
                         )
                         comment.parent_comment = parent_comment
-                        messages.info(request, "Reply submitted! It will appear after admin approval.")
+                        messages.info(
+                            request,
+                            (
+                                "Reply submitted! It will appear after admin "
+                                "approval."
+                            ),
+                        )
                     except Comment.DoesNotExist:
                         messages.error(request, "Invalid comment to reply to.")
                         return redirect('recipe_detail', slug=recipe.slug)
                 else:
-                    messages.info(request, "Comment submitted! It will appear after admin approval.")
+                    messages.info(
+                        request,
+                        (
+                            "Comment submitted! It will appear after admin "
+                            "approval."
+                        ),
+                    )
                 
                 comment.save()
                 
-                # Send notification to recipe owner (if not commenting on own recipe)
+                # Send notification to recipe owner (if not commenting on own
+                # recipe)
                 if comment.user != recipe.user:
                     send_comment_notification(comment, recipe.user)
                 
@@ -253,7 +283,8 @@ def recipe_detail(request, slug):
                 )
                 if created:
                     messages.success(request, "Rating added successfully!")
-                    # Send notification to recipe owner (if not rating own recipe)
+                    # Send notification to recipe owner (if not rating own
+                    # recipe)
                     if rating.user != recipe.user:
                         send_rating_notification(rating, recipe.user)
                 else:
@@ -275,6 +306,7 @@ def recipe_detail(request, slug):
         'recipe': recipe,
         'related_recipes': related_recipes,
         'comments': comments,
+        'my_pending_comments': my_pending_comments,
         'comment_form': comment_form,
         'rating_form': rating_form,
         'user_rating': user_rating,
@@ -372,7 +404,8 @@ def recipe_edit(request, slug):
                 if ingredient.recipe_id:  # Only update existing ingredients
                     ingredient.order = i
                     ingredient.save()
-            ingredient_formset.save_m2m() if hasattr(ingredient_formset, 'save_m2m') else None
+            if hasattr(ingredient_formset, 'save_m2m'):
+                ingredient_formset.save_m2m()
             
             # Save steps with automatic numbering
             steps = step_formset.save(commit=False)
@@ -380,7 +413,8 @@ def recipe_edit(request, slug):
                 if step.recipe_id:  # Only update existing steps
                     step.step_number = i
                     step.save()
-            step_formset.save_m2m() if hasattr(step_formset, 'save_m2m') else None
+            if hasattr(step_formset, 'save_m2m'):
+                step_formset.save_m2m()
 
             messages.success(
                 request,
@@ -431,7 +465,6 @@ def ingredients_api(request):
 @login_required
 def toggle_like(request, slug):
     """Toggle like status for a recipe."""
-    from django.contrib.auth.models import User
     from .models import RecipeLike
     
     recipe = get_object_or_404(Recipe, slug=slug)
@@ -446,11 +479,21 @@ def toggle_like(request, slug):
             # Unlike the recipe
             like.delete()
             liked = False
-            messages.success(request, f'Removed "{recipe.title}" from your liked recipes.')
+            messages.success(
+                request,
+                (
+                    f'Removed "{recipe.title}" from your liked recipes.'
+                ),
+            )
         else:
             # Like the recipe
             liked = True
-            messages.success(request, f'Added "{recipe.title}" to your liked recipes!')
+            messages.success(
+                request,
+                (
+                    f'Added "{recipe.title}" to your liked recipes!'
+                ),
+            )
         
         # Return JSON for AJAX requests
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -485,11 +528,22 @@ def toggle_follow(request, username):
             # Unfollow the user
             follow.delete()
             following = False
-            messages.success(request, f'You are no longer following {user_to_follow.username}.')
+            messages.success(
+                request,
+                (
+                    f'You are no longer following '
+                    f'{user_to_follow.username}.'
+                ),
+            )
         else:
             # Follow the user
             following = True
-            messages.success(request, f'You are now following {user_to_follow.username}!')
+            messages.success(
+                request,
+                (
+                    f'You are now following {user_to_follow.username}!'
+                ),
+            )
         
         # Return JSON for AJAX requests
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
