@@ -397,7 +397,10 @@
                                 {% csrf_token %}
                                 {{ comment_form.content }}
                                 <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <small class="text-muted">Maximum 500 characters</small>
+                                    <div class="d-flex flex-column">
+                                        <small class="text-muted">Maximum 500 characters</small>
+                                        <small class="text-muted">Comments are reviewed and must be authorised by an admin before they appear.</small>
+                                    </div>
                                     <button type="submit" name="comment_submit" class="btn btn-primary" aria-label="Post your comment">
                                         <i class="fas fa-paper-plane me-1" aria-hidden="true"></i>Post Comment
                                     </button>
@@ -414,7 +417,7 @@
                 {% if my_pending_comments %}
                     <div class="alert alert-warning d-flex align-items-center mb-3" role="alert">
                         <i class="fas fa-hourglass-half me-2" aria-hidden="true"></i>
-                        <div>Your recent comment{{ my_pending_comments|length|pluralize }} {{ my_pending_comments|length|pluralize:"is,are" }} pending approval and visible only to you.</div>
+                        <div>Your recent comment{{ my_pending_comments|length|pluralize }} {{ my_pending_comments|length|pluralize:"is,are" }} waiting for admin to authorise and visible only to you.</div>
                     </div>
                     {% for pending in my_pending_comments %}
                         <div class="card mb-3 border-warning">
@@ -430,7 +433,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="mb-0">{{ pending.content }}</p>
+                                <p class="mb-1">{{ pending.content }}</p>
+                                <small class="text-muted fst-italic">Waiting for admin to authorise</small>
                             </div>
                         </div>
                     {% endfor %}
