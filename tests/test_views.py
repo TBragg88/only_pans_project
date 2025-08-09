@@ -105,7 +105,7 @@ class RecipeViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Recipe')
-    self.assertContains(response, 'Test instructions')
+        self.assertContains(response, 'Test instructions')
 
     def test_recipe_create_view_authenticated(self):
         """Test recipe creation by authenticated user"""
@@ -124,8 +124,8 @@ class RecipeViewTest(TestCase):
         self.client.login(username='testuser', password='testpass123')
         
         # Create test ingredients and tags
-    ingredient = Ingredient.objects.create(name='Test Ingredient')
-    tag = Tag.objects.create(name='Test Tag', tag_type='cuisine')
+        ingredient = Ingredient.objects.create(name='Test Ingredient')
+        tag = Tag.objects.create(name='Test Tag', tag_type='cuisine')
         
         response = self.client.post(reverse('recipes:recipe_create'), {
             'title': 'New Test Recipe',
@@ -244,7 +244,7 @@ class ProfileViewTest(TestCase):
             first_name='Test',
             last_name='User'
         )
-    self.profile = self.user.profile
+        self.profile = self.user.profile
 
     def test_profile_view(self):
         """Test user profile page"""

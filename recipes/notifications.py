@@ -1,8 +1,11 @@
 # recipes/notifications.py
+import logging
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import Recipe
+
+logger = logging.getLogger(__name__)
 
 
 def send_comment_notification(comment, recipe_owner):
@@ -37,8 +40,8 @@ def send_comment_notification(comment, recipe_owner):
             fail_silently=True,
         )
     except Exception as e:
-        # Log error in production
-        print(f"Failed to send comment notification: {e}")
+        # Log error properly
+        logger.error(f"Failed to send comment notification: {e}")
 
 
 def send_rating_notification(rating, recipe_owner):
@@ -72,8 +75,8 @@ def send_rating_notification(rating, recipe_owner):
             fail_silently=True,
         )
     except Exception as e:
-        # Log error in production
-        print(f"Failed to send rating notification: {e}")
+        # Log error properly
+        logger.error(f"Failed to send rating notification: {e}")
 
 
 def send_weekly_recipe_digest(user):
@@ -120,7 +123,7 @@ def send_weekly_recipe_digest(user):
         )
     except Exception as e:
         # Log error in production
-        print(f"Failed to send weekly digest: {e}")
+        logger.error(f"Failed to send weekly digest: {e}")
 
 
 def send_new_follower_notification(followed_user, follower):
@@ -150,4 +153,4 @@ def send_new_follower_notification(followed_user, follower):
         )
     except Exception as e:
         # Log error in production
-        print(f"Failed to send follower notification: {e}")
+        logger.error(f"Failed to send follower notification: {e}")

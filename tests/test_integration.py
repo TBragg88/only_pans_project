@@ -60,8 +60,8 @@ class RecipeWorkflowTest(TestCase):
         self.assertEqual(create_response.status_code, 302)
 
         # Verify recipe was created
-    recipe = Recipe.objects.get(title='Integration Test Recipe')
-    self.assertEqual(recipe.user, self.user)
+        recipe = Recipe.objects.get(title='Integration Test Recipe')
+        self.assertEqual(recipe.user, self.user)
         self.assertEqual(recipe.prep_time, 15)
 
         # Step 3: View the recipe
