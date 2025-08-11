@@ -692,6 +692,54 @@ form .form-section h6 {
     background-color: #b1580e !important; /* Orange for difficulty */
 }
 
+/* Tag selection states */
+.tag-selectable {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tag-selectable:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Selected tag states with matching colored borders */
+/* Dietary tags - Green border */
+input[type="checkbox"]:checked + .tag-selectable[title*="- Dietary"] {
+    border: 3px solid #208537 !important;
+    box-shadow: 0 0 0 2px rgba(32, 133, 55, 0.3);
+}
+
+/* Cuisine tags - Blue border */
+input[type="checkbox"]:checked + .tag-selectable[title*="- Cuisine"] {
+    border: 3px solid #0062cc !important;
+    box-shadow: 0 0 0 2px rgba(0, 98, 204, 0.3);
+}
+
+/* Meal Type tags - Purple border */
+input[type="checkbox"]:checked + .tag-selectable[title*="- Meal Type"] {
+    border: 3px solid #6610f2 !important;
+    box-shadow: 0 0 0 2px rgba(102, 16, 242, 0.3);
+}
+
+/* Cooking Method tags - Red border */
+input[type="checkbox"]:checked + .tag-selectable[title*="- Cooking Method"] {
+    border: 3px solid #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.3);
+}
+
+/* Difficulty tags - Orange border */
+input[type="checkbox"]:checked + .tag-selectable[title*="- Difficulty"] {
+    border: 3px solid #b1580e !important;
+    box-shadow: 0 0 0 2px rgba(177, 88, 14, 0.3);
+}
+
+/* Focus state for accessibility */
+input[type="checkbox"]:focus + .tag-selectable {
+    outline: 2px solid #0051a8;
+    outline-offset: 2px;
+}
+
 /* Small tag variant */
 .tag-small {
     display: inline-block;
@@ -807,6 +855,63 @@ form .form-section h6 {
 .rating-star.active,
 .rating-star:hover {
     color: #ffc107;
+}
+
+/* Overlapped star rating system */
+.stars-wrapper {
+    display: inline-block;
+}
+
+.stars {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.user-rating-overlay,
+.login-rating-overlay {
+    display: flex;
+    gap: 0.25rem;
+    width: 100%;
+    height: 100%;
+}
+
+.star-interactive {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.star-interactive:hover {
+    color: #ffc107 !important;
+    transform: scale(1.1);
+}
+
+.rating-login-star {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.rating-login-star:hover {
+    color: #ffc107 !important;
+    transform: scale(1.1);
+}
+
+/* User rating section styling */
+.user-rating-section {
+    margin-top: 0.5rem;
+}
+
+.user-rating-stars {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.rating-login-stars {
+    display: flex;
+    gap: 0.25rem;
 }
 
 /* ===== 11. SEARCH & FILTERING ===== */
@@ -954,9 +1059,17 @@ form .form-section h6 {
 }
 
 /* ===== 14. PRINT STYLES ===== */
+.print-only {
+    display: none;
+}
+
 @media print {
     .no-print {
         display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
     }
 
     body {
@@ -1029,7 +1142,8 @@ form .form-section h6 {
     }
 }
 
-/* Dark mode support (future enhancement) */
+/* Dark mode support (disabled) */
+/*
 @media (prefers-color-scheme: dark) {
     :root {
         --light-color: #1a1a1a;
@@ -1039,3 +1153,4 @@ form .form-section h6 {
         --warm-cream: #2a2820;
     }
 }
+*/

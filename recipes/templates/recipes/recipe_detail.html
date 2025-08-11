@@ -149,53 +149,63 @@
                     
                     <!-- Rating Stars -->
                     <div class="rating-container">
-                        <div class="rating-display d-flex align-items-center">
-                            <div class="stars total-stars me-2">
-                                {% for i in "12345" %}
-                                    {% if forloop.counter <= recipe.average_rating %}
-                                        <i class="fas fa-star text-warning fs-5"></i>
-                                    {% else %}
-                                        <i class="far fa-star text-muted fs-5"></i>
-                                    {% endif %}
-                                {% endfor %}
+                        <div class="rating-display d-flex align-items-center mb-2">
+                            <!-- Single star system with overlays -->
+                            <div class="stars-wrapper position-relative me-2">
+                                <!-- Background stars showing average rating -->
+                                <div class="stars total-stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= recipe.average_rating %}
+                                            <i class="fas fa-star text-warning fs-5"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-muted fs-5"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Interactive overlay for authenticated users -->
+                                {% if user.is_authenticated %}
+                                    <form method="post" id="rating-form" class="rating-form-hidden">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="rating" id="rating-value" value="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
+                                        <input type="hidden" name="rating_submit" value="1">
+                                    </form>
+                                    
+                                    <div class="user-rating-overlay position-absolute top-0 start-0" data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
+                                        {% for i in "12345" %}
+                                            <i class="star-interactive far fa-star fs-5" 
+                                               data-rating="{{ forloop.counter }}" 
+                                               title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
+                                               style="cursor: pointer; color: transparent;"
+                                               {% if user_rating and forloop.counter <= user_rating.rating %}data-rated="true"{% endif %}></i>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <!-- Login overlay for non-authenticated users -->
+                                    <div class="login-rating-overlay position-absolute top-0 start-0">
+                                        {% for i in "12345" %}
+                                            <i class="far fa-star fs-5 rating-login-star" 
+                                               data-bs-toggle="modal" 
+                                               data-bs-target="#loginModal"
+                                               title="Sign in to rate this recipe"
+                                               style="cursor: pointer; color: transparent;"></i>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                             </div>
+                            
                             <small class="text-muted">({{ recipe.rating_count }})</small>
                         </div>
                         
-                        <!-- Interactive User Rating -->
                         {% if user.is_authenticated %}
-                            <form method="post" id="rating-form" class="rating-form-hidden">
-                                {% csrf_token %}
-                                <input type="hidden" name="rating" id="rating-value" value="{% if user_rating %}{{ user_rating.rating }}{% endif %}">
-                                <input type="hidden" name="rating_submit" value="1">
-                            </form>
-                            
-                            <div class="user-rating-overlay" data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
-                                {% for i in "12345" %}
-                                    <i class="star-interactive far fa-star fs-5" data-rating="{{ forloop.counter }}" 
-                                       title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
-                                       {% if user_rating and forloop.counter <= user_rating.rating %}class="rating-star-active"{% endif %}></i>
-                                {% endfor %}
-                            </div>
+                            <small class="text-muted">Click stars to rate</small>
                         {% else %}
-                            <!-- Login prompt for rating -->
-                            <div class="user-rating-prompt mt-2">
-                                <div class="rating-login-stars">
-                                    {% for i in "12345" %}
-                                        <i class="far fa-star fs-5 text-muted rating-login-star" 
-                                           data-bs-toggle="modal" 
-                                           data-bs-target="#loginModal"
-                                           title="You must sign in to rate this recipe"
-                                           style="cursor: pointer;"></i>
-                                    {% endfor %}
-                                </div>
-                                <small class="text-muted">
-                                    <a href="#" 
-                                       class="text-decoration-none" 
-                                       data-bs-toggle="modal" 
-                                       data-bs-target="#loginModal">Sign in</a> to rate this recipe
-                                </small>
-                            </div>
+                            <small class="text-muted">
+                                <a href="#" 
+                                   class="text-decoration-none" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#loginModal">Sign in</a> to rate this recipe
+                            </small>
                         {% endif %}
                     </div>
                 </div>
@@ -209,24 +219,24 @@
             <!-- Recipe Meta Info -->
             <div class="row text-center mb-4">
                 <div class="col-3">
-                    <div class="p-2 bg-primary bg-opacity-10 rounded">
+                    <div class="p-2 bg-light border rounded" style="background-color: #e3f2fd !important;">
                         <i class="fas fa-clock text-primary fs-4 d-block mb-1"></i>
-                        <small class="text-muted d-block">Prep</small>
-                        <strong>{{ recipe.prep_time }}m</strong>
+                        <small class="text-dark d-block fw-bold">Prep</small>
+                        <strong class="text-dark">{{ recipe.prep_time }}m</strong>
                     </div>
                 </div>
                 <div class="col-3">
-                    <div class="p-2 bg-danger bg-opacity-10 rounded">
+                    <div class="p-2 bg-light border rounded" style="background-color: #ffebee !important;">
                         <i class="fas fa-fire text-danger fs-4 d-block mb-1"></i>
-                        <small class="text-muted d-block">Cook</small>
-                        <strong>{{ recipe.cook_time }}m</strong>
+                        <small class="text-dark d-block fw-bold">Cook</small>
+                        <strong class="text-dark">{{ recipe.cook_time }}m</strong>
                     </div>
                 </div>
                 <div class="col-3">
-                    <div class="p-2 bg-success bg-opacity-10 rounded">
+                    <div class="p-2 bg-light border rounded" style="background-color: #e8f5e8 !important;">
                         <i class="fas fa-users text-success fs-4 d-block mb-1"></i>
-                        <small class="text-muted d-block">Serves</small>
-                        <strong>{{ recipe.servings }}</strong>
+                        <small class="text-dark d-block fw-bold">Serves</small>
+                        <strong class="text-dark">{{ recipe.servings }}</strong>
                     </div>
                 </div>
                 <div class="col-3">
@@ -366,7 +376,7 @@
 
             <!-- 8. NUTRITION -->
             <div class="card mb-5 shadow-sm">
-                <div class="card-header bg-success text-white">
+                <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">
                         <i class="fas fa-chart-pie me-2"></i>Nutrition Per Serving
                     </h4>
@@ -374,31 +384,31 @@
                 <div class="card-body">
                     <div class="row text-center">
                         <div class="col-6 col-md-3 mb-3">
-                            <div class="nutrition-stat p-3 bg-primary bg-opacity-10 rounded">
+                            <div class="nutrition-stat p-3 border rounded" style="background-color: #e3f2fd !important;">
                                 <i class="fas fa-fire text-primary fs-4 d-block mb-2"></i>
                                 <h3 class="text-primary mb-1">{{ recipe.nutrition_per_serving.calories }}</h3>
-                                <small class="text-muted fw-bold">Calories</small>
+                                <small class="text-dark fw-bold">Calories</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-3 mb-3">
-                            <div class="nutrition-stat p-3 bg-success bg-opacity-10 rounded">
+                            <div class="nutrition-stat p-3 border rounded" style="background-color: #e8f5e8 !important;">
                                 <i class="fas fa-dumbbell text-success fs-4 d-block mb-2"></i>
                                 <h3 class="text-success mb-1">{{ recipe.nutrition_per_serving.protein }}g</h3>
-                                <small class="text-muted fw-bold">Protein</small>
+                                <small class="text-dark fw-bold">Protein</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-3 mb-3">
-                            <div class="nutrition-stat p-3 bg-warning bg-opacity-10 rounded">
+                            <div class="nutrition-stat p-3 border rounded" style="background-color: #fff8e1 !important;">
                                 <i class="fas fa-bread-slice text-warning fs-4 d-block mb-2"></i>
                                 <h3 class="text-warning mb-1">{{ recipe.nutrition_per_serving.carbs }}g</h3>
-                                <small class="text-muted fw-bold">Carbs</small>
+                                <small class="text-dark fw-bold">Carbs</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-3 mb-3">
-                            <div class="nutrition-stat p-3 bg-info bg-opacity-10 rounded">
+                            <div class="nutrition-stat p-3 border rounded" style="background-color: #e1f5fe !important;">
                                 <i class="fas fa-tint text-info fs-4 d-block mb-2"></i>
                                 <h3 class="text-info mb-1">{{ recipe.nutrition_per_serving.fat }}g</h3>
-                                <small class="text-muted fw-bold">Fat</small>
+                                <small class="text-dark fw-bold">Fat</small>
                             </div>
                         </div>
                     </div>
@@ -543,7 +553,7 @@
             <!-- Related Recipes - Moved to main content -->
             {% if related_recipes %}
                 <div class="card mb-4">
-                    <div class="card-header bg-success text-white">
+                    <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">
                             <i class="fas fa-heart me-2"></i>You Might Also Like
                         </h4>
@@ -692,6 +702,106 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+    
+    // Star rating functionality
+    const starOverlay = document.querySelector('.user-rating-overlay');
+    const ratingForm = document.getElementById('rating-form');
+    const ratingInput = document.getElementById('rating-value');
+    const totalStars = document.querySelectorAll('.total-stars i');
+    
+    if (starOverlay && ratingForm) {
+        const interactiveStars = starOverlay.querySelectorAll('.star-interactive');
+        let currentRating = parseInt(starOverlay.dataset.currentRating) || 0;
+        
+        // Initialize star display
+        updateOverlayStars(interactiveStars, totalStars, currentRating);
+        
+        interactiveStars.forEach((star, index) => {
+            const rating = index + 1;
+            
+            // Hover effects
+            star.addEventListener('mouseenter', () => {
+                updateOverlayStars(interactiveStars, totalStars, rating, true);
+            });
+            
+            star.addEventListener('mouseleave', () => {
+                updateOverlayStars(interactiveStars, totalStars, currentRating);
+            });
+            
+            // Click to rate
+            star.addEventListener('click', () => {
+                currentRating = rating;
+                ratingInput.value = rating;
+                updateOverlayStars(interactiveStars, totalStars, rating);
+                
+                // Submit the rating
+                const formData = new FormData(ratingForm);
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(`You rated this recipe ${rating} star${rating !== 1 ? 's' : ''}!`, 'success');
+                        // Update the average rating display if needed
+                        if (data.new_average) {
+                            updateAverageRating(data.new_average, data.new_count);
+                        }
+                    } else {
+                        showToast('Error submitting rating. Please try again.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Rating error:', error);
+                    showToast('Error submitting rating. Please try again.', 'error');
+                });
+            });
+        });
+    }
 });
+
+// Update overlapped star display
+function updateOverlayStars(interactiveStars, backgroundStars, rating, isHover = false) {
+    // Update background stars to show the rating
+    backgroundStars.forEach((star, index) => {
+        if (index < rating) {
+            star.className = 'fas fa-star text-warning fs-5';
+        } else {
+            star.className = 'far fa-star text-muted fs-5';
+        }
+    });
+    
+    // Make interactive stars visible with hover effect if hovering
+    interactiveStars.forEach((star, index) => {
+        if (isHover && index < rating) {
+            star.style.color = '#ffc107';
+        } else {
+            star.style.color = 'transparent';
+        }
+    });
+}
+
+// Update average rating display
+function updateAverageRating(newAverage, newCount) {
+    const totalStars = document.querySelectorAll('.total-stars i');
+    const countElement = document.querySelector('.rating-display small');
+    
+    totalStars.forEach((star, index) => {
+        if (index < Math.round(newAverage)) {
+            star.className = 'fas fa-star text-warning fs-5';
+        } else {
+            star.className = 'far fa-star text-muted fs-5';
+        }
+    });
+    
+    if (countElement) {
+        countElement.textContent = `(${newCount})`;
+    }
+}
 </script>
 {% endblock %}
