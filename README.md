@@ -28,6 +28,7 @@ We believe cooking is for everyone. That’s why we’ve built a platform that�
     <img src="planning/images/Project_ERD_Cooking.png" alt="ERD Diagram" width="400" />
 -   **Future-Ready**: Designed for growth (subscriptions, messaging, marketplace)
 -   **Current Focus**: Clean V1 implementation with room to expand
+
 ### 🎨 Wireframes & User Experience
 
 Our wireframes focused on simplicity and accessibility:
@@ -35,52 +36,39 @@ Our wireframes focused on simplicity and accessibility:
 #### 🖥️ Desktop Experience
 
 ![Desktop Home Wireframe](planning/images/Wireframe_Desktop.png)
-![Desktop Recipe Detail Wireframe](planning/images/Wireframe_Desktop_Recipe_Detail.png)
 
 #### 📱 Mobile Experience
 
-![Mobile Home Wireframe](planning/images/wireframe_mobile.png)
 ![Mobile Recipe Detail Wireframe](planning/images/wireframe-mobile-recipe-detail.png)
 
-*Replace the image paths above with your actual wireframe images from `planning/files` as needed.*
+_Replace the image paths above with your actual wireframe images from `planning/files` as needed._
 
 ## 🛠️ From Dream to Dish: The OnlyPans Journey
 
-### **Original Vision**  
-A comprehensive cooking ecosystem where people can share meaningful recipes, support their favorite creators, and connect through food. The long-term vision includes premium content, live cooking sessions, AI-powered recommendations, messaging, and mobile apps—all designed to make cooking more joyful, personal, and inclusive.
+### **Original Vision**
 
-### **V1 Reality**  
-For this first version, I focused on what really matters—helping people create, discover, and talk about great food.  
-Sometimes the best ingredient is restraint, and I’m proud of the solid foundation that’s already in place.
+### **V1 Reality**
+
+For this first version, I focused on what really matters—helping people create, discover, and talk about great food.
 
 ---
-
-### ✅ What’s Already on the Table
 
 Here’s what’s working right now:
 
-- **Recipe Creation**: Rich media, step-by-step instructions, and ingredient tagging
-- **Edit & Manage Recipes**: Your personal cookbook, always evolving
-- **Community Features**: Comments, likes, and favorites to spark conversation
-- **Follow Other Cooks**: Build your culinary circle and stay inspired
-- **Smart Discovery**: Search, tags, and a featured carousel for easy browsing
-- **Accessibility Excellence**: WCAG 2.1 AA compliant, screen reader ready, keyboard friendly
-- **Mobile-Responsive Design**: Cook comfortably from any device
-
----
+-   **Edit & Manage Recipes**: Your personal cookbook, always evolving
+-   **Community Features**: Comments, likes, and favorites to spark conversation
+-   **Follow Other Cooks**: Build your culinary circle and stay inspired
+-   **Accessibility Excellence**: WCAG 2.1 AA compliant, screen reader ready, keyboard friendly
+-   **Mobile-Responsive Design**: Cook comfortably from any device
 
 ### 🔮 What’s Simmering for the Future
 
-There’s so much more I want to build. Here’s what’s on the roadmap:
-
-- **Premium Subscriptions**: Unlock exclusive content and support your favorite creators
-- **Recipe Books**: Curated collections you can save, share, or print
-- **Meal Prep Tools**: Plan your week with ease, from breakfast to dinner
-- **Smart Shopping Lists**: Auto-generated lists based on your chosen recipes
-- **Live Cooking Sessions**: Cook along with chefs and creators in real time
-- **AI Recommendations**: Personalized recipe suggestions based on your tastes
-- **Direct Messaging**: Chat with fellow cooks, swap tips, and share food stories
-- **Native Mobile Apps**: A smoother, faster experience right in your pocket
+-   **Premium Subscriptions**: Unlock exclusive content and support your favorite creators
+-   **Recipe Books**: Curated collections you can save, share, or print
+-   **Smart Shopping Lists**: Auto-generated lists based on your chosen recipes
+-   **Live Cooking Sessions**: Cook along with chefs and creators in real time
+-   **AI Recommendations**: Personalized recipe suggestions based on your tastes
+-   **Native Mobile Apps**: A smoother, faster experience right in your pocket
 
 ---
 
@@ -90,9 +78,8 @@ Sadly time and technical debt / ability took alot. but ive learned alot. sadly a
 
 OnlyPans was built using agile principles—iterative development, rapid feedback, and continuous improvement. Our workflow is managed through a public project board, tracking user stories, features, and bug fixes.
 
-- **Project Board:** [GitHub Project Board](https://github.com/TBragg88/only_pans_project/projects)
-- **User Stories:** Included in the User Experience Design section above
-- **Sprint Planning:** Features and fixes prioritized based on user feedback and accessibility goals
+-   **Project Board:** [GitHub Project Board](https://github.com/TBragg88/only_pans_project/projects)
+-   **Sprint Planning:** Features and fixes prioritized based on user feedback and accessibility goals
 
 ---
 
@@ -100,14 +87,13 @@ OnlyPans was built using agile principles—iterative development, rapid feedbac
 
 While full AI features are planned for future releases, OnlyPans is designed with AI-readiness in mind:
 
-- **Planned Features:**
-    - AI-powered recipe recommendations based on user preferences and dietary needs
-    - Smart ingredient substitutions for allergies and restrictions
-    - Natural language search for recipes ("quick vegan dinner")
-- **Current Status:**
-    - Framework and database structure support future AI modules
-    - Initial groundwork for personalized suggestions and smart search
-    
+-   **Planned Features:**
+    -   AI-powered recipe recommendations based on user preferences and dietary needs
+    -   Smart ingredient substitutions for allergies and restrictions
+-   **Current Status:**
+    -   Framework and database structure support future AI modules
+    -   Initial groundwork for personalized suggestions and smart search
+
 ## 🧪 Testing (Quality Assurance Kitchen)
 
 We take testing as seriously as food safety! Here's our comprehensive testing approach:
@@ -140,12 +126,15 @@ We take testing as seriously as food safety! Here's our comprehensive testing ap
 
 -   **ESLint:** Passed, no problems found
 -   **HTML/CSS Validation:** Passed, no critical warnings
+
 ### 📸 Lighthouse Screenshots
 
 #### 🖥️ Desktop Report
+
 <img src="planning/images/Lighthouse_desktop.png" alt="Lighthouse Desktop Report" width="400" />
 
 #### 📱 Mobile Report
+
 <img src="planning/images/Lighthouse_mobile.png" alt="Lighthouse Mobile Report" width="400" />
 
 All major accessibility, performance, and code quality checks passed!
@@ -354,6 +343,5 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 _OnlyPans believes that great recipes, like great communities, are better when everyone can participate._
 
 [🌐 Live Demo](https://only-pans-d09011088446.herokuapp.com/) | [🐛 Report Bug](https://github.com/TBragg88/only_pans_project/issues) | [✨ Request Feature](https://github.com/TBragg88/only_pans_project/issues) | [♿ Accessibility Feedback](https://github.com/TBragg88/only_pans_project/issues/new?labels=accessibility)
-
 
 </div>
