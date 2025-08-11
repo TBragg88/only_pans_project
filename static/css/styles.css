@@ -598,6 +598,47 @@ main h3 {
     font-weight: 500;
 }
 
+/* Form section styling */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h4 {
+    color: var(--dark-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.form-section h5 {
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+.form-section h6 {
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+/* Tag category titles */
+.tag-category-title {
+    color: var(--dark-color) !important;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+/* Form help text contrast fixes */
+.form-text {
+    color: var(--dark-color) !important;
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+/* Override Bootstrap's muted text in forms */
+.form-section .text-muted {
+    color: var(--dark-color) !important;
+    opacity: 0.8;
+}
+
 /* ===== 9. TAGS & BADGES ===== */
 .tag {
     display: inline-block;
