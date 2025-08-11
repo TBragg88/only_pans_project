@@ -7,6 +7,7 @@ OnlyPans is here to make sharing easy, joyful, and inclusive.
 We believe cooking is for everyone. That’s why we’ve built a platform that’s accessible, welcoming, and full of flavor—from the stories behind the meals to the chefs who bring them to life.
 
 ---
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Heroku-purple?style=for-the-badge)](https://only-pans-d09011088446.herokuapp.com/)
 
 ### ✨ What Makes OnlyPans Special
 
@@ -39,7 +40,7 @@ Our wireframes focused on simplicity and accessibility:
 
 #### 📱 Mobile Experience
 
-![Mobile Recipe Detail Wireframe](planning/images/wireframe-mobile-recipe-detail.png)
+![Mobile Recipe Detail Wireframe](planning/images/wireframe_mobile.png)
 
 ## 🛠️ From Dream to Dish: The OnlyPans Journey
 
