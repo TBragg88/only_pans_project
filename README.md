@@ -1,94 +1,34 @@
-# OnlyPans Recipe App 🍳
-
-**A warm, inclusive recipe sharing platform where every cook belongs**
-
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Heroku-purple?style=for-the-badge)](https://only-pans-d09011088446.herokuapp.com/)
-[![Django](https://img.shields.io/badge/Django-4.2.23-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
-[![Accessibility](https://img.shields.io/badge/WCAG-2.1%20AA-green?style=for-the-badge)](https://www.w3.org/WAI/WCAG21/AA/)
-
 ## 🌍 The Idea
 
-OnlyPans is a recipe website built to celebrate the joy of cooking and the people behind the food. It’s a place where users can explore global cuisines, share meaningful recipes, and support their favorite chefs and creators. Designed with accessibility and inclusivity at its core, the platform makes it easy for anyone to join the culinary conversation—whether they’re preserving family traditions, adapting dishes for dietary needs, or simply discovering something delicious.
+OnlyPans is more than just a recipe site—it’s a celebration of good food and the people who make it.  
+Whether you're preserving a family tradition, adapting dishes for dietary needs, or just discovering something delicious,  
+OnlyPans is here to make sharing easy, joyful, and inclusive.
 
-### What Makes OnlyPans Special ✨
+We believe cooking is for everyone. That’s why we’ve built a platform that’s accessible, welcoming, and full of flavor—from the stories behind the meals to the chefs who bring them to life.
 
--   **🤝 Truly Inclusive**: WCAG 2.1 AA compliant design ensures everyone can cook with us
--   **🌮 Culturally Respectful**: Celebrating authentic recipes while welcoming creative adaptations
--   **👩‍🍳 All Skill Levels**: From kitchen novices to seasoned chefs - everyone has something to share
--   **♿ Accessibility First**: Screen readers, keyboard navigation, and clear visual design
--   **📱 Cook Anywhere**: Mobile-first design that works in your kitchen
+---
 
-## 🚀 Quick Start
+### ✨ What Makes OnlyPans Special
 
-### Prerequisites
+-   🤝 **Everyone’s Invited**  
+    WCAG 2.1 AA compliant design means no one’s left out—whatever your background or ability.
 
--   Python 3.8+ (beginner-friendly installation)
--   Git (for downloading the code)
--   PostgreSQL (optional - we'll use SQLite for easy setup)
+-   🌮 **Respectful & Real**  
+    We celebrate authentic recipes and welcome creative twists that make them personal.
 
-### Get Cooking in 5 Minutes! 👨‍🍳
+-   👩‍🍳 **All Skill Levels Welcome**  
+    Whether you’re a kitchen newbie or a seasoned chef, your recipes and stories belong here.
 
-1. **Download the recipe book** 📖
+-   ♿ **Accessibility First**  
+    Screen reader support, keyboard navigation, and clean visual design make it easy to join the fun.
 
-    ```bash
-    git clone https://github.com/TBragg88/only_pans_project.git
-    cd only_pans_project
-    ```
-
-2. **Set up your kitchen environment** 🔧
-
-    ```bash
-    # Create a clean workspace
-    python -m venv .venv
-
-    # Activate it (like preheating your oven!)
-    source .venv/bin/activate  # Mac/Linux
-    # OR for Windows:
-    .venv\Scripts\activate
-    ```
-
-3. **Get all the ingredients** 🛒
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Season to taste** ⚙️
-
-    ```bash
-    # Copy the example settings
-    cp .env.example .env
-    # Edit .env with your preferences (optional for local development)
-    ```
-
-5. **Prep your database** 🗄️
-
-    ```bash
-    # Set up the tables
-    python manage.py migrate
-
-    # Create your admin account
-    python manage.py createsuperuser
-
-    # Add some sample recipes to get started
-    python manage.py loaddata recipes/fixtures/sample_recipes.json
-    ```
-
-6. **Fire up the stove!** 🔥
-    ```bash
-    python manage.py runserver
-    ```
-
-Visit `http://localhost:8000` and start exploring recipes! 🎉
-
-## 🗺️ Planning & Design Journey
-
-Our development was guided by thoughtful planning and user-centered design:
+-   📱 **Cook Anywhere**  
+    Mobile-first design means you can scroll, stir, and sauté—all at the same time.
 
 ### 📊 Database Design (ERD)
 
--   **Visual Planning**: See `planning/images/Project_ERD_Cooking.png`
+-   **Visual Planning**:  
+    <img src="planning/images/Project_ERD_Cooking.png" alt="ERD Diagram" width="400" />
 -   **Future-Ready**: Designed for growth (subscriptions, messaging, marketplace)
 -   **Current Focus**: Clean V1 implementation with room to expand
 
@@ -100,90 +40,68 @@ Our wireframes focused on simplicity and accessibility:
 
 <div>
     <strong>Home Page</strong><br>
-    <img src="planning/images/Wireframe_Desktop.png" alt="Wireframe Home Page" style="max-width: 400px; width: 100%; border-radius: 8px;">
+    <img src="planning/images/wireframe-home.png" alt="Wireframe Home" width="400" />
 </div>
 
 <div>
-    <strong>mobile</strong><br>
-    <img src="planning/images/wireframe_mobile.png" alt="Wireframe Recipe List" style="max-width: 400px; width: 100%; border-radius: 8px;">
+    <strong>Recipe List</strong><br>
+    <img src="planning/images/wireframe-recipe-list.png" alt="Wireframe Recipe List" width="400" />
+</div>
+
+<div>
+    <strong>Recipe Detail</strong><br>
+    <img src="planning/images/wireframe-recipe-detail.png" alt="Wireframe Recipe Detail" width="400" />
+</div>
+
+<div>
+    <strong>Add Recipe</strong><br>
+    <img src="planning/images/wireframe-add-recipe.png" alt="Wireframe Add Recipe" width="400" />
 </div>
 
 </div>
 
-### 🏗️ From Big Dreams to Beautiful Reality
+## 🛠️ From Dream to Dish: The OnlyPans Journey
 
-**Original Vision**: A comprehensive cooking ecosystem with subscriptions, live cooking sessions, AI recommendations, messaging, and mobile apps.
+### **Original Vision**  
+A comprehensive cooking ecosystem where people can share meaningful recipes, support their favorite creators, and connect through food. The long-term vision includes premium content, live cooking sessions, AI-powered recommendations, messaging, and mobile apps—all designed to make cooking more joyful, personal, and inclusive.
 
-**V1 Reality**: We focused on nailing the core experience - creating, discovering, and discussing amazing recipes. Sometimes the best ingredient is restraint!
+### **V1 Reality**  
+For this first version, I focused on what really matters—helping people create, discover, and talk about great food.  
+Sometimes the best ingredient is restraint, and I’m proud of the solid foundation that’s already in place.
 
-**What Made the Cut**:
+---
 
--   ✅ Recipe creation with rich media
--   ✅ Community features (comments, ratings)
--   ✅ Smart discovery (search, tags, carousel)
--   ✅ Accessibility excellence
--   ✅ Mobile-responsive design
+### ✅ What’s Already on the Table
 
-**Cooking for Later**:
+Here’s what’s working right now:
 
--   🔮 Premium subscriptions and content
--   🔮 Live cooking sessions
--   🔮 AI-powered recommendations
--   🔮 Direct messaging between cooks
--   🔮 Native mobile apps
+- **Recipe Creation**: Rich media, step-by-step instructions, and ingredient tagging
+- **Edit & Manage Recipes**: Your personal cookbook, always evolving
+- **Community Features**: Comments, likes, and favorites to spark conversation
+- **Follow Other Cooks**: Build your culinary circle and stay inspired
+- **Smart Discovery**: Search, tags, and a featured carousel for easy browsing
+- **Accessibility Excellence**: WCAG 2.1 AA compliant, screen reader ready, keyboard friendly
+- **Mobile-Responsive Design**: Cook comfortably from any device
 
-## 🔧 Technology Stack (Our Kitchen Tools)
+---
 
-### Backend (The Foundation) 🏠
+### 🔮 What’s Simmering for the Future
 
--   **Django 4.2.23** - Our reliable cooking framework
--   **PostgreSQL** - Where we store all the delicious data
--   **Django Allauth** - Secure user accounts and authentication
--   **Cloudinary** - Beautiful image hosting for food photos
+There’s so much more I want to build. Here’s what’s on the roadmap:
 
-### Frontend (The Presentation) 🎨
+- **Premium Subscriptions**: Unlock exclusive content and support your favorite creators
+- **Recipe Books**: Curated collections you can save, share, or print
+- **Meal Prep Tools**: Plan your week with ease, from breakfast to dinner
+- **Smart Shopping Lists**: Auto-generated lists based on your chosen recipes
+- **Live Cooking Sessions**: Cook along with chefs and creators in real time
+- **AI Recommendations**: Personalized recipe suggestions based on your tastes
+- **Direct Messaging**: Chat with fellow cooks, swap tips, and share food stories
+- **Native Mobile Apps**: A smoother, faster experience right in your pocket
 
--   **HTML5/CSS3** - Semantic, accessible markup
--   **Bootstrap 5** - Mobile-first responsive design
--   **JavaScript ES6+** - Interactive recipe features
--   **Font Awesome** - Beautiful, accessible icons
+---
 
-### Deployment (Sharing with the World) 🌐
+Sadly time and technical debt / ability took alot. but ive learned alot. sadly alot of the bonus features had to be removed as they didnt meet the cut. but the framework remains for them to be implimented at a later date.
 
--   **Heroku** - Reliable cloud hosting
--   **Gunicorn** - Production-ready web server
--   **Whitenoise** - Efficient static file serving
-
-## 🍽️ Core Features (What's in Our Recipe Box)
-
-### 👨‍🍳 Recipe Management
-
--   **Create Beautiful Recipes**: Rich text, images, ingredients, and step-by-step instructions
--   **Your Recipe Collection**: Edit and manage your culinary creations
--   **Visual Storytelling**: Upload mouth-watering photos via Cloudinary
--   **Smart Organization**: Tag recipes by cuisine, dietary needs, and difficulty
-
-### 🔍 Discovery & Exploration
-
--   **Unified Search**: Find recipes by name, ingredient, or cooking style
--   **Smart Filtering**: Filter by cuisine, dietary restrictions, cooking time, difficulty
--   **Featured Carousel**: Discover trending recipes and new cuisines
--   **Category Browsing**: Explore by cuisine type or dietary preference
-
-### 🤝 Community Features
-
--   **Star Ratings**: Rate recipes from 1-5 stars with averaged community scores
--   **Recipe Discussions**: Comment and reply system for sharing tips and variations
--   **Cook Profiles**: Personalized profiles with dietary preferences and favorite recipes
--   **Social Connections**: Follow your favorite recipe creators (coming soon!)
-
-### ♿ Accessibility Excellence
-
--   **WCAG 2.1 AA Compliance**: Every feature tested with assistive technologies
--   **Screen Reader Ready**: Semantic HTML and proper ARIA labels
--   **Keyboard Navigation**: Full functionality without a mouse
--   **Visual Accessibility**: High contrast colors and scalable text
--   **Cognitive Support**: Clear language and consistent layouts
 
 ## 🧪 Testing (Quality Assurance Kitchen)
 
@@ -220,26 +138,9 @@ We take testing as seriously as food safety! Here's our comprehensive testing ap
 
 ### 📸 Lighthouse Screenshots
 
-### 📸 Lighthouse Reports
-
-<div align="center">
-
-### Lighthouse Reports
-
-<div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
-
-<div>
-    <strong>Desktop Report</strong><br>
-    <img src="planning/images/Lighthouse_desktop.png" alt="Lighthouse Accessibility Report" style="max-width: 400px; width: 100%; border-radius: 8px;">
-</div>
-
-<div>
-    <strong>Mobile Report</strong><br>
-    <img src="planning/images/Lighthouse_mobile.png" alt="Lighthouse Performance Report" style="max-width: 250px; width: 100%; border-radius: 8px;">
-</div>
-
-</div>
-</div>
+-   <img src="planning/images/lighthouse-accessibility.png" alt="Lighthouse Accessibility" width="400" />
+-   <img src="planning/images/lighthouse-performance.png" alt="Lighthouse Performance" width="400" />
+-   <img src="planning/images/lighthouse-overall.png" alt="Lighthouse Overall" width="400" />
 
 All major accessibility, performance, and code quality checks passed!
 
@@ -291,56 +192,6 @@ RecipeTag        # Many-to-many relationship for flexible tagging
 -   **Print Mode**: Kitchen-optimized recipe printing
 -   **Offline-Ready**: Core functionality works with poor connectivity
 
-## 🌐 Deployment (Sharing Your Kitchen with the World)
-
-### 🔧 Environment Configuration
-
-Create a `.env` file with your settings:
-
-```env
-# Core Django Settings
-SECRET_KEY=your-secret-key-here
-DEBUG=False  # True for development
-
-# Database (Heroku provides this automatically)
-DATABASE_URL=postgresql://user:password@host:port/database
-
-# Image Storage (Optional for local development)
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-
-# Email (For notifications - optional)
-EMAIL_HOST_USER=your-email@example.com
-EMAIL_HOST_PASSWORD=your-app-password
-```
-
-### 🚀 Heroku Deployment (Step by Step)
-
-```bash
-# 1. Create your Heroku app
-heroku create your-recipe-app-name
-
-# 2. Add PostgreSQL database
-heroku addons:create heroku-postgresql:mini
-
-# 3. Set your environment variables
-heroku config:set SECRET_KEY=your-secret-key
-heroku config:set DEBUG=False
-heroku config:set CLOUDINARY_CLOUD_NAME=your-cloud-name
-# ... add other variables
-
-# 4. Deploy your delicious code!
-git push heroku main
-
-# 5. Set up your production database
-heroku run python manage.py migrate
-heroku run python manage.py createsuperuser
-
-# 6. Optional: Load sample recipes
-heroku run python manage.py loaddata recipes/fixtures/sample_recipes.json
-```
-
 ## 📁 Project Structure (Our Kitchen Layout)
 
 ```
@@ -386,15 +237,6 @@ only_pans_project/
 -   **Session Management**: Secure cookie handling and session expiry
 -   **Permission System**: Role-based access to recipe management
 -   **Rate Limiting**: Protection against brute force attacks
-
-## 🎯 Performance (Fast as Your Favorite Recipe)
-
-### 📊 Lighthouse Scores
-
--   **Performance**: 95+ (optimized assets and database queries)
--   **Accessibility**: 100 (WCAG 2.1 AA compliant)
--   **Best Practices**: 100 (security and modern web standards)
--   **SEO**: 100 (semantic markup and meta tags)
 
 ### ⚡ Optimization Features
 
@@ -507,6 +349,5 @@ _OnlyPans believes that great recipes, like great communities, are better when e
 
 [🌐 Live Demo](https://only-pans-d09011088446.herokuapp.com/) | [🐛 Report Bug](https://github.com/TBragg88/only_pans_project/issues) | [✨ Request Feature](https://github.com/TBragg88/only_pans_project/issues) | [♿ Accessibility Feedback](https://github.com/TBragg88/only_pans_project/issues/new?labels=accessibility)
 
-**Join our mission to make cooking accessible, inclusive, and delicious for everyone.** 🍽️✨
 
 </div>
