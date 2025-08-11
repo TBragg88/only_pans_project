@@ -23,4 +23,5 @@ urlpatterns = [
     path('create/', views.recipe_create, name='recipe_create'),
     path('liked/', views.liked_recipes, name='liked_recipes'),
     path('follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
+    path('comment/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
 ]

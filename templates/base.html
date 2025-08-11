@@ -38,88 +38,15 @@
             integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
             crossorigin="anonymous"
         />
-        <!-- Font Awesome for icons - Preload for faster loading -->
+        <!-- Font Awesome for icons -->
         <link
-            rel="preload"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-            as="style"
-            onload="this.onload=null;this.rel='stylesheet'"
+            rel="stylesheet"
+            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+            crossorigin="anonymous"
         />
-        <noscript>
-            <link
-                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-                rel="stylesheet"
-                integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-                crossorigin="anonymous"
-            />
-        </noscript>
-        
-        <!-- Critical CSS inline for above-the-fold content -->
-        <style>
-        :root {
-            --primary-color: #0051a8;
-            --secondary-color: #74b9ff;
-            --accent-color: #fd79a8;
-            --dark-color: #2d3436;
-            --light-color: #ddd;
-            --success-color: #00b894;
-            --warning-color: #fdcb6e;
-            --danger-color: #e17055;
-            --info-color: #74b9ff;
-            --font-family-serif: "Georgia", "Times New Roman", serif;
-            --border-radius: 12px;
-            --border-radius-sm: 6px;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-            --box-shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        .navbar {
-            background-color: var(--primary-color) !important;
-            border-bottom: 3px solid var(--secondary-color);
-            backdrop-filter: blur(10px);
-        }
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-        .nav-link {
-            font-weight: 500;
-            transition: color 0.3s ease;
-            color: white !important;
-        }
-        .onlypans-hero {
-            background: linear-gradient(135deg, rgba(0, 81, 168, 0.8) 0%, rgba(116, 185, 255, 0.6) 100%), url("/static/images/heroimage.webp");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding: 3rem 0 2rem 0;
-            box-shadow: var(--box-shadow-lg);
-            position: relative;
-            min-height: 300px;
-        }
-        .hero-brand {
-            font-size: 4rem !important;
-            font-weight: 900 !important;
-            margin-bottom: 1.5rem;
-            color: white;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
-            font-family: var(--font-family-serif);
-            letter-spacing: 2px;
-        }
-        </style>
-        
-        <!-- Custom CSS - Load asynchronously -->
-        {% if DEBUG %}
-        <link rel="preload" href="{% static 'css/styles.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link href="{% static 'css/styles.css' %}" rel="stylesheet"></noscript>
-        {% else %}
-        <link rel="preload" href="{% static 'css/styles.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link href="{% static 'css/styles.min.css' %}" rel="stylesheet"></noscript>
-        {% endif %}
-
-        <!-- Preload critical hero image -->
-        <link rel="preload" href="{% static 'images/heroimage.webp' %}" as="image" type="image/webp" />
+        <!-- Custom CSS -->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
 
         {% block extra_css %}{% endblock %}
     </head>
@@ -142,30 +69,24 @@
                     <!-- Right side: Button group -->
                     <div class="d-flex align-items-center">
                         {% if user.is_authenticated %}
-                        <!-- Icon-only buttons with proper accessibility and tooltips -->
+                        <!-- Icon-only buttons with proper accessibility -->
                         <a class="btn btn-sm me-2" 
                            href="{% url 'accounts:profile' %}" 
-                           aria-label="View your profile page"
-                           data-bs-toggle="tooltip" 
-                           data-bs-placement="bottom" 
+                           aria-label="View Profile"
                            title="Profile">
                             <i class="fas fa-user" aria-hidden="true"></i>
                         </a>
                         
-                        <a class="btn btn-sm me-2" 
-                           href="{% url 'recipes:liked_recipes' %}" 
-                           aria-label="View your liked recipes"
-                           data-bs-toggle="tooltip" 
-                           data-bs-placement="bottom" 
+                                <a class="btn btn-sm me-2" 
+                                    href="{% url 'recipes:liked_recipes' %}" 
+                           aria-label="View Liked Recipes"
                            title="Liked Recipes">
                             <i class="fas fa-heart" aria-hidden="true"></i>
                         </a>
                         
-                        <a class="btn btn-sm me-2" 
-                           href="{% url 'recipes:recipe_create' %}" 
-                           aria-label="Create a new recipe"
-                           data-bs-toggle="tooltip" 
-                           data-bs-placement="bottom" 
+                                <a class="btn btn-sm me-2" 
+                                    href="{% url 'recipes:recipe_create' %}" 
+                           aria-label="Create New Recipe"
                            title="Create Recipe">
                             <i class="fas fa-plus" aria-hidden="true"></i>
                         </a>
@@ -173,9 +94,7 @@
                         <a class="btn btn-sm" 
                            href="#" 
                            id="logoutBtn" 
-                           aria-label="Sign out of your account"
-                           data-bs-toggle="tooltip" 
-                           data-bs-placement="bottom" 
+                           aria-label="Sign Out"
                            title="Logout">
                             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         </a>
@@ -184,17 +103,13 @@
                         <button class="btn btn-sm me-2" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#loginModal"
-                                aria-label="Sign in to your account"
-                                data-bs-original-title="Sign In"
-                                title="Sign In">
+                                aria-label="Sign In">
                             <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
                         </button>
                         <button class="btn btn-sm" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#registerModal"
-                                aria-label="Create a new account"
-                                data-bs-original-title="Register"
-                                title="Register">
+                                aria-label="Register Account">
                             <i class="fas fa-user-plus" aria-hidden="true"></i>
                         </button>
                         {% endif %}
@@ -273,7 +188,7 @@
                         <a href="#" class="text-light me-3" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us</a>
                         <a href="{% url 'privacy' %}" class="text-light me-3">Privacy</a>
                         <a href="{% url 'terms' %}" class="text-light me-3">Terms</a>
-                        <span class="text-light">&copy; 2025 OnlyPans</span>
+                        <span class="text-muted">&copy; 2025 OnlyPans</span>
                     </div>
                 </div>
             </div>
@@ -492,7 +407,7 @@
         </div>
 
         <!-- Success Toast for Login/Register - Top Center -->
-        <div class="toast-container-auth">
+    <div class="toast-container toast-container-auth position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1080;">
             <div
                 id="authToast"
                 class="toast toast-min-width"
@@ -517,7 +432,7 @@
         </div>
 
         <!-- Recipe Success Toast - Top Center -->
-        <div class="toast-container-auth">
+    <div class="toast-container toast-container-auth position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1080;">
             <div
                 id="recipeSuccessToast"
                 class="toast toast-min-width"
@@ -543,9 +458,10 @@
 
         <!-- Toast Container - Top Center -->
         <div
-            class="toast-container-messages"
+            class="toast-container toast-container-messages position-fixed top-0 start-50 translate-middle-x p-3"
             aria-live="polite"
             aria-atomic="true"
+            style="z-index: 1080;"
         >
             <div class="toast-container">
                 {% if messages %} {% for message in messages %}
@@ -648,36 +564,24 @@
             </div>
         </div>
 
-        <!-- Bootstrap JS - Defer loading -->
-        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         
-        <!-- Custom App JS - Defer loading -->
-        {% if DEBUG %}
-        <script defer src="{% static 'js/app.js' %}"></script>
-        {% else %}
-        <script defer src="{% static 'js/app.min.js' %}"></script>
-        {% endif %}
-        <script defer>
+        <!-- Custom App JS -->
+        <script src="{% static 'js/app.js' %}"></script>
+        <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // Initialize Bootstrap tooltips
-                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
-                });
 
                 // Function to show authentication toast messages
                 function showAuthToast(message) {
                     const toastElement = document.getElementById("authToast");
-                    const toastMessage =
-                        document.getElementById("authToastMessage");
-
+                    const toastMessage = document.getElementById("authToastMessage");
                     toastMessage.textContent = message;
-
+                    console.log("[DEBUG] Showing auth toast with message:", message);
                     const toast = new bootstrap.Toast(toastElement, {
                         autohide: true,
                         delay: 3000,
                     });
-
                     toast.show();
                 }
 
@@ -686,10 +590,9 @@
                 if (loginForm) {
                     loginForm.addEventListener("submit", function (e) {
                         e.preventDefault();
-
+                        console.log("[DEBUG] Login form submitted");
                         const formData = new FormData(this);
                         const errorDiv = document.getElementById("loginErrors");
-
                         fetch(this.action, {
                             method: "POST",
                             body: formData,
@@ -699,33 +602,25 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
+                                console.log("[DEBUG] Login AJAX response:", data);
                                 if (data.success) {
                                     // Show welcome toast
-                                    const firstName =
-                                        data.first_name || data.username;
-                                    showAuthToast(
-                                        `Welcome back, ${firstName}!`
-                                    );
-
+                                    const firstName = data.first_name || data.username;
+                                    showAuthToast(`Welcome back, ${firstName}!`);
                                     // Close modal and reload page after short delay
-                                    bootstrap.Modal.getInstance(
-                                        document.getElementById("loginModal")
-                                    ).hide();
-
+                                    bootstrap.Modal.getInstance(document.getElementById("loginModal")).hide();
                                     setTimeout(() => {
                                         location.reload();
                                     }, 1500);
                                 } else {
                                     // Show error in modal
-                                    errorDiv.textContent =
-                                        data.error ||
-                                        "Login failed. Please try again.";
+                                    errorDiv.textContent = data.error || "Login failed. Please try again.";
                                     errorDiv.style.display = "block";
                                 }
                             })
                             .catch((error) => {
-                                errorDiv.textContent =
-                                    "An error occurred. Please try again.";
+                                console.error("[DEBUG] Login AJAX error:", error);
+                                errorDiv.textContent = "An error occurred. Please try again.";
                                 errorDiv.style.display = "block";
                             });
                     });
@@ -736,11 +631,8 @@
                 if (registerForm) {
                     registerForm.addEventListener("submit", function (e) {
                         e.preventDefault();
-
                         const formData = new FormData(this);
-                        const errorDiv =
-                            document.getElementById("registerErrors");
-
+                        const errorDiv = document.getElementById("registerErrors");
                         fetch(this.action, {
                             method: "POST",
                             body: formData,
@@ -752,31 +644,21 @@
                             .then((data) => {
                                 if (data.success) {
                                     // Show welcome toast
-                                    const firstName =
-                                        data.first_name || data.username;
-                                    showAuthToast(
-                                        `Welcome to OnlyPans, ${firstName}!`
-                                    );
-
+                                    const firstName = data.first_name || data.username;
+                                    showAuthToast(`Welcome to OnlyPans, ${firstName}!`);
                                     // Close modal and reload page after short delay
-                                    bootstrap.Modal.getInstance(
-                                        document.getElementById("registerModal")
-                                    ).hide();
-
+                                    bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide();
                                     setTimeout(() => {
                                         location.reload();
                                     }, 1500);
                                 } else {
                                     // Show error in modal
-                                    errorDiv.textContent =
-                                        data.error ||
-                                        "Registration failed. Please try again.";
+                                    errorDiv.textContent = data.error || "Registration failed. Please try again.";
                                     errorDiv.style.display = "block";
                                 }
                             })
                             .catch((error) => {
-                                errorDiv.textContent =
-                                    "An error occurred. Please try again.";
+                                errorDiv.textContent = "An error occurred. Please try again.";
                                 errorDiv.style.display = "block";
                             });
                     });
@@ -792,7 +674,7 @@
                     }
                     logoutBtn.addEventListener("click", function (e) {
                         e.preventDefault();
-
+                        console.log("[DEBUG] Logout button clicked");
                         fetch("{% url 'accounts:logout' %}", {
                             method: "POST",
                             headers: {
@@ -803,10 +685,10 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
+                                console.log("[DEBUG] Logout AJAX response:", data);
                                 if (data.success) {
                                     // Show goodbye toast
                                     showAuthToast(data.message);
-
                                     // Redirect to home page after short delay
                                     setTimeout(() => {
                                         window.location.href = "{% url 'recipes:recipe_list' %}";
@@ -814,7 +696,7 @@
                                 }
                             })
                             .catch((error) => {
-                                console.error("Logout error:", error);
+                                console.error("[DEBUG] Logout AJAX error:", error);
                                 // Fallback to regular logout
                                 window.location.href = "{% url 'accounts:logout' %}";
                             });

@@ -1,9 +1,7 @@
-"""
-Views for the recipes app.
-"""
-
-from django.contrib import messages
+from django.urls import reverse
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -14,11 +12,26 @@ from .forms import (RecipeForm, RecipeIngredientFormSet, RecipeStepFormSet,
 from .models import Recipe, Tag, Comment, Rating, Ingredient
 from .notifications import send_comment_notification, send_rating_notification
 
+"""
+Views for the recipes app.
+"""
+
+
+@login_required
+@require_POST
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    # Only allow user to delete their own comment
+    if comment.user != request.user:
+        messages.error(request, "You do not have permission to delete this comment.")
+        return redirect('recipes:recipe_detail', slug=comment.recipe.slug)
+    comment.delete()
+    messages.success(request, "Comment deleted successfully!")
+    return redirect('recipes:recipe_detail', slug=comment.recipe.slug)
 
 def test_view(request):
     """Simple test view for debugging."""
     return HttpResponse("Test view works!")
-
 
 def recipe_list(request):
     """Display all recipes with advanced filtering and pagination."""

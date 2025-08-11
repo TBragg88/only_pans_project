@@ -1,14 +1,6 @@
-/*
-===========================================================
-    OnlyPans Recipe App - Main JavaScript
-===========================================================
-*/
-
-// Initialize application when DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
     initializeApp();
 });
-
 function initializeApp() {
     initializeRatingSystem();
     initializeComments();
@@ -19,56 +11,38 @@ function initializeApp() {
     initializeTagSelection();
     initializeRecipeControls();
     initializeLikeButtons();
-    initializeIngredientCheckboxes(); // Add this new function
+    initializeIngredientCheckboxes();
 }
-
-/**
- * Interactive Star Rating System
- */
 function initializeRatingSystem() {
     const userRatingOverlay = document.querySelector(".user-rating-overlay");
     if (!userRatingOverlay) return;
-
     const stars = userRatingOverlay.querySelectorAll(".star-interactive");
     const ratingInput = document.getElementById("rating-value");
     const ratingForm = document.getElementById("rating-form");
     const currentRating =
         parseInt(userRatingOverlay.dataset.currentRating) || 0;
-
-    // Set initial state
     updateStars(currentRating);
-
     stars.forEach((star, index) => {
         const rating = index + 1;
-
-        // Hover effects
         star.addEventListener("mouseenter", function () {
             updateStars(rating, true);
         });
-
         star.addEventListener("mouseleave", function () {
             const selectedRating = parseInt(ratingInput.value) || currentRating;
             updateStars(selectedRating);
         });
-
-        // Click to rate - auto submit
         star.addEventListener("click", function (e) {
             e.preventDefault();
             ratingInput.value = rating;
             updateStars(rating);
-
-            // Show brief feedback
             const originalTitle = this.title;
             this.title = "Rating submitted!";
             setTimeout(() => {
                 this.title = originalTitle;
             }, 2000);
-
-            // Auto-submit immediately
             ratingForm.submit();
         });
     });
-
     function updateStars(rating, isHover = false) {
         stars.forEach((star, index) => {
             star.classList.remove("selected", "hover");
@@ -78,44 +52,29 @@ function initializeRatingSystem() {
         });
     }
 }
-
-/**
- * Comment Reply System
- */
 function initializeComments() {
     const replyBtns = document.querySelectorAll(".reply-btn");
     const cancelReplyBtns = document.querySelectorAll(".cancel-reply");
-
     replyBtns.forEach((btn) => {
         btn.addEventListener("click", function () {
             const commentId = this.dataset.commentId;
             const replyForm = document.getElementById(
                 `reply-form-${commentId}`
             );
-
-            // Hide all other reply forms
             document.querySelectorAll(".reply-form").forEach((form) => {
                 form.style.display = "none";
             });
-
-            // Show this reply form
             replyForm.style.display = "block";
             replyForm.querySelector("textarea").focus();
         });
     });
-
     cancelReplyBtns.forEach((btn) => {
         btn.addEventListener("click", function () {
             this.closest(".reply-form").style.display = "none";
         });
     });
 }
-
-/**
- * Image Preview for File Uploads
- */
 function initializeFormImagePreviews() {
-    // Profile image preview
     const profileImageInput = document.querySelector(
         'input[type="file"][name="profile_image"]'
     );
@@ -136,8 +95,6 @@ function initializeFormImagePreviews() {
             }
         });
     }
-
-    // Recipe image preview
     const recipeImageInput = document.querySelector(
         'input[type="file"][name="image"]'
     );
@@ -147,7 +104,6 @@ function initializeFormImagePreviews() {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    // Create or update preview
                     let preview = document.querySelector(".image-preview");
                     if (!preview) {
                         preview = document.createElement("img");
@@ -163,35 +119,26 @@ function initializeFormImagePreviews() {
         });
     }
 }
-
-/**
- * Toast Notifications
- */
 function initializeToasts() {
-    // Only auto-show toasts that have content (Django messages)
     const messageToasts = document.querySelectorAll(
         ".toast:not(#authToast):not(#recipeSuccessToast)"
     );
     messageToasts.forEach((toastEl) => {
-        // Check if toast has actual content
         const toastBody = toastEl.querySelector(".toast-body");
         if (toastBody && toastBody.textContent.trim()) {
             const toast = new bootstrap.Toast(toastEl, {
                 autohide: true,
-                delay: 4000,
+                delay: 7000,
             });
             toast.show();
         }
     });
-
-    // Check for success messages and show in recipe success toast instead
     const successMessages = document.querySelectorAll(
         ".toast.bg-custom-success .toast-body"
     );
     successMessages.forEach((messageBody) => {
         if (messageBody.textContent.trim()) {
             showRecipeSuccessToast(messageBody.textContent.trim());
-            // Hide the original success toast
             const originalToast = messageBody.closest(".toast");
             if (originalToast) {
                 originalToast.style.display = "none";
@@ -199,35 +146,22 @@ function initializeToasts() {
         }
     });
 }
-
-/**
- * Show Recipe Success Toast
- */
 function showRecipeSuccessToast(message) {
     const toastElement = document.getElementById("recipeSuccessToast");
     const toastMessage = document.getElementById("recipeSuccessToastMessage");
-
     if (toastElement && toastMessage) {
         toastMessage.textContent = message;
-
         const toast = new bootstrap.Toast(toastElement, {
             autohide: true,
-            delay: 5000,
+            delay: 7000,
         });
         toast.show();
     }
 }
-
-/**
- * Modal Functionality
- */
 function initializeModals() {
-    // Handle login/register modal switching
     const loginModal = document.getElementById("loginModal");
     const registerModal = document.getElementById("registerModal");
-
     if (loginModal && registerModal) {
-        // Switch from login to register
         const switchToRegister = document.querySelector(
             '[data-bs-target="#registerModal"]'
         );
@@ -240,8 +174,6 @@ function initializeModals() {
                 }
             });
         }
-
-        // Switch from register to login
         const switchToLogin = document.querySelector(
             '[data-bs-target="#loginModal"]'
         );
@@ -256,16 +188,10 @@ function initializeModals() {
         }
     }
 }
-
-/**
- * Form Validation Helpers
- */
 function showFieldError(fieldName, errorMessage) {
     const field = document.querySelector(`[name="${fieldName}"]`);
     if (field) {
         field.classList.add("is-invalid");
-
-        // Create or update error feedback
         let errorDiv = field.parentNode.querySelector(".invalid-feedback");
         if (!errorDiv) {
             errorDiv = document.createElement("div");
@@ -275,7 +201,6 @@ function showFieldError(fieldName, errorMessage) {
         errorDiv.textContent = errorMessage;
     }
 }
-
 function clearFieldErrors() {
     document.querySelectorAll(".is-invalid").forEach((field) => {
         field.classList.remove("is-invalid");
@@ -284,35 +209,25 @@ function clearFieldErrors() {
         errorDiv.remove();
     });
 }
-
-/**
- * Dynamic Form Management
- */
 function initializeDynamicForms() {
-    // Add event listeners for remove buttons
     document.addEventListener("click", function (e) {
         if (e.target.matches(".btn-remove-row, .remove-row")) {
             removeRow(e.target);
         }
     });
 }
-
 function removeRow(button) {
     const row = button.closest(".ingredient-row, .step-row, .dynamic-form-row");
     if (row) {
         row.remove();
     }
 }
-
 function addIngredientRow() {
     const container = document.querySelector("#ingredient-formset");
     if (!container) return;
-
     const lastRow = container.querySelector(".ingredient-row:last-child");
     if (lastRow) {
         const newRow = lastRow.cloneNode(true);
-
-        // Clear input values
         newRow.querySelectorAll("input, select, textarea").forEach((input) => {
             if (input.type === "checkbox" || input.type === "radio") {
                 input.checked = false;
@@ -320,13 +235,8 @@ function addIngredientRow() {
                 input.value = "";
             }
         });
-
-        // Update form indices if needed
-        updateFormIndices(newRow, container.children.length - 1); // -1 for management form
-
+        updateFormIndices(newRow, container.children.length - 1);
         container.appendChild(newRow);
-
-        // Setup autocomplete for the new ingredient input
         const newIngredientInput = newRow.querySelector(
             ".ingredient-autocomplete"
         );
@@ -335,16 +245,12 @@ function addIngredientRow() {
         }
     }
 }
-
 function addStepRow() {
     const container = document.querySelector("#step-formset");
     if (!container) return;
-
     const lastRow = container.querySelector(".step-row:last-child");
     if (lastRow) {
         const newRow = lastRow.cloneNode(true);
-
-        // Clear input values
         newRow.querySelectorAll("input, select, textarea").forEach((input) => {
             if (input.type === "checkbox" || input.type === "radio") {
                 input.checked = false;
@@ -352,16 +258,11 @@ function addStepRow() {
                 input.value = "";
             }
         });
-
-        // Update form indices if needed
-        updateFormIndices(newRow, container.children.length - 1); // -1 for management form
-
+        updateFormIndices(newRow, container.children.length - 1);
         container.appendChild(newRow);
     }
 }
-
 function updateFormIndices(row, index) {
-    // Update form field names and IDs to maintain proper Django formset structure
     row.querySelectorAll("input, select, textarea").forEach((field) => {
         if (field.name) {
             field.name = field.name.replace(/\d+/, index);
@@ -370,27 +271,20 @@ function updateFormIndices(row, index) {
             field.id = field.id.replace(/\d+/, index);
         }
     });
-
     row.querySelectorAll("label").forEach((label) => {
         if (label.htmlFor) {
             label.htmlFor = label.htmlFor.replace(/\d+/, index);
         }
     });
 }
-
-/**
- * Utility Functions
- */
 function showLoading(element) {
     element.classList.add("loading");
     element.disabled = true;
 }
-
 function hideLoading(element) {
     element.classList.remove("loading");
     element.disabled = false;
 }
-
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -402,8 +296,6 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
-
-// Export functions for use in other scripts
 window.OnlyPansApp = {
     showFieldError,
     clearFieldErrors,
@@ -415,40 +307,25 @@ window.OnlyPansApp = {
     addStepRow,
     showRecipeSuccessToast,
 };
-
-/**
- * Interactive Tag Selection for Forms
- */
 function initializeTagSelection() {
     const tagSelections = document.querySelectorAll(".tag-selection");
-
     tagSelections.forEach((container) => {
         const selectableLabels = container.querySelectorAll(".tag-selectable");
-
         selectableLabels.forEach((label) => {
             label.addEventListener("click", function (e) {
                 e.preventDefault();
-
-                // Find the associated checkbox
                 const checkbox = document.getElementById(
                     this.getAttribute("for")
                 );
                 if (checkbox) {
-                    // Toggle the checkbox
                     checkbox.checked = !checkbox.checked;
-
-                    // Update visual state
                     this.classList.toggle("tag-selected", checkbox.checked);
-
-                    // Trigger change event for form validation
                     checkbox.dispatchEvent(
                         new Event("change", { bubbles: true })
                     );
                 }
             });
         });
-
-        // Initialize visual state based on existing checked checkboxes
         const checkboxes = container.querySelectorAll(".tag-checkbox");
         checkboxes.forEach((checkbox) => {
             const label = container.querySelector(
@@ -460,12 +337,7 @@ function initializeTagSelection() {
         });
     });
 }
-
-/**
- * Recipe Controls - Servings Scaler and Unit Converter
- */
 function initializeRecipeControls() {
-    // Servings scaler elements
     const servingsInputs = document.querySelectorAll(
         "#servings-scaler, #servings-scaler-mobile"
     );
@@ -475,25 +347,18 @@ function initializeRecipeControls() {
     const increaseButtons = document.querySelectorAll(
         "#increase-servings, #increase-servings-mobile"
     );
-
-    // Unit system toggles
     const unitToggles = document.querySelectorAll(
         "#unit-system-toggle, #unit-system-toggle-mobile"
     );
     const unitLabels = document.querySelectorAll(
         "#unit-system-label, #unit-system-label-mobile"
     );
-
-    // Get original serving size
     const originalServings = parseInt(servingsInputs[0]?.dataset.original) || 1;
     let isAmericanUnits = false;
-
-    // Servings scaler functionality
     servingsInputs.forEach((input) => {
         input.addEventListener("change", updateIngredientQuantities);
         input.addEventListener("input", updateIngredientQuantities);
     });
-
     decreaseButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
             servingsInputs.forEach((input) => {
@@ -505,7 +370,6 @@ function initializeRecipeControls() {
             });
         });
     });
-
     increaseButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
             servingsInputs.forEach((input) => {
@@ -517,39 +381,28 @@ function initializeRecipeControls() {
             });
         });
     });
-
-    // Unit system toggle functionality
     unitToggles.forEach((toggle) => {
         toggle.addEventListener("change", (e) => {
             isAmericanUnits = e.target.checked;
-
-            // Sync all toggles
             unitToggles.forEach((otherToggle) => {
                 otherToggle.checked = isAmericanUnits;
             });
-
-            // Update labels
             unitLabels.forEach((label) => {
                 label.textContent = isAmericanUnits ? "US" : "Metric";
             });
-
             updateIngredientQuantities();
         });
     });
-
     function updateIngredientQuantities() {
         const currentServings =
             parseInt(servingsInputs[0]?.value) || originalServings;
         const scaleFactor = currentServings / originalServings;
-
         document.querySelectorAll(".ingredient-amount").forEach((element) => {
             const originalQuantity = parseFloat(
                 element.dataset.originalQuantity
             );
             const unit = element.dataset.unit;
             const unitName = element.dataset.unitName;
-
-            // Check if this is a "to taste" or similar non-scalable unit
             const nonScalableUnits = [
                 "to taste",
                 "taste",
@@ -561,19 +414,14 @@ function initializeRecipeControls() {
                 "sprinkle",
                 "garnish",
             ];
-
             const isNonScalable = nonScalableUnits.some((nonScalableUnit) =>
                 unitName.toLowerCase().includes(nonScalableUnit.toLowerCase())
             );
-
             if (isNonScalable) {
-                // Don't scale "to taste" type measurements, and show without quantity
-                element.textContent = unitName; // Just show the unit name
+                element.textContent = unitName;
                 return;
             }
-
             if (isAmericanUnits) {
-                // Convert to American units
                 const convertedAmount = getAmericanConversion(
                     originalQuantity,
                     unitName,
@@ -581,7 +429,6 @@ function initializeRecipeControls() {
                 );
                 element.textContent = convertedAmount;
             } else {
-                // Use metric with scaling
                 const scaledQuantity = originalQuantity * scaleFactor;
                 const formattedQuantity =
                     scaledQuantity % 1 === 0
@@ -591,11 +438,8 @@ function initializeRecipeControls() {
             }
         });
     }
-
     function getAmericanConversion(quantity, unitName, scale) {
         const unit = unitName.toLowerCase();
-
-        // Check if this is a non-scalable unit
         const nonScalableUnits = [
             "to taste",
             "taste",
@@ -607,19 +451,13 @@ function initializeRecipeControls() {
             "sprinkle",
             "garnish",
         ];
-
         const isNonScalable = nonScalableUnits.some((nonScalableUnit) =>
             unit.includes(nonScalableUnit.toLowerCase())
         );
-
         if (isNonScalable) {
-            // Don't scale "to taste" type measurements, just show unit name
-            return unitName; // Keep original casing
+            return unitName;
         }
-
         const scaledQuantity = quantity * scale;
-
-        // Volume conversions
         if (unit.includes("ml") || unit.includes("milliliter")) {
             if (scaledQuantity >= 1000) {
                 const cups = scaledQuantity / 240;
@@ -632,8 +470,6 @@ function initializeRecipeControls() {
                 return `${(scaledQuantity / 5).toFixed(1)} Tsp`;
             }
         }
-
-        // Weight conversions
         if (unit.includes("gram") || unit === "g") {
             if (scaledQuantity >= 450) {
                 return `${(scaledQuantity / 453.6).toFixed(1)} Lb${
@@ -643,44 +479,31 @@ function initializeRecipeControls() {
                 return `${(scaledQuantity / 28.35).toFixed(1)} Oz`;
             }
         }
-
         if (unit.includes("kilogram") || unit === "kg") {
             return `${(scaledQuantity * 2.2).toFixed(1)} Lbs`;
         }
-
-        // Liter conversions
         if (unit.includes("liter") || unit === "l") {
             return `${(scaledQuantity * 4.2).toFixed(1)} Cups`;
         }
-
         // Default: return scaled original with proper casing
         const formattedQuantity =
             scaledQuantity % 1 === 0
                 ? scaledQuantity.toString()
                 : scaledQuantity.toFixed(1).replace(/\.?0+$/, "");
-        return `${formattedQuantity} ${unitName}`; // Keep original casing
+        return `${formattedQuantity} ${unitName}`;
     }
 }
-
-/**
- * Like Button Functionality
- */
 function initializeLikeButtons() {
     const likeForms = document.querySelectorAll(".like-form");
-
     likeForms.forEach((form) => {
         form.addEventListener("submit", function (e) {
             e.preventDefault();
-
             const button = this.querySelector(".like-btn");
             const icon = button.querySelector("i");
             const countSpan = button.querySelector(".like-count");
-
-            // Add loading state
             const originalContent = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             button.disabled = true;
-
             fetch(this.action, {
                 method: "POST",
                 headers: {
@@ -692,7 +515,6 @@ function initializeLikeButtons() {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    // Update button state
                     if (data.liked) {
                         button.classList.remove("btn-outline-light");
                         button.classList.add("btn-danger");
@@ -700,17 +522,11 @@ function initializeLikeButtons() {
                         button.classList.remove("btn-danger");
                         button.classList.add("btn-outline-light");
                     }
-
-                    // Update count
                     if (countSpan) {
                         countSpan.textContent = data.like_count;
                     }
-
-                    // Restore button content
                     button.innerHTML = originalContent;
                     button.disabled = false;
-
-                    // Add a subtle animation
                     button.style.transform = "scale(1.1)";
                     setTimeout(() => {
                         button.style.transform = "";
@@ -724,26 +540,17 @@ function initializeLikeButtons() {
         });
     });
 }
-
-/**
- * Ingredient Checkboxes Functionality
- */
 function initializeIngredientCheckboxes() {
     const ingredientCheckboxes = document.querySelectorAll(
         ".ingredient-checkbox"
     );
-
     ingredientCheckboxes.forEach((checkbox) => {
-        // Load saved state from localStorage
         const savedState = localStorage.getItem(`ingredient-${checkbox.id}`);
         if (savedState === "true") {
             checkbox.checked = true;
         }
-
-        // Save state on change
         checkbox.addEventListener("change", function () {
             localStorage.setItem(`ingredient-${this.id}`, this.checked);
-
             // Optional: Add a subtle animation or feedback
             const label = this.parentElement.querySelector("label");
             if (this.checked) {
@@ -751,8 +558,6 @@ function initializeIngredientCheckboxes() {
             }
         });
     });
-
-    // Clear all checkboxes button (optional)
     const clearAllBtn = document.querySelector("#clear-all-ingredients");
     if (clearAllBtn) {
         clearAllBtn.addEventListener("click", function () {
@@ -763,8 +568,6 @@ function initializeIngredientCheckboxes() {
         });
     }
 }
-
-// Initialize like buttons when DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
     initializeLikeButtons();
 });

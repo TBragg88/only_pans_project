@@ -508,11 +508,21 @@
                                             <small class="text-muted">{{ comment.created_at|date:"F j, Y g:i A" }}</small>
                                         </div>
                                     </div>
-                                    {% if user.is_authenticated %}
-                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}" aria-label="Reply to {{ comment.user.username }}'s comment">
-                                            <i class="fas fa-reply me-1" aria-hidden="true"></i>Reply
-                                        </button>
-                                    {% endif %}
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if user.is_authenticated %}
+                                            <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}" aria-label="Reply to {{ comment.user.username }}'s comment">
+                                                <i class="fas fa-reply me-1" aria-hidden="true"></i>Reply
+                                            </button>
+                                        {% endif %}
+                                        {% if user.is_authenticated and user == comment.user %}
+                                            <form method="post" action="{% url 'recipes:comment_delete' comment.id %}" class="d-inline-block ms-2" onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete your comment">
+                                                    <i class="fas fa-trash me-1" aria-hidden="true"></i>Delete
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
                                 </div>
                                 <p class="mb-0">{{ comment.content }}</p>
                                 
@@ -676,35 +686,31 @@ function fallbackCopyToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
-// Show toast notification
+// Show toast notification using global Bootstrap system
 function showToast(message, type) {
-    // Create toast element
+    // Use the global toast system by triggering a Django message toast
+    // Find the toast container (should match base.html)
+    const toastContainer = document.querySelector('.toast-container-messages .toast-container');
+    if (!toastContainer) return;
+    // Create toast markup matching the global system
     const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+    toast.className = `toast align-items-center toast-min-width text-white ${type === 'success' ? 'bg-custom-success' : 'bg-danger'} border-0`;
     toast.setAttribute('role', 'alert');
     toast.setAttribute('aria-live', 'assertive');
     toast.setAttribute('aria-atomic', 'true');
-    toast.style.position = 'fixed';
-    toast.style.top = '20px';
-    toast.style.right = '20px';
-    toast.style.zIndex = '9999';
-    
     toast.innerHTML = `
         <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            <div class="toast-body fs-5 py-3">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     `;
-    
-    document.body.appendChild(toast);
-    
+    toastContainer.appendChild(toast);
     // Initialize and show toast
-    const bsToast = new bootstrap.Toast(toast, { autohide: true, delay: 3000 });
+    const bsToast = new bootstrap.Toast(toast, { autohide: true, delay: 7000 });
     bsToast.show();
-    
     // Remove from DOM after hiding
     toast.addEventListener('hidden.bs.toast', () => {
-        document.body.removeChild(toast);
+        toastContainer.removeChild(toast);
     });
 }
 
