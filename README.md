@@ -41,7 +41,6 @@ Our wireframes focused on simplicity and accessibility:
 
 ![Mobile Recipe Detail Wireframe](planning/images/wireframe-mobile-recipe-detail.png)
 
-_Replace the image paths above with your actual wireframe images from `planning/files` as needed._
 
 ## 🛠️ From Dream to Dish: The OnlyPans Journey
 
