@@ -41,7 +41,6 @@ Our wireframes focused on simplicity and accessibility:
 
 ![Mobile Recipe Detail Wireframe](planning/images/wireframe-mobile-recipe-detail.png)
 
-
 ## 🛠️ From Dream to Dish: The OnlyPans Journey
 
 ### **Original Vision**
