@@ -92,13 +92,25 @@
                 <!-- Follow and Rating Section -->
                 <div class="d-flex align-items-center gap-3">
                     <!-- Print and Share Buttons -->
-                    <button class="btn btn-outline-primary btn-sm" onclick="window.print()" aria-label="Print this recipe" title="Print Recipe">
+                    <button class="btn btn-outline-primary btn-sm" 
+                            onclick="window.print()" 
+                            aria-label="Print this recipe"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Print Recipe">
                         <i class="fas fa-print" aria-hidden="true"></i>
                     </button>
                     
                     <!-- Smart Share Button with Fallback -->
                     <div class="dropdown">
-                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share this recipe" title="Share Recipe">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                                type="button" 
+                                id="shareDropdown" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false" 
+                                aria-label="Share this recipe"
+                                data-bs-original-title="Share Recipe"
+                                title="Share Recipe">
                             <i class="fas fa-share" aria-hidden="true"></i>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="shareDropdown">
@@ -259,10 +271,22 @@
                             <div class="d-flex align-items-center gap-2">
                                 <label class="text-white-50 small mb-0">Servings:</label>
                                 <div class="input-group input-group-sm" style="width: 120px;">
-                                    <button class="btn btn-outline-light btn-sm" type="button" id="decrease-servings">-</button>
+                                    <button class="btn btn-outline-light btn-sm" 
+                                            type="button" 
+                                            id="decrease-servings"
+                                            aria-label="Decrease servings"
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top" 
+                                            title="Decrease servings">-</button>
                                     <input type="number" class="form-control form-control-sm text-center" id="servings-scaler" 
                                            value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
-                                    <button class="btn btn-outline-light btn-sm" type="button" id="increase-servings">+</button>
+                                    <button class="btn btn-outline-light btn-sm" 
+                                            type="button" 
+                                            id="increase-servings"
+                                            aria-label="Increase servings"
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top" 
+                                            title="Increase servings">+</button>
                                 </div>
                             </div>
                             

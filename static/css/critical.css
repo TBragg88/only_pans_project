@@ -1,0 +1,64 @@
+/* Critical CSS - Above the fold styles only */
+:root {
+    --primary-color: #0051a8;
+    --secondary-color: #74b9ff;
+    --accent-color: #fd79a8;
+    --dark-color: #2d3436;
+    --light-color: #ddd;
+    --success-color: #00b894;
+    --warning-color: #fdcb6e;
+    --danger-color: #e17055;
+    --info-color: #74b9ff;
+    --font-family-serif: "Georgia", "Times New Roman", serif;
+    --border-radius: 12px;
+    --border-radius-sm: 6px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Critical navigation styles */
+.navbar {
+    background-color: var(--primary-color) !important;
+    border-bottom: 3px solid var(--secondary-color);
+    backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+    color: white !important;
+}
+
+/* Critical hero section styles */
+.onlypans-hero {
+    background: linear-gradient(
+            135deg,
+            rgba(0, 81, 168, 0.8) 0%,
+            rgba(116, 185, 255, 0.6) 100%
+        ),
+        url("/static/images/heroimage.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 3rem 0 2rem 0;
+    box-shadow: var(--box-shadow-lg);
+    position: relative;
+    min-height: 300px;
+}
+
+.hero-brand {
+    font-size: 4rem !important;
+    font-weight: 900 !important;
+    margin-bottom: 1.5rem;
+    color: white;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+    font-family: var(--font-family-serif);
+    letter-spacing: 2px;
+}

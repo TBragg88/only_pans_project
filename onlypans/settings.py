@@ -220,6 +220,12 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
+# Performance optimizations
+# Enable compression (works with gunicorn and whitenoise)
+if not DEBUG:
+    # Static files caching for production
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Logging configuration
 LOGGING = {
     'version': 1,
