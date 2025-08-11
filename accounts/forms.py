@@ -184,8 +184,8 @@ class UserProfileForm(forms.ModelForm):
         }
         labels = {
             'bio': 'About Me',
-            'dietary_tags': 'Dietary Restrictions & Preferences',
-            'favorite_cuisines': 'Favorite Cuisines',
+            'dietary_tags': 'Select Your Preferences',
+            'favorite_cuisines': 'Select Your Favorites',
             'preferred_difficulty': 'Preferred Recipe Difficulty',
             'profile_image': 'Profile Picture',
         }

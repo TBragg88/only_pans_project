@@ -1058,7 +1058,75 @@ input[type="checkbox"]:focus + .tag-selectable {
     }
 }
 
-/* ===== 14. PRINT STYLES ===== */
+/* Form Section Styling */
+.form-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid #dee2e6;
+}
+
+.section-title {
+    color: #000 !important;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+/* Profile Edit Tag Selection Fixes */
+.tag-selection .tag {
+    background-color: #e9ecef !important;
+    color: #000 !important;
+    border: 2px solid #6c757d !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tag-selection .tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-color: #0d6efd !important;
+    transform: none !important;
+}
+
+.tag-selection input[type="checkbox"]:checked + .tag {
+    background-color: #198754 !important;
+    color: white !important;
+    border-color: #198754 !important;
+}
+
+/* Tab Navigation Fixes */
+.nav-tabs .nav-link {
+    color: #000 !important;
+    font-weight: bold;
+}
+
+.nav-tabs .nav-link.active {
+    color: #000 !important;
+    background-color: #fff;
+    border-color: #0d6efd #0d6efd #fff;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #0d6efd !important;
+    border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+/* Form Help Text Fixes */
+.form-text {
+    color: #000 !important;
+    font-weight: 500;
+}
+
+/* Form Labels */
+.form-label {
+    color: #000 !important;
+    font-weight: bold;
+}
+
 .print-only {
     display: none;
 }

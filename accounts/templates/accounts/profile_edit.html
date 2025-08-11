@@ -18,9 +18,10 @@
                         {% csrf_token %}
 
                         <!-- Basic Information -->
-                        <h5 class="border-bottom pb-2 mb-4">
-                            Basic Information
-                        </h5>
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-user me-2"></i>Basic Information
+                            </h5>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label
@@ -68,9 +69,10 @@
                         </div>
 
                         <!-- Profile Picture -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">
-                            Profile Picture
-                        </h5>
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-camera me-2"></i>Profile Picture
+                            </h5>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label
@@ -99,14 +101,18 @@
                                     <img
                                         src="{{ user.profile.get_profile_image_url }}"
                                         alt="Current profile picture"
-                                        class="rounded-circle profile-avatar-sm"
+                                        class="rounded-circle"
+                                        style="width: 80px; height: 80px; object-fit: cover;"
                                     />
                                 </div>
                             </div>
                         </div>
 
                         <!-- About Me -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">About Me</h5>
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-quote-left me-2"></i>About Me
+                            </h5>
                         <div class="mb-3">
                             <label
                                 for="{{ form.bio.id_for_label }}"
@@ -128,9 +134,10 @@
                         </div>
 
                         <!-- Food Preferences -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">
-                            <i class="fas fa-utensils me-2"></i>Food Preferences
-                        </h5>
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-utensils me-2"></i>Food Preferences
+                            </h5>
                         
                         <!-- Dietary Restrictions -->
                         <div class="mb-4">
@@ -209,9 +216,10 @@
                         </div>
 
                         <!-- Privacy Settings -->
-                        <h5 class="border-bottom pb-2 mb-4 mt-4">
-                            Privacy Settings
-                        </h5>
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-shield-alt me-2"></i>Privacy Settings
+                            </h5>
                         <div class="mb-3">
                             <div class="form-check">
                                 {{ form.show_dietary_preferences }}
