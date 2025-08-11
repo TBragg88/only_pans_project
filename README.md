@@ -96,10 +96,19 @@ Our development was guided by thoughtful planning and user-centered design:
 
 Our wireframes focused on simplicity and accessibility:
 
--   **Home Page**: `planning/images/wireframe-home.png` - Welcoming carousel and easy discovery
--   **Recipe List**: `planning/images/wireframe-recipe-list.png` - Clear filtering and search
--   **Recipe Detail**: `planning/images/wireframe-recipe-detail.png` - Kitchen-friendly layout
--   **Add Recipe**: `planning/images/wireframe-add-recipe.png` - Intuitive recipe creation
+<div align="center" style="display: flex; flex-direction: column; gap: 24px;">
+
+<div>
+    <strong>Home Page</strong><br>
+    <img src="planning/images/Wireframe_Desktop.png" alt="Wireframe Home Page" style="max-width: 400px; width: 100%; border-radius: 8px;">
+</div>
+
+<div>
+    <strong>mobile</strong><br>
+    <img src="planning/images/lighthouse_mobile.png" alt="Wireframe Recipe List" style="max-width: 400px; width: 100%; border-radius: 8px;">
+</div>
+
+</div>
 
 ### 🏗️ From Big Dreams to Beautiful Reality
 
