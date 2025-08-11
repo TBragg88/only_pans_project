@@ -403,9 +403,10 @@
                 >
                     Cancel
                 </button>
-                <a href="#" id="deleteLink" class="btn btn-danger"
-                    >Delete Recipe</a
-                >
+                <form id="deleteForm" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" id="deleteButton">Delete Recipe</button>
+                </form>
             </div>
         </div>
     </div>
@@ -415,9 +416,8 @@
 <script>
     function confirmDelete(slug, title) {
         document.getElementById("recipeTitle").textContent = title;
-        document.getElementById("deleteLink").href =
-            "/recipes/" + slug + "/delete/";
-
+        var form = document.getElementById("deleteForm");
+        form.action = "/recipes/" + slug + "/delete/";
         var deleteModal = new bootstrap.Modal(
             document.getElementById("deleteModal")
         );

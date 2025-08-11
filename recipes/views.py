@@ -447,15 +447,15 @@ def recipe_delete(request, slug):
     recipe = get_object_or_404(Recipe, slug=slug, user=request.user)
 
     if request.method == 'POST':
+        recipe_title = recipe.title
         recipe.delete()
         messages.success(
-            request, 'Recipe deleted successfully!'
+            request, f'Recipe "{recipe_title}" deleted successfully!'
         )
-    return redirect('recipes:recipe_list')
+    return redirect('accounts:profile', username=request.user.username)
 
-    return render(
-        request, 'recipes/recipe_confirm_delete.html', {'recipe': recipe}
-    )
+    # If GET request, redirect back to recipe detail page
+    return redirect('recipes:recipe_detail', slug=slug)
 
 
 def ingredients_api(request):
