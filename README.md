@@ -28,34 +28,21 @@ We believe cooking is for everyone. That’s why we’ve built a platform that�
     <img src="planning/images/Project_ERD_Cooking.png" alt="ERD Diagram" width="400" />
 -   **Future-Ready**: Designed for growth (subscriptions, messaging, marketplace)
 -   **Current Focus**: Clean V1 implementation with room to expand
-
 ### 🎨 Wireframes & User Experience
 
 Our wireframes focused on simplicity and accessibility:
 
-<div align="center" style="display: flex; flex-direction: column; gap: 24px;">
+#### 🖥️ Desktop Experience
 
-<div>
-    <strong>Home Page</strong><br>
-    <img src="planning/images/wireframe-home.png" alt="Wireframe Home" width="400" />
-</div>
+![Desktop Home Wireframe](planning/images/Wireframe_Desktop.png)
+![Desktop Recipe Detail Wireframe](planning/images/Wireframe_Desktop_Recipe_Detail.png)
 
-<div>
-    <strong>Recipe List</strong><br>
-    <img src="planning/images/wireframe-recipe-list.png" alt="Wireframe Recipe List" width="400" />
-</div>
+#### 📱 Mobile Experience
 
-<div>
-    <strong>Recipe Detail</strong><br>
-    <img src="planning/images/wireframe-recipe-detail.png" alt="Wireframe Recipe Detail" width="400" />
-</div>
+![Mobile Home Wireframe](planning/images/wireframe_mobile.png)
+![Mobile Recipe Detail Wireframe](planning/images/wireframe-mobile-recipe-detail.png)
 
-<div>
-    <strong>Add Recipe</strong><br>
-    <img src="planning/images/wireframe-add-recipe.png" alt="Wireframe Add Recipe" width="400" />
-</div>
-
-</div>
+*Replace the image paths above with your actual wireframe images from `planning/files` as needed.*
 
 ## 🛠️ From Dream to Dish: The OnlyPans Journey
 
