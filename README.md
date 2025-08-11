@@ -7,9 +7,9 @@
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 [![Accessibility](https://img.shields.io/badge/WCAG-2.1%20AA-green?style=for-the-badge)](https://www.w3.org/WAI/WCAG21/AA/)
 
-## 🌍 Our Mission
+## 🌍 The Idea
 
-OnlyPans celebrates the beautiful diversity of global cuisine while ensuring everyone can participate in our cooking community. Whether you're sharing your grandmother's treasured family recipe, exploring new cuisines, or adapting dishes for dietary needs, our platform welcomes every food journey with accessibility and inclusivity at its heart.
+OnlyPans is a recipe website built to celebrate the joy of cooking and the people behind the food. It’s a place where users can explore global cuisines, share meaningful recipes, and support their favorite chefs and creators. Designed with accessibility and inclusivity at its core, the platform makes it easy for anyone to join the culinary conversation—whether they’re preserving family traditions, adapting dishes for dietary needs, or simply discovering something delicious.
 
 ### What Makes OnlyPans Special ✨
 
