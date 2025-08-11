@@ -151,9 +151,9 @@
                     <div class="rating-container">
                         <div class="rating-display d-flex align-items-center mb-2">
                             <!-- Single star system with overlays -->
-                            <div class="stars-wrapper position-relative me-2">
+                            <div class="stars-wrapper position-relative me-2" role="group" aria-label="Recipe rating">
                                 <!-- Background stars showing average rating -->
-                                <div class="stars total-stars">
+                                <div class="stars total-stars" aria-hidden="true">
                                     {% for i in "12345" %}
                                         {% if forloop.counter <= recipe.average_rating %}
                                             <i class="fas fa-star text-warning fs-5"></i>
@@ -165,39 +165,55 @@
                                 
                                 <!-- Interactive overlay for authenticated users -->
                                 {% if user.is_authenticated %}
-                                    <form method="post" id="rating-form" class="rating-form-hidden">
+                                    <form method="post" id="rating-form" class="rating-form-hidden" aria-label="Rate this recipe">
                                         {% csrf_token %}
                                         <input type="hidden" name="rating" id="rating-value" value="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
                                         <input type="hidden" name="rating_submit" value="1">
                                     </form>
                                     
-                                    <div class="user-rating-overlay position-absolute top-0 start-0" data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}">
+                                    <div class="user-rating-overlay position-absolute top-0 start-0" 
+                                         data-current-rating="{% if user_rating %}{{ user_rating.rating }}{% else %}0{% endif %}"
+                                         role="radiogroup" 
+                                         aria-label="Rate this recipe from 1 to 5 stars"
+                                         aria-describedby="rating-instructions">
                                         {% for i in "12345" %}
-                                            <i class="star-interactive far fa-star fs-5" 
-                                               data-rating="{{ forloop.counter }}" 
-                                               title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
-                                               style="cursor: pointer; color: transparent;"
-                                               {% if user_rating and forloop.counter <= user_rating.rating %}data-rated="true"{% endif %}></i>
+                                            <button type="button" 
+                                                    class="star-interactive btn p-0 border-0 bg-transparent" 
+                                                    data-rating="{{ forloop.counter }}" 
+                                                    title="Rate {{ forloop.counter }} star{{ forloop.counter|pluralize }}"
+                                                    aria-label="Rate {{ forloop.counter }} out of 5 stars"
+                                                    role="radio"
+                                                    aria-checked="{% if user_rating and forloop.counter == user_rating.rating %}true{% else %}false{% endif %}"
+                                                    style="cursor: pointer; color: transparent;">
+                                                <i class="far fa-star fs-5" aria-hidden="true"></i>
+                                            </button>
                                         {% endfor %}
                                     </div>
                                 {% else %}
                                     <!-- Login overlay for non-authenticated users -->
-                                    <div class="login-rating-overlay position-absolute top-0 start-0">
+                                    <div class="login-rating-overlay position-absolute top-0 start-0" 
+                                         role="group" 
+                                         aria-label="Sign in required to rate">
                                         {% for i in "12345" %}
-                                            <i class="far fa-star fs-5 rating-login-star" 
-                                               data-bs-toggle="modal" 
-                                               data-bs-target="#loginModal"
-                                               title="Sign in to rate this recipe"
-                                               style="cursor: pointer; color: transparent;"></i>
+                                            <button type="button"
+                                                    class="btn p-0 border-0 bg-transparent rating-login-star" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#loginModal"
+                                                    title="Sign in to rate this recipe"
+                                                    aria-label="Sign in to rate {{ forloop.counter }} out of 5 stars"
+                                                    style="cursor: pointer; color: transparent;">
+                                                <i class="far fa-star fs-5" aria-hidden="true"></i>
+                                            </button>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
                             </div>
                             
-                            <small class="text-muted">({{ recipe.rating_count }})</small>
+                            <small class="text-muted" aria-label="{{ recipe.rating_count }} total ratings">({{ recipe.rating_count }})</small>
                         </div>
                         
                         {% if user.is_authenticated %}
+                            <div id="rating-instructions" class="visually-hidden">Use arrow keys to navigate between star ratings, then press Enter or Space to select.</div>
                             <small class="text-muted">Click stars to rate</small>
                         {% else %}
                             <small class="text-muted">
@@ -289,7 +305,8 @@
                                             data-bs-placement="top" 
                                             title="Decrease servings">-</button>
                                     <input type="number" class="form-control form-control-sm text-center" id="servings-scaler" 
-                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}">
+                                           value="{{ recipe.servings }}" min="1" max="20" data-original="{{ recipe.servings }}"
+                                           aria-label="Number of servings">
                                     <button class="btn btn-outline-light btn-sm" 
                                             type="button" 
                                             id="increase-servings"
@@ -715,24 +732,27 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize star display
         updateOverlayStars(interactiveStars, totalStars, currentRating);
+        updateAriaChecked(interactiveStars, currentRating);
         
-        interactiveStars.forEach((star, index) => {
+        interactiveStars.forEach((starButton, index) => {
             const rating = index + 1;
             
             // Hover effects
-            star.addEventListener('mouseenter', () => {
+            starButton.addEventListener('mouseenter', () => {
                 updateOverlayStars(interactiveStars, totalStars, rating, true);
             });
             
-            star.addEventListener('mouseleave', () => {
+            starButton.addEventListener('mouseleave', () => {
                 updateOverlayStars(interactiveStars, totalStars, currentRating);
             });
             
             // Click to rate
-            star.addEventListener('click', () => {
+            starButton.addEventListener('click', (e) => {
+                e.preventDefault();
                 currentRating = rating;
                 ratingInput.value = rating;
                 updateOverlayStars(interactiveStars, totalStars, rating);
+                updateAriaChecked(interactiveStars, rating);
                 
                 // Submit the rating
                 const formData = new FormData(ratingForm);
@@ -748,6 +768,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data.success) {
                         showToast(`You rated this recipe ${rating} star${rating !== 1 ? 's' : ''}!`, 'success');
+                        // Update the average rating display if needed
+                        if (data.new_average) {
+                            updateAverageRating(data.new_average, data.new_count);
+                        }
+                    } else {
+                        showToast('Error submitting rating. Please try again.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Rating error:', error);
+                    showToast('Error submitting rating. Please try again.', 'error');
+                });
+            });
+            
+            // Keyboard support
+            starButton.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    starButton.click();
+                } else if (e.key === 'ArrowLeft' && index > 0) {
+                    e.preventDefault();
+                    interactiveStars[index - 1].focus();
+                } else if (e.key === 'ArrowRight' && index < interactiveStars.length - 1) {
+                    e.preventDefault();
+                    interactiveStars[index + 1].focus();
+                }
+            });
+        });
+    }
                         // Update the average rating display if needed
                         if (data.new_average) {
                             updateAverageRating(data.new_average, data.new_count);
@@ -783,6 +832,14 @@ function updateOverlayStars(interactiveStars, backgroundStars, rating, isHover =
         } else {
             star.style.color = 'transparent';
         }
+    });
+}
+
+// Update ARIA checked state for rating buttons
+function updateAriaChecked(interactiveStars, selectedRating) {
+    interactiveStars.forEach((star, index) => {
+        const rating = index + 1;
+        star.setAttribute('aria-checked', rating === selectedRating ? 'true' : 'false');
     });
 }
 
