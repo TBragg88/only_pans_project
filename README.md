@@ -119,12 +119,13 @@ We take testing as seriously as food safety! Here's our comprehensive testing ap
 
 -   **ESLint:** Passed, no problems found
 -   **HTML/CSS Validation:** Passed, no critical warnings
-
 ### 📸 Lighthouse Screenshots
 
--   <img src="planning/images/lighthouse-accessibility.png" alt="Lighthouse Accessibility" width="400" />
--   <img src="planning/images/lighthouse-performance.png" alt="Lighthouse Performance" width="400" />
--   <img src="planning/images/lighthouse-overall.png" alt="Lighthouse Overall" width="400" />
+#### 🖥️ Desktop Report
+<img src="planning/images/Lighthouse_desktop.png" alt="Lighthouse Desktop Report" width="400" />
+
+#### 📱 Mobile Report
+<img src="planning/images/Lighthouse_mobile.png" alt="Lighthouse Mobile Report" width="400" />
 
 All major accessibility, performance, and code quality checks passed!
 
