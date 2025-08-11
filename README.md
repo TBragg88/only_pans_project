@@ -105,7 +105,7 @@ Our wireframes focused on simplicity and accessibility:
 
 <div>
     <strong>mobile</strong><br>
-    <img src="planning/images/lighthouse_mobile.png" alt="Wireframe Recipe List" style="max-width: 400px; width: 100%; border-radius: 8px;">
+    <img src="planning/images/wireframe_mobile.png" alt="Wireframe Recipe List" style="max-width: 400px; width: 100%; border-radius: 8px;">
 </div>
 
 </div>
