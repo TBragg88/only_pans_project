@@ -603,26 +603,30 @@ main h3 {
     margin-bottom: 2rem;
 }
 
-.form-section h4 {
-    color: var(--dark-color);
-    font-weight: 600;
+.form-section h4,
+form .form-section h4 {
+    color: var(--dark-color) !important;
+    font-weight: 600 !important;
     margin-bottom: 1rem;
 }
 
-.form-section h5 {
-    color: var(--dark-color);
-    font-weight: 600;
+.form-section h5,
+form .form-section h5 {
+    color: var(--dark-color) !important;
+    font-weight: 600 !important;
 }
 
-.form-section h6 {
-    color: var(--dark-color);
-    font-weight: 600;
+.form-section h6,
+form .form-section h6 {
+    color: var(--dark-color) !important;
+    font-weight: 600 !important;
 }
 
 /* Tag category titles */
-.tag-category-title {
+.tag-category-title,
+.tag-category .tag-category-title {
     color: var(--dark-color) !important;
-    font-weight: 600;
+    font-weight: 600 !important;
     margin-bottom: 0.75rem;
 }
 
@@ -660,6 +664,32 @@ main h3 {
     color: white !important;
     text-decoration: none;
     opacity: 0.9;
+}
+
+/* Uniform tag colors by type - override inline styles */
+.tag-selectable[title*="- Dietary"],
+.tag[title*="- Dietary"] {
+    background-color: #208537 !important; /* Green for dietary */
+}
+
+.tag-selectable[title*="- Cuisine"],
+.tag[title*="- Cuisine"] {
+    background-color: #0062cc !important; /* Blue for cuisine */
+}
+
+.tag-selectable[title*="- Meal Type"],
+.tag[title*="- Meal Type"] {
+    background-color: #6610f2 !important; /* Purple for meal type */
+}
+
+.tag-selectable[title*="- Cooking Method"],
+.tag[title*="- Cooking Method"] {
+    background-color: #dc3545 !important; /* Red for cooking method */
+}
+
+.tag-selectable[title*="- Difficulty"],
+.tag[title*="- Difficulty"] {
+    background-color: #b1580e !important; /* Orange for difficulty */
 }
 
 /* Small tag variant */
