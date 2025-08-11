@@ -1,82 +1,74 @@
-# 🍳 OnlyPans - Inclusive Social Recipe Sharing Platform
+# OnlyPans Recipe App
 
-<div align="center">
+## Description
 
-![OnlyPans Logo](planning/images/Project_ERD## 🎯 Project Philosophy
+OnlyPans is an accessible, inclusive social recipe sharing platform built with Django. It enables users to create, discover, and discuss recipes from diverse culinary traditions, with a strong focus on accessibility, cultural sensitivity, and community.
 
-OnlyPans was built with strong values that guide every technical and design decision:
+---
 
-### 🌐 Accessibility First
+## Planning
 
-We believe great food should be accessible to everyone—and so should our platform. Every feature is designed with accessibility in mind, from semantic HTML and ARIA labels to keyboard navigation and screen reader compatibility.
+### ERD & Wireframes
 
-### 🎨 Inclusive Design
+-   **ERD:** See `planning/images/Project_ERD_Cooking.png` for the full entity relationship diagram.
+-   **Wireframes:** Key screens are documented in `planning/images/`:
+    -   Home: `wireframe-home.png`
+    -   Recipe List: `wireframe-recipe-list.png`
+    -   Recipe Detail: `wireframe-recipe-detail.png`
+    -   Add Recipe: `wireframe-add-recipe.png`
 
-Our ### Development Approach
+### MVP Build
 
-#### Agile & Inclusive Development
+-   **Core Models:** User, UserProfile, Recipe, Ingredient, Step, Tag, Rating, Comment.
+-   **Features:** Recipe CRUD, image upload, dietary/cuisine tagging, ratings, comments, responsive design, accessibility (WCAG AA), print-friendly views, search/filter, user profiles.
 
--   **User-Centered Design**: Feature## 🌱 Roadmap
+---
 
-### Our Vision for Inclusive Culinary Technology
+## Testing
 
-OnlyPans is evolving into a platform that truly serves everyone who loves food. Our roadmap prioritizes accessibility, cultural celebration, and community connection.
+### Manual & Automated Testing
 
-#### Phase 2: Enhanced Accessibility (Next 3 months)
+-   **Unit Tests:** Models, forms, views, utilities.
+-   **Integration Tests:** End-to-end user workflows, authentication, permissions.
+-   **Accessibility Tests:** Keyboard navigation, screen reader compatibility, color contrast, ARIA labels.
 
--   **Advanced Screen Reader Support**: Rich recipe narration and cooking guidance
--   **Voice Navigation**: Hands-free recipe browsing for kitchen use
--   **High Contrast Themes**: Multiple visual accessibility options
--   **Cognitive Accessibility**: Simplified interfaces and clear language options
--   **Multi-Language Support**: Beginning with Spanish and French recipe translation
+### Button & UI Testing Grid
 
-#### Phase 3: Cultural Celebration (6 months)
+| Button/Action  | Template/File        | Test Type   | Result |
+| -------------- | -------------------- | ----------- | ------ |
+| Login/Register | `base.html`          | Manual/Unit | ✅     |
+| Add Recipe     | `recipe_form.html`   | Manual/Unit | ✅     |
+| Rate Recipe    | `recipe_detail.html` | Manual/Unit | ✅     |
+| Comment/Reply  | `recipe_detail.html` | Manual/Unit | ✅     |
+| Search/Filter  | `base.html`          | Manual/Unit | ✅     |
+| Print Recipe   | `recipe_detail.html` | Manual      | ✅     |
+| Edit Profile   | `profile_edit.html`  | Manual/Unit | ✅     |
+| Tag Selection  | `profile_edit.html`  | Manual      | ✅     |
 
--   **Cultural Context Features**: Rich background information for traditional recipes
--   **Regional Ingredient Mapping**: Local ingredient suggestions for global recipes
--   **Festival and Holiday Integration**: Seasonal recipe recommendations
--   **Cultural Ambassador Program**: Community-led cultural education
--   **Attribution System**: Proper crediting for traditional recipes and techniques
+### Internal File Testing
 
-#### Phase 4: Smart Accessibility (9 months)
+| Test File                   | Coverage Area  | Result |
+| --------------------------- | -------------- | ------ |
+| `tests/test_models.py`      | Models         | ✅     |
+| `tests/test_views.py`       | Views          | ✅     |
+| `tests/test_forms.py`       | Forms          | ✅     |
+| `tests/test_integration.py` | User workflows | ✅     |
+| `tests/run_all_tests.py`    | Full suite     | ✅     |
 
--   **AI-Powered Descriptions**: Automatic alt text generation for recipe images
--   **Dietary Intelligence**: Smart recipe suggestions based on restrictions and preferences
--   **Accessibility Automation**: Automated accessibility testing and optimization
--   **Personalized Interfaces**: Adaptive UIs based on user accessibility needs
+---
 
-#### Phase 5: Global Community (12+ months)
+## Planned Elements & ERD Development
 
--   **Mobile Accessibility**: Native apps with full accessibility feature parity
--   **Real-time Translation**: Live recipe translation and cultural context
--   **Community Mentorship**: Experienced cooks paired with newcomers
--   **Accessibility API**: Open API for assistive technology integration
--   **Global Recipe Exchange**: International recipe sharing and cultural learning
+-   **Future Features:** Saved collections, following cooks, premium content, smart recommendations, mobile apps, live sessions.
+-   **ERD Evolution:** Designed for extensibility—future additions (subscriptions, DMs, marketplace) can be integrated without major refactoring.
 
-### Technical Roadmap
+---
 
-#### Immediate Priorities
+## Thank You
 
--   **Performance Optimization**: Faster loading for all users, especially on slower connections
--   **Enhanced Security**: Additional protection for user data and privacy
--   **Code Quality**: Continued refactoring for maintainability and accessibility
--   **Test Coverage**: Expanding to include more accessibility and usability tests
+Thank you to all contributors, testers, and community members who helped make OnlyPans accessible, inclusive, and production-ready!
 
-#### Future Architecture
-
--   **Microservices Migration**: Scalable architecture supporting global usage
--   **API-First Design**: RESTful APIs enabling third-party accessibility tools
--   **Progressive Web App**: App-like experience with offline capability
--   **Machine Learning**: Ethical AI for recipe recommendations and accessibility features
-
-### Community Development Roadmap
-
-#### Education & Outreach
-
--   **Accessibility Workshops**: Teaching inclusive development practices
--   **Cultural Sensitivity Training**: Guidelines for respectful recipe sharing
--   **Open Source Advocacy**: Promoting accessibility in food technology
--   **Academic Partnerships**: Collaborating with culinary and accessibility programs
+---
 
 #### Partnerships & Integration
 
