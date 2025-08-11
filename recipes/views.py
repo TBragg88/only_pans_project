@@ -452,7 +452,7 @@ def recipe_delete(request, slug):
         messages.success(
             request, f'Recipe "{recipe_title}" deleted successfully!'
         )
-    return redirect('accounts:profile', username=request.user.username)
+    return redirect('accounts:profile_detail', username=request.user.username)
 
     # If GET request, redirect back to recipe detail page
     return redirect('recipes:recipe_detail', slug=slug)
