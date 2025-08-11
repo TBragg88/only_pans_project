@@ -86,7 +86,28 @@ There’s so much more I want to build. Here’s what’s on the roadmap:
 
 Sadly time and technical debt / ability took alot. but ive learned alot. sadly alot of the bonus features had to be removed as they didnt meet the cut. but the framework remains for them to be implimented at a later date.
 
+## 🚀 Agile Development
 
+OnlyPans was built using agile principles—iterative development, rapid feedback, and continuous improvement. Our workflow is managed through a public project board, tracking user stories, features, and bug fixes.
+
+- **Project Board:** [GitHub Project Board](https://github.com/TBragg88/only_pans_project/projects)
+- **User Stories:** Included in the User Experience Design section above
+- **Sprint Planning:** Features and fixes prioritized based on user feedback and accessibility goals
+
+---
+
+## 🤖 AI Implementation
+
+While full AI features are planned for future releases, OnlyPans is designed with AI-readiness in mind:
+
+- **Planned Features:**
+    - AI-powered recipe recommendations based on user preferences and dietary needs
+    - Smart ingredient substitutions for allergies and restrictions
+    - Natural language search for recipes ("quick vegan dinner")
+- **Current Status:**
+    - Framework and database structure support future AI modules
+    - Initial groundwork for personalized suggestions and smart search
+    
 ## 🧪 Testing (Quality Assurance Kitchen)
 
 We take testing as seriously as food safety! Here's our comprehensive testing approach:
