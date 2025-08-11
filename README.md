@@ -10,9 +10,6 @@ We believe cooking is for everyone. That’s why we’ve built a platform that�
 
 ### ✨ What Makes OnlyPans Special
 
--   🤝 **Everyone’s Invited**  
-    WCAG 2.1 AA compliant design means no one’s left out—whatever your background or ability.
-
 -   🌮 **Respectful & Real**  
     We celebrate authentic recipes and welcome creative twists that make them personal.
 
