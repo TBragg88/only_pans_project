@@ -187,13 +187,22 @@ CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 if CLOUDINARY_URL:
     # Parse the CLOUDINARY_URL automatically
     cloudinary.config()
+    # Force HTTPS for all URLs to prevent mixed content warnings
+    cloudinary.config(secure=True)
 else:
     # Fallback to individual environment variables for development
     cloudinary.config(
         cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME", "dummy-cloud"),
         api_key=os.environ.get("CLOUDINARY_API_KEY", "dummy-key"),
         api_secret=os.environ.get("CLOUDINARY_API_SECRET", "dummy-secret"),
+        secure=True,  # Force HTTPS for all URLs
     )
+
+# Additional Cloudinary settings for security
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL': CLOUDINARY_URL,
+    'SECURE': True,  # Force HTTPS URLs
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
