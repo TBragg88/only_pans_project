@@ -462,13 +462,13 @@
                         </div>
                     </div>
                 {% else %}
-                    <div class="alert alert-info">
-                        <a href="#" class="alert-link" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</a> to share your thoughts about this recipe.
+                    <div class="text-center py-3">
+                        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</a> to share your thoughts about this recipe.
                     </div>
                 {% endif %}
 
                 {% if my_pending_comments %}
-                    <div class="alert alert-warning d-flex align-items-center mb-3" role="alert">
+                    <div class="text-warning d-flex align-items-center mb-3" role="status">
                         <i class="fas fa-hourglass-half me-2" aria-hidden="true"></i>
                         <div>Your recent comment{{ my_pending_comments|length|pluralize }} {{ my_pending_comments|length|pluralize:"is,are" }} waiting for admin to authorise and visible only to you.</div>
                     </div>

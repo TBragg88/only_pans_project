@@ -75,6 +75,42 @@ body {
     color: var(--dark-color);
 }
 
+/* ===== TOASTS (Bootstrap + Custom) ===== */
+.toast-min-width {
+    min-width: 320px;
+    max-width: 420px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow-lg);
+    font-size: 1.1rem;
+    word-break: break-word;
+}
+.bg-custom-success {
+    background-color: var(--success-color) !important;
+    color: #fff !important;
+}
+.bg-danger {
+    background-color: var(--danger-color) !important;
+    color: #fff !important;
+}
+.text-white {
+    color: #fff !important;
+}
+.toast {
+    box-shadow: var(--box-shadow-lg);
+    border-radius: var(--border-radius-lg);
+    padding: 0;
+    z-index: 1080;
+    background: #222;
+    color: #fff;
+}
+.toast .toast-body {
+    font-size: 1.1rem;
+    padding: 1rem 1.25rem;
+}
+.toast .btn-close {
+    filter: invert(1);
+}
+
 main {
     flex: 1;
 }
