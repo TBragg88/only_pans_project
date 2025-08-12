@@ -134,7 +134,7 @@ We take testing as seriously as food safety! Here's our comprehensive testing ap
 
 #### 📱 Mobile Report
 
-<img src="planning/images/Lighthouse_mobile.png" alt="Lighthouse Mobile Report" width="400" />
+<img src="/planning/images/lighthouse_mobile.png" alt="Lighthouse Mobile Report" width="400" />
 
 All major accessibility, performance, and code quality checks passed!
 
